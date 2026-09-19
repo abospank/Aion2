@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:compileSdkVersion="33" android:compileSdkVersionCodename="13" package="com.mbm_soft.irontvgld" platformBuildVersionCode="33" platformBuildVersionName="13">
+    <uses-feature android:name="android.hardware.microphone" android:required="false"/>
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
+    <uses-feature android:name="android.software.leanback" android:required="false"/>
+    <queries>
+        <package android:name="org.videolan.vlc"/>
+        <package android:name="com.mxtech.videoplayer.ad"/>
+    </queries>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <application android:allowBackup="true" android:appComponentFactory="androidx.core.app.CoreComponentFactory" android:banner="@drawable/banner" android:hardwareAccelerated="true" android:icon="@drawable/app_logo" android:label="@string/app_name" android:logo="@drawable/app_logo" android:name="com.mbm_soft.irontvmax.QuickPlayerApp" android:roundIcon="@drawable/app_logo" android:supportsRtl="true" android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" android:usesCleartextTraffic="true">
+        <meta-data android:name="preloaded_fonts" android:resource="@array/preloaded_fonts"/>
+        <activity android:configChanges="keyboardHidden|orientation|screenSize" android:exported="true" android:label="@string/app_name" android:launchMode="singleInstance" android:name="com.mbm_soft.irontvmax.activities.SplashScreen" android:screenOrientation="sensorLandscape" android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" android:windowSoftInputMode="stateAlwaysHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:configChanges="keyboardHidden|orientation|screenSize" android:exported="false" android:name="com.mbm_soft.irontvmax.activities.MainActivity" android:screenOrientation="sensorLandscape" android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity android:configChanges="keyboardHidden|orientation|screenSize" android:exported="false" android:name="com.mbm_soft.irontvmax.activities.SettingsActivity" android:screenOrientation="sensorLandscape" android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity android:configChanges="keyboardHidden|orientation|screenSize" android:exported="false" android:name="com.mbm_soft.irontvmax.activities.LiveActivity" android:screenOrientation="sensorLandscape" android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity android:configChanges="keyboardHidden|orientation|screenSize" android:exported="false" android:name="com.mbm_soft.irontvmax.activities.LiveActivityVlc" android:screenOrientation="sensorLandscape" android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity android:configChanges="keyboardHidden|orientation|screenSize" android:exported="false" android:name="com.mbm_soft.irontvmax.activities.VodActivity" android:screenOrientation="sensorLandscape" android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity android:configChanges="keyboardHidden|orientation|screenSize" android:exported="false" android:name="com.mbm_soft.irontvmax.activities.VodVlcActivity" android:screenOrientation="sensorLandscape" android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity android:configChanges="keyboardHidden|orientation|screenSize" android:exported="false" android:name="com.mbm_soft.irontvmax.activities.SeriesDetailsActivity" android:screenOrientation="sensorLandscape" android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity android:configChanges="keyboardHidden|orientation|screenSize" android:exported="false" android:name="com.mbm_soft.irontvmax.activities.MovieDetailsActivity" android:screenOrientation="sensorLandscape" android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity android:configChanges="keyboardHidden|orientation|screenSize" android:exported="false" android:name="com.mbm_soft.irontvmax.activities.StreamsActivity" android:screenOrientation="sensorLandscape" android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" android:windowSoftInputMode="stateAlwaysHidden"/>
+        <receiver android:exported="true" android:name="com.mbm_soft.irontvmax.utils.BootUpReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+            </intent-filter>
+        </receiver>
+        <service android:exported="false" android:name="com.mbm_soft.irontvmax.utils.AppDownloadService">
+            <intent-filter>
+                <action android:name="com.google.android.exoplayer.downloadService.action.RESTART"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </service>
+        <service android:exported="true" android:name="com.google.android.exoplayer2.scheduler.PlatformScheduler$PlatformSchedulerService" android:permission="android.permission.BIND_JOB_SERVICE"/>
+        <provider android:authorities="com.mbm_soft.irontvgld.provider" android:exported="false" android:grantUriPermissions="true" android:name="androidx.core.content.FileProvider">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/provider_paths"/>
+        </provider>
+        <provider android:authorities="com.mbm_soft.irontvgld.lifecycle-process" android:exported="false" android:multiprocess="true" android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"/>
+        <service android:directBootAware="true" android:exported="false" android:name="androidx.room.MultiInstanceInvalidationService"/>
+    </application>
+</manifest>

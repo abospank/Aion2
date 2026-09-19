@@ -1,0 +1,63 @@
+.class public Lcom/mbm_soft/irontvmax/adapter/LiveCatAdapter$ViewHolder;
+.super Ljava/lang/Object;
+.source "SourceFile"
+
+
+# annotations
+.annotation system Ldalvik/annotation/EnclosingClass;
+    value = Lcom/mbm_soft/irontvmax/adapter/LiveCatAdapter;
+.end annotation
+
+.annotation system Ldalvik/annotation/InnerClass;
+    accessFlags = 0x1
+    name = "ViewHolder"
+.end annotation
+
+
+# instance fields
+.field public channelFav:Landroid/widget/ImageView;
+    .annotation runtime Lbutterknife/BindView;
+    .end annotation
+.end field
+
+.field public channelImage:Landroid/widget/ImageView;
+    .annotation runtime Lbutterknife/BindView;
+    .end annotation
+.end field
+
+.field public channelLock:Landroid/widget/ImageView;
+    .annotation runtime Lbutterknife/BindView;
+    .end annotation
+.end field
+
+.field public channelName:Landroid/widget/TextView;
+    .annotation runtime Lbutterknife/BindView;
+    .end annotation
+.end field
+
+.field public channelNumber:Landroid/widget/TextView;
+    .annotation runtime Lbutterknife/BindView;
+    .end annotation
+.end field
+
+
+# direct methods
+.method public constructor <init>(Landroid/view/View;)V
+    .locals 1
+
+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+
+    invoke-static {p1, p0}, Lbutterknife/ButterKnife;->a(Landroid/view/View;Ljava/lang/Object;)Lbutterknife/Unbinder;
+
+    iget-object p1, p0, Lcom/mbm_soft/irontvmax/adapter/LiveCatAdapter$ViewHolder;->channelFav:Landroid/widget/ImageView;
+
+    const/16 v0, 0x8
+
+    invoke-virtual {p1, v0}, Landroid/widget/ImageView;->setVisibility(I)V
+
+    iget-object p1, p0, Lcom/mbm_soft/irontvmax/adapter/LiveCatAdapter$ViewHolder;->channelImage:Landroid/widget/ImageView;
+
+    invoke-virtual {p1, v0}, Landroid/widget/ImageView;->setVisibility(I)V
+
+    return-void
+.end method

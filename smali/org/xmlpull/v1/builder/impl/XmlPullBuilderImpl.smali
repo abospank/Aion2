@@ -1,0 +1,1051 @@
+.class public Lorg/xmlpull/v1/builder/impl/XmlPullBuilderImpl;
+.super Lorg/xmlpull/v1/builder/XmlPullBuilder;
+.source "SourceFile"
+
+
+# static fields
+.field private static final PROPERTY_XMLDECL_STANDALONE:Ljava/lang/String; = "http://xmlpull.org/v1/doc/properties.html#xmldecl-standalone"
+
+.field private static final PROPERTY_XMLDECL_VERSION:Ljava/lang/String; = "http://xmlpull.org/v1/doc/properties.html#xmldecl-version"
+
+
+# direct methods
+.method public constructor <init>()V
+    .locals 0
+
+    invoke-direct {p0}, Lorg/xmlpull/v1/builder/XmlPullBuilder;-><init>()V
+
+    return-void
+.end method
+
+.method private parseDocumentStart(Lorg/xmlpull/v1/XmlPullParser;)Lorg/xmlpull/v1/builder/XmlDocument;
+    .locals 3
+
+    :try_start_0
+    invoke-interface {p1}, Lorg/xmlpull/v1/XmlPullParser;->getEventType()I
+
+    move-result v0
+
+    if-nez v0, :cond_0
+
+    invoke-interface {p1}, Lorg/xmlpull/v1/XmlPullParser;->next()I
+
+    const-string v0, "http://xmlpull.org/v1/doc/properties.html#xmldecl-version"
+
+    invoke-interface {p1, v0}, Lorg/xmlpull/v1/XmlPullParser;->getProperty(Ljava/lang/String;)Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Ljava/lang/String;
+
+    const-string v1, "http://xmlpull.org/v1/doc/properties.html#xmldecl-standalone"
+
+    invoke-interface {p1, v1}, Lorg/xmlpull/v1/XmlPullParser;->getProperty(Ljava/lang/String;)Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, Ljava/lang/Boolean;
+
+    invoke-interface {p1}, Lorg/xmlpull/v1/XmlPullParser;->getInputEncoding()Ljava/lang/String;
+
+    move-result-object p1
+
+    new-instance v2, Lorg/xmlpull/v1/builder/impl/XmlDocumentImpl;
+
+    invoke-direct {v2, v0, v1, p1}, Lorg/xmlpull/v1/builder/impl/XmlDocumentImpl;-><init>(Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/String;)V
+
+    return-object v2
+
+    :cond_0
+    new-instance v0, Lorg/xmlpull/v1/builder/XmlBuilderException;
+
+    new-instance v1, Ljava/lang/StringBuffer;
+
+    invoke-direct {v1}, Ljava/lang/StringBuffer;-><init>()V
+
+    const-string v2, "parser must be positioned on beginning of document and not "
+
+    invoke-virtual {v1, v2}, Ljava/lang/StringBuffer;->append(Ljava/lang/String;)Ljava/lang/StringBuffer;
+
+    invoke-interface {p1}, Lorg/xmlpull/v1/XmlPullParser;->getPositionDescription()Ljava/lang/String;
+
+    move-result-object p1
+
+    invoke-virtual {v1, p1}, Ljava/lang/StringBuffer;->append(Ljava/lang/String;)Ljava/lang/StringBuffer;
+
+    invoke-virtual {v1}, Ljava/lang/StringBuffer;->toString()Ljava/lang/String;
+
+    move-result-object p1
+
+    invoke-direct {v0, p1}, Lorg/xmlpull/v1/builder/XmlBuilderException;-><init>(Ljava/lang/String;)V
+
+    throw v0
+    :try_end_0
+    .catch Lorg/xmlpull/v1/XmlPullParserException; {:try_start_0 .. :try_end_0} :catch_1
+    .catch Ljava/io/IOException; {:try_start_0 .. :try_end_0} :catch_0
+
+    :catch_0
+    move-exception p1
+
+    new-instance v0, Lorg/xmlpull/v1/builder/XmlBuilderException;
+
+    const-string v1, "could not read XML document prolog"
+
+    invoke-direct {v0, v1, p1}, Lorg/xmlpull/v1/builder/XmlBuilderException;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+
+    throw v0
+
+    :catch_1
+    move-exception p1
+
+    new-instance v0, Lorg/xmlpull/v1/builder/XmlBuilderException;
+
+    const-string v1, "could not parse XML document prolog"
+
+    invoke-direct {v0, v1, p1}, Lorg/xmlpull/v1/builder/XmlBuilderException;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+
+    throw v0
+.end method
+
+.method private serializeContainer(Lorg/xmlpull/v1/builder/XmlContainer;Lorg/xmlpull/v1/XmlSerializer;)V
+    .locals 2
+
+    instance-of v0, p1, Lorg/xmlpull/v1/builder/XmlSerializable;
+
+    if-eqz v0, :cond_0
+
+    check-cast p1, Lorg/xmlpull/v1/builder/XmlSerializable;
+
+    invoke-interface {p1, p2}, Lorg/xmlpull/v1/builder/XmlSerializable;->serialize(Lorg/xmlpull/v1/XmlSerializer;)V
+
+    goto :goto_0
+
+    :cond_0
+    instance-of v0, p1, Lorg/xmlpull/v1/builder/XmlDocument;
+
+    if-eqz v0, :cond_1
+
+    check-cast p1, Lorg/xmlpull/v1/builder/XmlDocument;
+
+    invoke-direct {p0, p1, p2}, Lorg/xmlpull/v1/builder/impl/XmlPullBuilderImpl;->serializeDocument(Lorg/xmlpull/v1/builder/XmlDocument;Lorg/xmlpull/v1/XmlSerializer;)V
+
+    goto :goto_0
+
+    :cond_1
+    instance-of v0, p1, Lorg/xmlpull/v1/builder/XmlElement;
+
+    if-eqz v0, :cond_2
+
+    check-cast p1, Lorg/xmlpull/v1/builder/XmlElement;
+
+    invoke-direct {p0, p1, p2}, Lorg/xmlpull/v1/builder/impl/XmlPullBuilderImpl;->serializeFragment(Lorg/xmlpull/v1/builder/XmlElement;Lorg/xmlpull/v1/XmlSerializer;)V
+
+    :goto_0
+    return-void
+
+    :cond_2
+    new-instance p2, Ljava/lang/IllegalArgumentException;
+
+    new-instance v0, Ljava/lang/StringBuffer;
+
+    invoke-direct {v0}, Ljava/lang/StringBuffer;-><init>()V
+
+    const-string v1, "could not serialzie unknown XML container "
+
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuffer;->append(Ljava/lang/String;)Ljava/lang/StringBuffer;
+
+    invoke-virtual {p1}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+
+    move-result-object p1
+
+    invoke-virtual {v0, p1}, Ljava/lang/StringBuffer;->append(Ljava/lang/Object;)Ljava/lang/StringBuffer;
+
+    invoke-virtual {v0}, Ljava/lang/StringBuffer;->toString()Ljava/lang/String;
+
+    move-result-object p1
+
+    invoke-direct {p2, p1}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;)V
+
+    throw p2
+.end method
+
+.method private serializeDocument(Lorg/xmlpull/v1/builder/XmlDocument;Lorg/xmlpull/v1/XmlSerializer;)V
+    .locals 2
+
+    :try_start_0
+    invoke-interface {p1}, Lorg/xmlpull/v1/builder/XmlDocument;->getCharacterEncodingScheme()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-interface {p1}, Lorg/xmlpull/v1/builder/XmlDocument;->isStandalone()Ljava/lang/Boolean;
+
+    move-result-object v1
+
+    invoke-interface {p2, v0, v1}, Lorg/xmlpull/v1/XmlSerializer;->startDocument(Ljava/lang/String;Ljava/lang/Boolean;)V
+    :try_end_0
+    .catch Ljava/io/IOException; {:try_start_0 .. :try_end_0} :catch_1
+
+    invoke-interface {p1}, Lorg/xmlpull/v1/builder/XmlDocument;->getDocumentElement()Lorg/xmlpull/v1/builder/XmlElement;
+
+    move-result-object p1
+
+    invoke-direct {p0, p1, p2}, Lorg/xmlpull/v1/builder/impl/XmlPullBuilderImpl;->serializeFragment(Lorg/xmlpull/v1/builder/XmlElement;Lorg/xmlpull/v1/XmlSerializer;)V
+
+    :try_start_1
+    invoke-interface {p2}, Lorg/xmlpull/v1/XmlSerializer;->endDocument()V
+    :try_end_1
+    .catch Ljava/io/IOException; {:try_start_1 .. :try_end_1} :catch_0
+
+    return-void
+
+    :catch_0
+    move-exception p1
+
+    new-instance p2, Lorg/xmlpull/v1/builder/XmlBuilderException;
+
+    const-string v0, "serializing XML document end failed"
+
+    invoke-direct {p2, v0, p1}, Lorg/xmlpull/v1/builder/XmlBuilderException;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+
+    throw p2
+
+    :catch_1
+    move-exception p1
+
+    new-instance p2, Lorg/xmlpull/v1/builder/XmlBuilderException;
+
+    const-string v0, "serialziing XML document start failed"
+
+    invoke-direct {p2, v0, p1}, Lorg/xmlpull/v1/builder/XmlBuilderException;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+
+    throw p2
+.end method
+
+.method private serializeFragment(Lorg/xmlpull/v1/builder/XmlElement;Lorg/xmlpull/v1/XmlSerializer;)V
+    .locals 3
+
+    invoke-virtual {p0, p1, p2}, Lorg/xmlpull/v1/builder/impl/XmlPullBuilderImpl;->serializeStartTag(Lorg/xmlpull/v1/builder/XmlElement;Lorg/xmlpull/v1/XmlSerializer;)V
+
+    invoke-interface {p1}, Lorg/xmlpull/v1/builder/XmlElement;->hasChildren()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_3
+
+    invoke-interface {p1}, Lorg/xmlpull/v1/builder/XmlElement;->children()Ljava/util/Iterator;
+
+    move-result-object v0
+
+    :goto_0
+    invoke-interface {v0}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v1
+
+    if-nez v1, :cond_0
+
+    goto :goto_1
+
+    :cond_0
+    invoke-interface {v0}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v1
+
+    instance-of v2, v1, Lorg/xmlpull/v1/builder/XmlSerializable;
+
+    if-eqz v2, :cond_1
+
+    check-cast v1, Lorg/xmlpull/v1/builder/XmlSerializable;
+
+    invoke-interface {v1, p2}, Lorg/xmlpull/v1/builder/XmlSerializable;->serialize(Lorg/xmlpull/v1/XmlSerializer;)V
+
+    goto :goto_0
+
+    :cond_1
+    instance-of v2, v1, Lorg/xmlpull/v1/builder/XmlElement;
+
+    if-eqz v2, :cond_2
+
+    check-cast v1, Lorg/xmlpull/v1/builder/XmlElement;
+
+    invoke-direct {p0, v1, p2}, Lorg/xmlpull/v1/builder/impl/XmlPullBuilderImpl;->serializeFragment(Lorg/xmlpull/v1/builder/XmlElement;Lorg/xmlpull/v1/XmlSerializer;)V
+
+    goto :goto_0
+
+    :cond_2
+    invoke-virtual {p0, v1, p2}, Lorg/xmlpull/v1/builder/impl/XmlPullBuilderImpl;->serializeItem(Ljava/lang/Object;Lorg/xmlpull/v1/XmlSerializer;)V
+
+    goto :goto_0
+
+    :cond_3
+    :goto_1
+    invoke-virtual {p0, p1, p2}, Lorg/xmlpull/v1/builder/impl/XmlPullBuilderImpl;->serializeEndTag(Lorg/xmlpull/v1/builder/XmlElement;Lorg/xmlpull/v1/XmlSerializer;)V
+
+    return-void
+.end method
+
+
+# virtual methods
+.method public newDocument(Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/String;)Lorg/xmlpull/v1/builder/XmlDocument;
+    .locals 1
+
+    new-instance v0, Lorg/xmlpull/v1/builder/impl/XmlDocumentImpl;
+
+    invoke-direct {v0, p1, p2, p3}, Lorg/xmlpull/v1/builder/impl/XmlDocumentImpl;-><init>(Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/String;)V
+
+    return-object v0
+.end method
+
+.method public newFragment(Ljava/lang/String;)Lorg/xmlpull/v1/builder/XmlElement;
+    .locals 2
+
+    new-instance v0, Lorg/xmlpull/v1/builder/impl/XmlElementImpl;
+
+    const/4 v1, 0x0
+
+    invoke-direct {v0, v1, p1}, Lorg/xmlpull/v1/builder/impl/XmlElementImpl;-><init>(Lorg/xmlpull/v1/builder/XmlNamespace;Ljava/lang/String;)V
+
+    return-object v0
+.end method
+
+.method public newFragment(Ljava/lang/String;Ljava/lang/String;)Lorg/xmlpull/v1/builder/XmlElement;
+    .locals 1
+
+    new-instance v0, Lorg/xmlpull/v1/builder/impl/XmlElementImpl;
+
+    invoke-direct {v0, p1, p2}, Lorg/xmlpull/v1/builder/impl/XmlElementImpl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+
+    return-object v0
+.end method
+
+.method public newFragment(Lorg/xmlpull/v1/builder/XmlNamespace;Ljava/lang/String;)Lorg/xmlpull/v1/builder/XmlElement;
+    .locals 1
+
+    new-instance v0, Lorg/xmlpull/v1/builder/impl/XmlElementImpl;
+
+    invoke-direct {v0, p1, p2}, Lorg/xmlpull/v1/builder/impl/XmlElementImpl;-><init>(Lorg/xmlpull/v1/builder/XmlNamespace;Ljava/lang/String;)V
+
+    return-object v0
+.end method
+
+.method public newNamespace(Ljava/lang/String;)Lorg/xmlpull/v1/builder/XmlNamespace;
+    .locals 2
+
+    new-instance v0, Lorg/xmlpull/v1/builder/impl/XmlNamespaceImpl;
+
+    const/4 v1, 0x0
+
+    invoke-direct {v0, v1, p1}, Lorg/xmlpull/v1/builder/impl/XmlNamespaceImpl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+
+    return-object v0
+.end method
+
+.method public newNamespace(Ljava/lang/String;Ljava/lang/String;)Lorg/xmlpull/v1/builder/XmlNamespace;
+    .locals 1
+
+    new-instance v0, Lorg/xmlpull/v1/builder/impl/XmlNamespaceImpl;
+
+    invoke-direct {v0, p1, p2}, Lorg/xmlpull/v1/builder/impl/XmlNamespaceImpl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+
+    return-object v0
+.end method
+
+.method public parse(Lorg/xmlpull/v1/XmlPullParser;)Lorg/xmlpull/v1/builder/XmlDocument;
+    .locals 1
+
+    invoke-direct {p0, p1}, Lorg/xmlpull/v1/builder/impl/XmlPullBuilderImpl;->parseDocumentStart(Lorg/xmlpull/v1/XmlPullParser;)Lorg/xmlpull/v1/builder/XmlDocument;
+
+    move-result-object v0
+
+    invoke-virtual {p0, p1}, Lorg/xmlpull/v1/builder/impl/XmlPullBuilderImpl;->parseFragment(Lorg/xmlpull/v1/XmlPullParser;)Lorg/xmlpull/v1/builder/XmlElement;
+
+    move-result-object p1
+
+    invoke-interface {v0, p1}, Lorg/xmlpull/v1/builder/XmlDocument;->setDocumentElement(Lorg/xmlpull/v1/builder/XmlElement;)V
+
+    return-object v0
+.end method
+
+.method public parseFragment(Lorg/xmlpull/v1/XmlPullParser;)Lorg/xmlpull/v1/builder/XmlElement;
+    .locals 4
+
+    :try_start_0
+    invoke-interface {p1}, Lorg/xmlpull/v1/XmlPullParser;->getEventType()I
+
+    move-result v0
+
+    const/4 v1, 0x2
+
+    if-ne v0, v1, :cond_4
+
+    invoke-virtual {p0, p1}, Lorg/xmlpull/v1/builder/impl/XmlPullBuilderImpl;->parseStartTag(Lorg/xmlpull/v1/XmlPullParser;)Lorg/xmlpull/v1/builder/XmlElement;
+
+    move-result-object v0
+
+    :cond_0
+    :goto_0
+    invoke-interface {p1}, Lorg/xmlpull/v1/XmlPullParser;->next()I
+
+    move-result v2
+
+    if-ne v2, v1, :cond_1
+
+    invoke-virtual {p0, p1}, Lorg/xmlpull/v1/builder/impl/XmlPullBuilderImpl;->parseStartTag(Lorg/xmlpull/v1/XmlPullParser;)Lorg/xmlpull/v1/builder/XmlElement;
+
+    move-result-object v2
+
+    invoke-interface {v0, v2}, Lorg/xmlpull/v1/builder/XmlElement;->addChild(Ljava/lang/Object;)V
+
+    move-object v0, v2
+
+    goto :goto_0
+
+    :cond_1
+    const/4 v3, 0x3
+
+    if-ne v2, v3, :cond_3
+
+    invoke-interface {v0}, Lorg/xmlpull/v1/builder/XmlElement;->getParent()Lorg/xmlpull/v1/builder/XmlContainer;
+
+    move-result-object v2
+
+    if-nez v2, :cond_2
+
+    return-object v0
+
+    :cond_2
+    move-object v0, v2
+
+    check-cast v0, Lorg/xmlpull/v1/builder/XmlElement;
+
+    goto :goto_0
+
+    :cond_3
+    const/4 v3, 0x4
+
+    if-ne v2, v3, :cond_0
+
+    invoke-interface {p1}, Lorg/xmlpull/v1/XmlPullParser;->getText()Ljava/lang/String;
+
+    move-result-object v2
+
+    invoke-interface {v0, v2}, Lorg/xmlpull/v1/builder/XmlElement;->addChild(Ljava/lang/Object;)V
+
+    goto :goto_0
+
+    :cond_4
+    new-instance v1, Lorg/xmlpull/v1/builder/XmlBuilderException;
+
+    new-instance v2, Ljava/lang/StringBuffer;
+
+    invoke-direct {v2}, Ljava/lang/StringBuffer;-><init>()V
+
+    const-string v3, "expected parser to be on start tag and not "
+
+    invoke-virtual {v2, v3}, Ljava/lang/StringBuffer;->append(Ljava/lang/String;)Ljava/lang/StringBuffer;
+
+    sget-object v3, Lorg/xmlpull/v1/XmlPullParser;->TYPES:[Ljava/lang/String;
+
+    aget-object v0, v3, v0
+
+    invoke-virtual {v2, v0}, Ljava/lang/StringBuffer;->append(Ljava/lang/String;)Ljava/lang/StringBuffer;
+
+    invoke-interface {p1}, Lorg/xmlpull/v1/XmlPullParser;->getPositionDescription()Ljava/lang/String;
+
+    move-result-object p1
+
+    invoke-virtual {v2, p1}, Ljava/lang/StringBuffer;->append(Ljava/lang/String;)Ljava/lang/StringBuffer;
+
+    invoke-virtual {v2}, Ljava/lang/StringBuffer;->toString()Ljava/lang/String;
+
+    move-result-object p1
+
+    invoke-direct {v1, p1}, Lorg/xmlpull/v1/builder/XmlBuilderException;-><init>(Ljava/lang/String;)V
+
+    throw v1
+    :try_end_0
+    .catch Lorg/xmlpull/v1/XmlPullParserException; {:try_start_0 .. :try_end_0} :catch_1
+    .catch Ljava/io/IOException; {:try_start_0 .. :try_end_0} :catch_0
+
+    :catch_0
+    move-exception p1
+
+    new-instance v0, Lorg/xmlpull/v1/builder/XmlBuilderException;
+
+    const-string v1, "could not read XML tree content"
+
+    invoke-direct {v0, v1, p1}, Lorg/xmlpull/v1/builder/XmlBuilderException;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+
+    throw v0
+
+    :catch_1
+    move-exception p1
+
+    new-instance v0, Lorg/xmlpull/v1/builder/XmlBuilderException;
+
+    const-string v1, "could not build tree from XML"
+
+    invoke-direct {v0, v1, p1}, Lorg/xmlpull/v1/builder/XmlBuilderException;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+
+    throw v0
+.end method
+
+.method public parseItem(Lorg/xmlpull/v1/XmlPullParser;)Ljava/lang/Object;
+    .locals 4
+
+    :try_start_0
+    invoke-interface {p1}, Lorg/xmlpull/v1/XmlPullParser;->getEventType()I
+
+    move-result v0
+
+    const/4 v1, 0x2
+
+    if-ne v0, v1, :cond_0
+
+    invoke-virtual {p0, p1}, Lorg/xmlpull/v1/builder/impl/XmlPullBuilderImpl;->parseStartTag(Lorg/xmlpull/v1/XmlPullParser;)Lorg/xmlpull/v1/builder/XmlElement;
+
+    move-result-object p1
+
+    return-object p1
+
+    :cond_0
+    const/4 v1, 0x4
+
+    if-ne v0, v1, :cond_1
+
+    invoke-interface {p1}, Lorg/xmlpull/v1/XmlPullParser;->getText()Ljava/lang/String;
+
+    move-result-object p1
+
+    return-object p1
+
+    :cond_1
+    if-nez v0, :cond_2
+
+    invoke-direct {p0, p1}, Lorg/xmlpull/v1/builder/impl/XmlPullBuilderImpl;->parseDocumentStart(Lorg/xmlpull/v1/XmlPullParser;)Lorg/xmlpull/v1/builder/XmlDocument;
+
+    move-result-object p1
+
+    return-object p1
+
+    :cond_2
+    new-instance v1, Lorg/xmlpull/v1/builder/XmlBuilderException;
+
+    new-instance v2, Ljava/lang/StringBuffer;
+
+    invoke-direct {v2}, Ljava/lang/StringBuffer;-><init>()V
+
+    const-string v3, "currently unsupported event type "
+
+    invoke-virtual {v2, v3}, Ljava/lang/StringBuffer;->append(Ljava/lang/String;)Ljava/lang/StringBuffer;
+
+    sget-object v3, Lorg/xmlpull/v1/XmlPullParser;->TYPES:[Ljava/lang/String;
+
+    aget-object v0, v3, v0
+
+    invoke-virtual {v2, v0}, Ljava/lang/StringBuffer;->append(Ljava/lang/String;)Ljava/lang/StringBuffer;
+
+    invoke-interface {p1}, Lorg/xmlpull/v1/XmlPullParser;->getPositionDescription()Ljava/lang/String;
+
+    move-result-object p1
+
+    invoke-virtual {v2, p1}, Ljava/lang/StringBuffer;->append(Ljava/lang/String;)Ljava/lang/StringBuffer;
+
+    invoke-virtual {v2}, Ljava/lang/StringBuffer;->toString()Ljava/lang/String;
+
+    move-result-object p1
+
+    invoke-direct {v1, p1}, Lorg/xmlpull/v1/builder/XmlBuilderException;-><init>(Ljava/lang/String;)V
+
+    throw v1
+    :try_end_0
+    .catch Lorg/xmlpull/v1/XmlPullParserException; {:try_start_0 .. :try_end_0} :catch_0
+
+    :catch_0
+    move-exception p1
+
+    new-instance v0, Lorg/xmlpull/v1/builder/XmlBuilderException;
+
+    const-string v1, "could not parse XML item"
+
+    invoke-direct {v0, v1, p1}, Lorg/xmlpull/v1/builder/XmlBuilderException;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+
+    throw v0
+.end method
+
+.method public parseLocation(Ljava/lang/String;)Lorg/xmlpull/v1/builder/XmlDocument;
+    .locals 4
+
+    :try_start_0
+    new-instance v0, Ljava/net/URL;
+
+    invoke-direct {v0, p1}, Ljava/net/URL;-><init>(Ljava/lang/String;)V
+    :try_end_0
+    .catch Ljava/net/MalformedURLException; {:try_start_0 .. :try_end_0} :catch_1
+
+    :try_start_1
+    invoke-virtual {v0}, Ljava/net/URL;->openStream()Ljava/io/InputStream;
+
+    move-result-object v0
+
+    invoke-virtual {p0, v0}, Lorg/xmlpull/v1/builder/XmlPullBuilder;->parseInputStream(Ljava/io/InputStream;)Lorg/xmlpull/v1/builder/XmlDocument;
+
+    move-result-object p1
+    :try_end_1
+    .catch Ljava/io/IOException; {:try_start_1 .. :try_end_1} :catch_0
+
+    return-object p1
+
+    :catch_0
+    move-exception v0
+
+    new-instance v1, Lorg/xmlpull/v1/builder/XmlBuilderException;
+
+    new-instance v2, Ljava/lang/StringBuffer;
+
+    invoke-direct {v2}, Ljava/lang/StringBuffer;-><init>()V
+
+    const-string v3, "could not open connection to URL "
+
+    invoke-virtual {v2, v3}, Ljava/lang/StringBuffer;->append(Ljava/lang/String;)Ljava/lang/StringBuffer;
+
+    invoke-virtual {v2, p1}, Ljava/lang/StringBuffer;->append(Ljava/lang/String;)Ljava/lang/StringBuffer;
+
+    invoke-virtual {v2}, Ljava/lang/StringBuffer;->toString()Ljava/lang/String;
+
+    move-result-object p1
+
+    invoke-direct {v1, p1, v0}, Lorg/xmlpull/v1/builder/XmlBuilderException;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+
+    throw v1
+
+    :catch_1
+    move-exception v0
+
+    new-instance v1, Lorg/xmlpull/v1/builder/XmlBuilderException;
+
+    new-instance v2, Ljava/lang/StringBuffer;
+
+    invoke-direct {v2}, Ljava/lang/StringBuffer;-><init>()V
+
+    const-string v3, "could not parse URL "
+
+    invoke-virtual {v2, v3}, Ljava/lang/StringBuffer;->append(Ljava/lang/String;)Ljava/lang/StringBuffer;
+
+    invoke-virtual {v2, p1}, Ljava/lang/StringBuffer;->append(Ljava/lang/String;)Ljava/lang/StringBuffer;
+
+    invoke-virtual {v2}, Ljava/lang/StringBuffer;->toString()Ljava/lang/String;
+
+    move-result-object p1
+
+    invoke-direct {v1, p1, v0}, Lorg/xmlpull/v1/builder/XmlBuilderException;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+
+    throw v1
+.end method
+
+.method public parseStartTag(Lorg/xmlpull/v1/XmlPullParser;)Lorg/xmlpull/v1/builder/XmlElement;
+    .locals 11
+
+    :try_start_0
+    invoke-interface {p1}, Lorg/xmlpull/v1/XmlPullParser;->getEventType()I
+
+    move-result v0
+
+    const/4 v1, 0x2
+
+    if-ne v0, v1, :cond_4
+
+    new-instance v0, Lorg/xmlpull/v1/builder/impl/XmlElementImpl;
+
+    invoke-interface {p1}, Lorg/xmlpull/v1/XmlPullParser;->getNamespace()Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-interface {p1}, Lorg/xmlpull/v1/XmlPullParser;->getName()Ljava/lang/String;
+
+    move-result-object v2
+
+    invoke-direct {v0, v1, v2}, Lorg/xmlpull/v1/builder/impl/XmlElementImpl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+
+    invoke-interface {p1}, Lorg/xmlpull/v1/XmlPullParser;->getDepth()I
+
+    move-result v1
+
+    const/4 v9, 0x1
+
+    sub-int/2addr v1, v9
+
+    invoke-interface {p1, v1}, Lorg/xmlpull/v1/XmlPullParser;->getNamespaceCount(I)I
+
+    move-result v1
+
+    :goto_0
+    invoke-interface {p1}, Lorg/xmlpull/v1/XmlPullParser;->getDepth()I
+
+    move-result v2
+
+    invoke-interface {p1, v2}, Lorg/xmlpull/v1/XmlPullParser;->getNamespaceCount(I)I
+
+    move-result v2
+
+    if-lt v1, v2, :cond_2
+
+    const/4 v1, 0x0
+
+    const/4 v10, 0x0
+
+    :goto_1
+    invoke-interface {p1}, Lorg/xmlpull/v1/XmlPullParser;->getAttributeCount()I
+
+    move-result v2
+
+    if-lt v10, v2, :cond_0
+
+    return-object v0
+
+    :cond_0
+    invoke-interface {p1, v10}, Lorg/xmlpull/v1/XmlPullParser;->getAttributeType(I)Ljava/lang/String;
+
+    move-result-object v3
+
+    invoke-interface {p1, v10}, Lorg/xmlpull/v1/XmlPullParser;->getAttributePrefix(I)Ljava/lang/String;
+
+    move-result-object v4
+
+    invoke-interface {p1, v10}, Lorg/xmlpull/v1/XmlPullParser;->getAttributeNamespace(I)Ljava/lang/String;
+
+    move-result-object v5
+
+    invoke-interface {p1, v10}, Lorg/xmlpull/v1/XmlPullParser;->getAttributeName(I)Ljava/lang/String;
+
+    move-result-object v6
+
+    invoke-interface {p1, v10}, Lorg/xmlpull/v1/XmlPullParser;->getAttributeValue(I)Ljava/lang/String;
+
+    move-result-object v7
+
+    invoke-interface {p1, v10}, Lorg/xmlpull/v1/XmlPullParser;->isAttributeDefault(I)Z
+
+    move-result v2
+
+    if-nez v2, :cond_1
+
+    const/4 v8, 0x1
+
+    goto :goto_2
+
+    :cond_1
+    const/4 v8, 0x0
+
+    :goto_2
+    move-object v2, v0
+
+    invoke-interface/range {v2 .. v8}, Lorg/xmlpull/v1/builder/XmlElement;->addAttribute(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)Lorg/xmlpull/v1/builder/XmlAttribute;
+
+    add-int/lit8 v10, v10, 0x1
+
+    goto :goto_1
+
+    :cond_2
+    invoke-interface {p1, v1}, Lorg/xmlpull/v1/XmlPullParser;->getNamespacePrefix(I)Ljava/lang/String;
+
+    move-result-object v2
+
+    if-nez v2, :cond_3
+
+    const-string v2, ""
+
+    :cond_3
+    invoke-interface {p1, v1}, Lorg/xmlpull/v1/XmlPullParser;->getNamespaceUri(I)Ljava/lang/String;
+
+    move-result-object v3
+
+    invoke-interface {v0, v2, v3}, Lorg/xmlpull/v1/builder/XmlElement;->declareNamespace(Ljava/lang/String;Ljava/lang/String;)Lorg/xmlpull/v1/builder/XmlNamespace;
+
+    add-int/lit8 v1, v1, 0x1
+
+    goto :goto_0
+
+    :cond_4
+    new-instance v0, Lorg/xmlpull/v1/builder/XmlBuilderException;
+
+    new-instance v1, Ljava/lang/StringBuffer;
+
+    invoke-direct {v1}, Ljava/lang/StringBuffer;-><init>()V
+
+    const-string v2, "parser must be on START_TAG and not "
+
+    invoke-virtual {v1, v2}, Ljava/lang/StringBuffer;->append(Ljava/lang/String;)Ljava/lang/StringBuffer;
+
+    invoke-interface {p1}, Lorg/xmlpull/v1/XmlPullParser;->getPositionDescription()Ljava/lang/String;
+
+    move-result-object p1
+
+    invoke-virtual {v1, p1}, Ljava/lang/StringBuffer;->append(Ljava/lang/String;)Ljava/lang/StringBuffer;
+
+    invoke-virtual {v1}, Ljava/lang/StringBuffer;->toString()Ljava/lang/String;
+
+    move-result-object p1
+
+    invoke-direct {v0, p1}, Lorg/xmlpull/v1/builder/XmlBuilderException;-><init>(Ljava/lang/String;)V
+
+    throw v0
+    :try_end_0
+    .catch Lorg/xmlpull/v1/XmlPullParserException; {:try_start_0 .. :try_end_0} :catch_0
+
+    :catch_0
+    move-exception p1
+
+    new-instance v0, Lorg/xmlpull/v1/builder/XmlBuilderException;
+
+    const-string v1, "could not parse XML start tag"
+
+    invoke-direct {v0, v1, p1}, Lorg/xmlpull/v1/builder/XmlBuilderException;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+
+    throw v0
+.end method
+
+.method public serialize(Ljava/lang/Object;Lorg/xmlpull/v1/XmlSerializer;)V
+    .locals 1
+
+    instance-of v0, p1, Lorg/xmlpull/v1/builder/XmlContainer;
+
+    if-eqz v0, :cond_0
+
+    check-cast p1, Lorg/xmlpull/v1/builder/XmlContainer;
+
+    invoke-direct {p0, p1, p2}, Lorg/xmlpull/v1/builder/impl/XmlPullBuilderImpl;->serializeContainer(Lorg/xmlpull/v1/builder/XmlContainer;Lorg/xmlpull/v1/XmlSerializer;)V
+
+    goto :goto_0
+
+    :cond_0
+    invoke-virtual {p0, p1, p2}, Lorg/xmlpull/v1/builder/impl/XmlPullBuilderImpl;->serializeItem(Ljava/lang/Object;Lorg/xmlpull/v1/XmlSerializer;)V
+
+    :goto_0
+    return-void
+.end method
+
+.method public serializeEndTag(Lorg/xmlpull/v1/builder/XmlElement;Lorg/xmlpull/v1/XmlSerializer;)V
+    .locals 1
+
+    :try_start_0
+    invoke-interface {p1}, Lorg/xmlpull/v1/builder/XmlElement;->getNamespaceName()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-interface {p1}, Lorg/xmlpull/v1/builder/XmlElement;->getName()Ljava/lang/String;
+
+    move-result-object p1
+
+    invoke-interface {p2, v0, p1}, Lorg/xmlpull/v1/XmlSerializer;->endTag(Ljava/lang/String;Ljava/lang/String;)Lorg/xmlpull/v1/XmlSerializer;
+    :try_end_0
+    .catch Ljava/io/IOException; {:try_start_0 .. :try_end_0} :catch_0
+
+    return-void
+
+    :catch_0
+    move-exception p1
+
+    new-instance p2, Lorg/xmlpull/v1/builder/XmlBuilderException;
+
+    const-string v0, "serializing XML end tag failed"
+
+    invoke-direct {p2, v0, p1}, Lorg/xmlpull/v1/builder/XmlBuilderException;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+
+    throw p2
+.end method
+
+.method public serializeItem(Ljava/lang/Object;Lorg/xmlpull/v1/XmlSerializer;)V
+    .locals 2
+
+    :try_start_0
+    instance-of v0, p1, Lorg/xmlpull/v1/builder/XmlSerializable;
+
+    if-eqz v0, :cond_0
+
+    check-cast p1, Lorg/xmlpull/v1/builder/XmlSerializable;
+
+    invoke-interface {p1, p2}, Lorg/xmlpull/v1/builder/XmlSerializable;->serialize(Lorg/xmlpull/v1/XmlSerializer;)V
+
+    goto :goto_0
+
+    :cond_0
+    instance-of v0, p1, Ljava/lang/String;
+
+    if-eqz v0, :cond_1
+
+    invoke-virtual {p1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object p1
+
+    invoke-interface {p2, p1}, Lorg/xmlpull/v1/XmlSerializer;->text(Ljava/lang/String;)Lorg/xmlpull/v1/XmlSerializer;
+
+    goto :goto_0
+
+    :cond_1
+    instance-of v0, p1, Lorg/xmlpull/v1/builder/XmlComment;
+
+    if-eqz v0, :cond_2
+
+    check-cast p1, Lorg/xmlpull/v1/builder/XmlComment;
+
+    invoke-interface {p1}, Lorg/xmlpull/v1/builder/XmlComment;->getContent()Ljava/lang/String;
+
+    move-result-object p1
+
+    invoke-interface {p2, p1}, Lorg/xmlpull/v1/XmlSerializer;->comment(Ljava/lang/String;)V
+
+    :goto_0
+    return-void
+
+    :cond_2
+    new-instance p2, Ljava/lang/IllegalArgumentException;
+
+    new-instance v0, Ljava/lang/StringBuffer;
+
+    invoke-direct {v0}, Ljava/lang/StringBuffer;-><init>()V
+
+    const-string v1, "could not serialize "
+
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuffer;->append(Ljava/lang/String;)Ljava/lang/StringBuffer;
+
+    invoke-virtual {p1}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+
+    move-result-object p1
+
+    invoke-virtual {v0, p1}, Ljava/lang/StringBuffer;->append(Ljava/lang/Object;)Ljava/lang/StringBuffer;
+
+    invoke-virtual {v0}, Ljava/lang/StringBuffer;->toString()Ljava/lang/String;
+
+    move-result-object p1
+
+    invoke-direct {p2, p1}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;)V
+
+    throw p2
+    :try_end_0
+    .catch Ljava/io/IOException; {:try_start_0 .. :try_end_0} :catch_0
+
+    :catch_0
+    move-exception p1
+
+    new-instance p2, Lorg/xmlpull/v1/builder/XmlBuilderException;
+
+    const-string v0, "serializing XML start tag failed"
+
+    invoke-direct {p2, v0, p1}, Lorg/xmlpull/v1/builder/XmlBuilderException;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+
+    throw p2
+.end method
+
+.method public serializeStartTag(Lorg/xmlpull/v1/builder/XmlElement;Lorg/xmlpull/v1/XmlSerializer;)V
+    .locals 3
+
+    :try_start_0
+    invoke-interface {p1}, Lorg/xmlpull/v1/builder/XmlElement;->hasNamespaceDeclarations()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_1
+
+    invoke-interface {p1}, Lorg/xmlpull/v1/builder/XmlElement;->namespaces()Ljava/util/Iterator;
+
+    move-result-object v0
+
+    :goto_0
+    invoke-interface {v0}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v1
+
+    if-nez v1, :cond_0
+
+    goto :goto_1
+
+    :cond_0
+    invoke-interface {v0}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, Lorg/xmlpull/v1/builder/XmlNamespace;
+
+    invoke-interface {v1}, Lorg/xmlpull/v1/builder/XmlNamespace;->getPrefix()Ljava/lang/String;
+
+    move-result-object v2
+
+    invoke-interface {v1}, Lorg/xmlpull/v1/builder/XmlNamespace;->getNamespaceName()Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-interface {p2, v2, v1}, Lorg/xmlpull/v1/XmlSerializer;->setPrefix(Ljava/lang/String;Ljava/lang/String;)V
+
+    goto :goto_0
+
+    :cond_1
+    :goto_1
+    invoke-interface {p1}, Lorg/xmlpull/v1/builder/XmlElement;->getNamespaceName()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-interface {p1}, Lorg/xmlpull/v1/builder/XmlElement;->getName()Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-interface {p2, v0, v1}, Lorg/xmlpull/v1/XmlSerializer;->startTag(Ljava/lang/String;Ljava/lang/String;)Lorg/xmlpull/v1/XmlSerializer;
+
+    invoke-interface {p1}, Lorg/xmlpull/v1/builder/XmlElement;->hasAttributes()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_3
+
+    invoke-interface {p1}, Lorg/xmlpull/v1/builder/XmlElement;->attributes()Ljava/util/Iterator;
+
+    move-result-object p1
+
+    :goto_2
+    invoke-interface {p1}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-nez v0, :cond_2
+
+    goto :goto_3
+
+    :cond_2
+    invoke-interface {p1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Lorg/xmlpull/v1/builder/XmlAttribute;
+
+    invoke-interface {v0}, Lorg/xmlpull/v1/builder/XmlAttribute;->getNamespaceName()Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-interface {v0}, Lorg/xmlpull/v1/builder/XmlAttribute;->getName()Ljava/lang/String;
+
+    move-result-object v2
+
+    invoke-interface {v0}, Lorg/xmlpull/v1/builder/XmlAttribute;->getValue()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-interface {p2, v1, v2, v0}, Lorg/xmlpull/v1/XmlSerializer;->attribute(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lorg/xmlpull/v1/XmlSerializer;
+    :try_end_0
+    .catch Ljava/io/IOException; {:try_start_0 .. :try_end_0} :catch_0
+
+    goto :goto_2
+
+    :cond_3
+    :goto_3
+    return-void
+
+    :catch_0
+    move-exception p1
+
+    new-instance p2, Lorg/xmlpull/v1/builder/XmlBuilderException;
+
+    const-string v0, "serializing XML start tag failed"
+
+    invoke-direct {p2, v0, p1}, Lorg/xmlpull/v1/builder/XmlBuilderException;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+
+    throw p2
+.end method

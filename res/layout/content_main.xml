@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:layout_width="match_parent" android:layout_height="match_parent" android:background="#00000000"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#00000000">
+        <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="0.0dp" android:layout_weight="0.185">
+            <Space android:layout_width="0.0dp" android:layout_height="match_parent" android:layout_weight="0.905" />
+            <LinearLayout android:orientation="vertical" android:layout_width="0.0dp" android:layout_height="match_parent" android:layout_weight="0.055">
+                <Space android:layout_width="match_parent" android:layout_height="0.0dp" android:layout_weight="0.26" />
+                <LinearLayout android:id="@id/lil_settings" android:orientation="vertical" android:gravity="center" android:background="@drawable/menu_selector" android:focusable="true" android:clickable="true" android:layout_width="match_parent" android:layout_height="0.0dp" android:layout_weight="1.0" />
+                <Space android:layout_width="match_parent" android:layout_height="0.0dp" android:layout_weight="0.26" />
+            </LinearLayout>
+            <Space android:layout_width="0.0dp" android:layout_height="match_parent" android:layout_weight="0.04" />
+        </LinearLayout>
+        <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="0.0dp" android:layout_weight="0.61">
+            <Space android:layout_width="0.0dp" android:layout_height="match_parent" android:layout_weight="0.039" />
+            <LinearLayout android:orientation="horizontal" android:layout_width="0.0dp" android:layout_height="match_parent" android:layout_weight="0.706">
+                <LinearLayout android:id="@id/lil_live" android:orientation="horizontal" android:gravity="center" android:background="@drawable/menu_selector" android:focusable="true" android:clickable="true" android:layout_width="0.0dp" android:layout_height="match_parent" android:layout_weight="1.0" />
+                <Space android:layout_width="0.0dp" android:layout_height="match_parent" android:layout_weight="0.06" />
+                <LinearLayout android:id="@id/lil_movies" android:orientation="horizontal" android:gravity="center" android:background="@drawable/menu_selector" android:focusable="true" android:clickable="true" android:layout_width="0.0dp" android:layout_height="match_parent" android:layout_weight="1.0" />
+                <Space android:layout_width="0.0dp" android:layout_height="match_parent" android:layout_weight="0.06" />
+                <LinearLayout android:id="@id/lil_series" android:orientation="horizontal" android:gravity="center" android:background="@drawable/menu_selector" android:focusable="true" android:clickable="true" android:layout_width="0.0dp" android:layout_height="match_parent" android:layout_weight="1.0" />
+            </LinearLayout>
+            <Space android:layout_width="0.0dp" android:layout_height="match_parent" android:layout_weight="0.017" />
+            <LinearLayout android:orientation="vertical" android:layout_width="0.0dp" android:layout_height="match_parent" android:layout_weight="0.207">
+                <LinearLayout android:id="@id/lil_ondemand" android:orientation="vertical" android:gravity="center" android:background="@drawable/menu_selector" android:focusable="true" android:clickable="true" android:layout_width="match_parent" android:layout_height="0.0dp" android:layout_weight="1.0" />
+                <Space android:layout_width="match_parent" android:layout_height="0.0dp" android:layout_weight="0.16" />
+                <Space android:layout_width="match_parent" android:layout_height="0.0dp" android:layout_weight="1.0" />
+                <Space android:layout_width="match_parent" android:layout_height="0.0dp" android:layout_weight="0.16" />
+                <LinearLayout android:id="@id/lil_sync" android:orientation="vertical" android:gravity="center" android:background="@drawable/menu_selector" android:focusable="true" android:clickable="true" android:layout_width="match_parent" android:layout_height="0.0dp" android:layout_weight="1.0" />
+            </LinearLayout>
+            <Space android:layout_width="0.0dp" android:layout_height="match_parent" android:layout_weight="0.031" />
+        </LinearLayout>
+        <Space android:layout_width="match_parent" android:layout_height="0.0dp" android:layout_weight="0.205" />
+    </LinearLayout>
+    <ImageView android:id="@id/background_image" android:visibility="gone" android:layout_width="1.0dp" android:layout_height="1.0dp" />
+    <androidx.slidingpanelayout.widget.SlidingPaneLayout android:id="@id/sliding_pane" android:visibility="gone" android:layout_width="1.0dp" android:layout_height="1.0dp">
+        <FrameLayout android:layout_width="1.0dp" android:layout_height="1.0dp" />
+        <FrameLayout android:layout_width="1.0dp" android:layout_height="1.0dp" />
+    </androidx.slidingpanelayout.widget.SlidingPaneLayout>
+    <ImageView android:id="@id/logo_imageView" android:visibility="gone" android:layout_width="1.0dp" android:layout_height="1.0dp" />
+    <TextView android:id="@id/account_valid" android:visibility="invisible" android:layout_width="1.0dp" android:layout_height="1.0dp" android:textColor="#00000000" />
+    <androidx.constraintlayout.widget.Guideline android:id="@id/guideline" android:visibility="gone" android:layout_width="0.0dp" android:layout_height="0.0dp" />
+    <androidx.recyclerview.widget.RecyclerView android:id="@id/rv_latest_movies" android:visibility="gone" android:layout_width="1.0dp" android:layout_height="1.0dp" />
+    <androidx.recyclerview.widget.RecyclerView android:id="@id/rv_latest_series" android:visibility="gone" android:layout_width="1.0dp" android:layout_height="1.0dp" />
+    <LinearLayout android:id="@id/messages_layout" android:orientation="vertical" android:visibility="gone" android:background="#cc05091e" android:padding="8.0dp" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <TextView android:id="@id/messages_txt_view" android:textColor="#ffffffff" android:gravity="center" android:layout_width="match_parent" android:layout_height="wrap_content" />
+    </LinearLayout>
+</FrameLayout>
