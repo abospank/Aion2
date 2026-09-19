@@ -36,6 +36,21 @@ jobs:
           curl -fL --retry 3 -o /tmp/apktool.jar \
             https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
 
+      - name: Fix legacy Nine-Patch resources
+        shell: bash
+        run: |
+          set -euxo pipefail
+          for f in \
+            res/drawable-hdpi/abc_menu_hardkey_panel_mtrl_mult.9.png \
+            res/drawable-hdpi/abc_popup_background_mtrl_mult.9.png \
+            res/drawable-xxhdpi/abc_menu_hardkey_panel_mtrl_mult.9.png \
+            res/drawable-xxhdpi/abc_popup_background_mtrl_mult.9.png
+          do
+            if [ -f "$f" ]; then
+              mv "$f" "${f/.9.png/.png}"
+            fi
+          done
+
       - name: Build APK
         run: java -jar /tmp/apktool.jar b . -o /tmp/aion2-unsigned.apk
 
