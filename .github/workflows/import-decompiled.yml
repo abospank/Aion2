@@ -32,9 +32,8 @@ jobs:
         run: |
           set -euxo pipefail
           cd "$GITHUB_WORKSPACE"
-          rsync -a --exclude='.git/' --exclude='transfer/' /tmp/aion2-import/ "$GITHUB_WORKSPACE"/
+          rsync -a --exclude='.git/' --exclude='.github/' --exclude='transfer/' /tmp/aion2-import/ "$GITHUB_WORKSPACE"/
           rm -rf transfer
-          rm -f .github/workflows/import-decompiled.yml
 
       - name: Commit decompiled project
         shell: bash
