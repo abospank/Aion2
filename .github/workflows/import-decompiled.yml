@@ -30,7 +30,7 @@ jobs:
         shell: bash
         run: |
           set -euxo pipefail
-          rsync -a --delete-excluded --exclude='.git/' --exclude='transfer/' /tmp/aion2-import/ ./
+          rsync -a --exclude='.git/' --exclude='transfer/' /tmp/aion2-import/ ./
           rm -rf transfer
           rm -f .github/workflows/import-decompiled.yml
 
