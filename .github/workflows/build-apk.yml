@@ -50,6 +50,9 @@ jobs:
               mv "$f" "${f/.9.png/.png}"
             fi
           done
+          sed -i 's|android:drawable="#ff040405"|android:drawable="@android:color/black"|g' \
+            res/mipmap-anydpi-v26/ic_launcher.xml \
+            res/mipmap-anydpi-v26/ic_launcher_round.xml
 
       - name: Build APK
         run: java -jar /tmp/apktool.jar b . -o /tmp/aion2-unsigned.apk
