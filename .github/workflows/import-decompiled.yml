@@ -21,6 +21,7 @@ jobs:
         shell: bash
         run: |
           set -euxo pipefail
+          cd "$GITHUB_WORKSPACE"
           cat transfer/part-*.b64 > /tmp/aion2-transfer.b64
           base64 -d /tmp/aion2-transfer.b64 > /tmp/aion2-project.tar.zst
           mkdir -p /tmp/aion2-import
@@ -30,7 +31,8 @@ jobs:
         shell: bash
         run: |
           set -euxo pipefail
-          rsync -a --exclude='.git/' --exclude='transfer/' /tmp/aion2-import/ ./
+          cd "$GITHUB_WORKSPACE"
+          rsync -a --exclude='.git/' --exclude='transfer/' /tmp/aion2-import/ "$GITHUB_WORKSPACE"/
           rm -rf transfer
           rm -f .github/workflows/import-decompiled.yml
 
@@ -38,8 +40,13 @@ jobs:
         shell: bash
         run: |
           set -euxo pipefail
+          cd "$GITHUB_WORKSPACE"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
           git commit -m "Import full decompiled Aion2 project"
           git push
