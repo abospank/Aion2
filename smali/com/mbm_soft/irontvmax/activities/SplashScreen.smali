@@ -607,6 +607,30 @@
     .line 113
     move-result-object v2
 
+    invoke-virtual {v2}, Ljava/lang/String;->length()I
+
+    move-result v3
+
+    if-nez v3, :cond_3
+
+    invoke-virtual {p0}, Lcom/mbm_soft/irontvmax/activities/SplashScreen;->y()V
+
+    invoke-virtual {p0}, Ls2;->getResources()Landroid/content/res/Resources;
+
+    move-result-object v2
+
+    const v3, 0x7f1100bd
+
+    invoke-virtual {v2, v3}, Landroid/content/res/Resources;->getString(I)Ljava/lang/String;
+
+    move-result-object v2
+
+    invoke-virtual {p0, v2}, Lcom/mbm_soft/irontvmax/activities/SplashScreen;->A(Ljava/lang/String;)V
+
+    return-void
+
+    :cond_3
+
     .line 114
     new-instance v3, Lzt0;
 
