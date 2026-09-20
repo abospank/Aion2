@@ -1,9 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout android:background="@drawable/app_bg" android:layout_width="match_parent" android:layout_height="match_parent"
-  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-    <FrameLayout android:layout_width="0.0dp" android:layout_height="0.0dp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent">
-        <ImageView android:id="@id/background_image" android:background="@color/semi_transparent" android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="fitXY" />
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:background="@drawable/app_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <ImageView
+            android:id="@id/background_image"
+            android:background="@color/semi_transparent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"/>
     </FrameLayout>
-    <com.google.android.material.navigation.NavigationView android:id="@id/settings_navigation" android:background="@color/transparent_title_bg" android:layout_width="@dimen/_120sdp" android:layout_height="0.0dp" android:layout_marginTop="@dimen/_30sdp" android:layout_marginBottom="@dimen/_30sdp" android:layout_marginStart="@dimen/_30sdp" app:itemBackground="@drawable/nav_item_drawable" app:itemIconTint="@color/white_color" app:itemTextAppearance="@style/MediumTextViewItem" app:itemTextColor="@color/white_color" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" app:menu="@menu/settings_nav" />
-    <FrameLayout android:id="@id/fragment_container" android:background="@color/transparent_title_bg" android:layout_width="0.0dp" android:layout_height="0.0dp" android:layout_marginTop="@dimen/_30sdp" android:layout_marginBottom="@dimen/_30sdp" android:layout_marginStart="0.0dp" android:layout_marginEnd="@dimen/_30sdp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toEndOf="@id/settings_navigation" app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@id/settings_navigation"
+        android:background="@color/transparent_title_bg"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintWidth_percent="0.253"
+        app:itemBackground="@drawable/nav_item_drawable"
+        app:itemIconTint="@color/white_color"
+        app:itemTextAppearance="@style/MediumTextViewItem"
+        app:itemTextColor="@color/white_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:menu="@menu/settings_nav"/>
+
+    <FrameLayout
+        android:id="@id/fragment_container"
+        android:background="@color/transparent_title_bg"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/settings_navigation"
+        app:layout_constraintTop_toTopOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
