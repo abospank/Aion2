@@ -35,7 +35,6 @@ jobs:
               scripts/assets/home_bg_lossless_part2.txt \
               scripts/assets/home_bg_lossless_part3.txt \
               scripts/assets/home_bg_lossless_part4.txt \
-            | tr -d '\\r\\n' \
             | base64 --decode > /tmp/app_bg.webp
 
           python - <<'PY'
