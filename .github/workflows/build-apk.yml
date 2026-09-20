@@ -14,6 +14,7 @@ on:
       - "unknown/**"
       - "original/**"
       - "scripts/**"
+      - "inject-src/**"
       - ".github/workflows/build-apk.yml"
 
 permissions:
@@ -55,6 +56,42 @@ jobs:
           distribution: temurin
           java-version: "17"
 
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.10.2"
+
+      - name: Apply imported AION GOLD FILMS library
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python3 scripts/patch_films_remove_inner_poster_border.py
+          python3 scripts/patch_films_library_approved_preview.py
+          python3 scripts/patch_films_library_professional_chrome.py
+          python3 scripts/patch_films_sort_newest_first.py
+          python3 scripts/patch_films_library_performance.py
+          python3 scripts/patch_films_poster_placeholder_logo.py
+          python3 scripts/patch_films_details_polish_v2.py
+          python3 scripts/patch_films_details_reference_layout.py
+          python3 scripts/patch_films_details_final_shading_spacing.py
+          python3 scripts/patch_films_details_screen.py
+          python3 scripts/patch_films_category_pointer_sync.py
+          python3 scripts/patch_films_footer_clean_black_v3.py
+          python3 scripts/patch_films_unify_frame_gold.py
+          python3 scripts/patch_films_poster_edge_motion.py
+
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("inject-src/com/irontvgold/app/MovieLibraryActivity.java")
+          s = p.read_text(encoding="utf-8")
+          old = "new Intent(MovieLibraryActivity.this, LiveTvActivity.class)"
+          new = 'new Intent().setClassName(MovieLibraryActivity.this, "com.mbm_soft.irontvmax.activities.LiveActivityVlc")'
+          if old in s:
+              s = s.replace(old, new)
+          p.write_text(s, encoding="utf-8")
+          print("FILMS footer LIVE TV routed to Aion2 LiveActivityVlc")
+          PY
+
       - name: Download apktool
         run: |
           curl -fL --retry 3 -o /tmp/apktool.jar \
@@ -78,8 +115,65 @@ jobs:
             res/mipmap-anydpi-v26/ic_launcher.xml \
             res/mipmap-anydpi-v26/ic_launcher_round.xml
 
+      - name: Resolve FILMS VLC compile dependency
+        shell: bash
+        run: |
+          set -euxo pipefail
+          rm -rf /tmp/films-gradle /tmp/films-deps /tmp/films-aar
+          mkdir -p /tmp/films-gradle /tmp/films-deps
+          cat > /tmp/films-gradle/build.gradle <<'EOF'
+          import org.gradle.api.attributes.java.TargetJvmEnvironment
+          repositories {
+            google()
+            mavenCentral()
+          }
+          configurations {
+            films {
+              attributes {
+                attribute(TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE,
+                          objects.named(TargetJvmEnvironment, TargetJvmEnvironment.ANDROID))
+              }
+            }
+          }
+          dependencies {
+            films("org.videolan.android:libvlc-all:3.5.1")
+          }
+          tasks.register("copyFilmsDeps", Copy) {
+            from(configurations.films)
+            into("/tmp/films-deps")
+          }
+          EOF
+          echo "rootProject.name='aion2-films-port'" > /tmp/films-gradle/settings.gradle
+          gradle -p /tmp/films-gradle --no-daemon copyFilmsDeps
+          AAR="$(find /tmp/films-deps -maxdepth 1 -type f -name '*.aar' | head -1)"
+          test -n "$AAR"
+          mkdir -p /tmp/films-aar
+          unzip -q "$AAR" -d /tmp/films-aar
+          test -f /tmp/films-aar/classes.jar
+
+      - name: Compile imported FILMS library
+        shell: bash
+        run: |
+          set -euxo pipefail
+          BUILD_TOOLS="$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)"
+          PLATFORM="$ANDROID_HOME/platforms/android-35/android.jar"
+          test -f "$PLATFORM"
+          test -x "$BUILD_TOOLS/d8"
+          rm -rf /tmp/films-classes /tmp/films-dex
+          mkdir -p /tmp/films-classes /tmp/films-dex
+          javac -source 8 -target 8 -Xlint:-options             -cp "$PLATFORM:/tmp/films-aar/classes.jar"             -d /tmp/films-classes             inject-src/com/irontvgold/app/MovieLibraryActivity.java             inject-src/com/irontvgold/app/VlcFullscreenActivity.java
+          "$BUILD_TOOLS/d8"             --lib "$PLATFORM"             --lib /tmp/films-aar/classes.jar             --min-api 23             --output /tmp/films-dex             $(find /tmp/films-classes -type f -name '*.class' -print)
+          test -f /tmp/films-dex/classes.dex
+          mv /tmp/films-dex/classes.dex /tmp/films-dex/classes2.dex
+
       - name: Build APK
-        run: java -jar /tmp/apktool.jar b . -o /tmp/aion2-unsigned.apk
+        shell: bash
+        run: |
+          set -euxo pipefail
+          java -jar /tmp/apktool.jar b . -o /tmp/aion2-unsigned.apk
+          zip -q -d /tmp/aion2-unsigned.apk classes2.dex || true
+          zip -q -j /tmp/aion2-unsigned.apk /tmp/films-dex/classes2.dex
+          unzip -l /tmp/aion2-unsigned.apk | grep -q 'classes2.dex'
 
       - name: Align and sign
         shell: bash
