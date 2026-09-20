@@ -73,6 +73,13 @@
     .line 23
     move-result p2
 
+    invoke-static {p1, p2}, Lcom/irontvgold/app/SettingsExtraActions;->handle(Landroid/app/Activity;I)Z
+    move-result v2
+    if-eqz v2, :aion_existing_settings
+    const/4 v0, 0x1
+    return v0
+
+    :aion_existing_settings
     .line 24
     const/4 v2, 0x0
 
