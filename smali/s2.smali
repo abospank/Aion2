@@ -1148,8 +1148,6 @@
 
     invoke-virtual {v0, p1}, La3;->r(I)V
 
-    invoke-static {p0}, Lcom/irontvgold/app/SettingsExtraActions;->applyCategoryPreference(Landroid/app/Activity;)V
-
     return-void
 .end method
 
@@ -1164,8 +1162,6 @@
 
     invoke-virtual {v0, p1}, La3;->s(Landroid/view/View;)V
 
-    invoke-static {p0}, Lcom/irontvgold/app/SettingsExtraActions;->applyCategoryPreference(Landroid/app/Activity;)V
-
     return-void
 .end method
 
@@ -1179,8 +1175,6 @@
     move-result-object v0
 
     invoke-virtual {v0, p1, p2}, La3;->t(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
-
-    invoke-static {p0}, Lcom/irontvgold/app/SettingsExtraActions;->applyCategoryPreference(Landroid/app/Activity;)V
 
     return-void
 .end method

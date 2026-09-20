@@ -208,13 +208,10 @@
     <string name="wrong_old_password">L’ancien mot de passe est incorrect.</string>
     <string name="language">Langue</string>
     <string name="hide_categories">Masquer les catégories</string>
-    <string name="show_categories">Afficher les catégories</string>
     <string name="clear_history">Effacer l’historique</string>
     <string name="categories_hidden">Catégories masquées</string>
     <string name="categories_shown">Catégories visibles</string>
     <string name="history_cleared">Historique effacé</string>
-    <string name="clear_history_confirm">Effacer l’historique et les positions de reprise de lecture ?</string>
-    <string name="confirm">Confirmer</string>
     <string name="last_update_now">Dernière mise à jour : maintenant</string>
     <string name="direct_with_epg">Direct avec EPG</string>
     <string name="multi_screen">Multi-écran</string>

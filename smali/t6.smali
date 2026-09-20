@@ -34,8 +34,6 @@
 
     move-result-object p1
 
-    invoke-static {p1}, Lcom/irontvgold/app/SettingsExtraActions;->applyCategoryPreference(Landroid/view/View;)V
-
     invoke-static {p1, p0}, Lbutterknife/ButterKnife;->a(Landroid/view/View;Ljava/lang/Object;)Lbutterknife/Unbinder;
 
     move-result-object p2
