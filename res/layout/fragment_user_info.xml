@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingStart="22dp"
-    android:paddingEnd="34dp"
-    android:paddingTop="40dp"
-    android:paddingBottom="24dp">
+    android:paddingStart="10dp"
+    android:paddingEnd="26dp"
+    android:paddingTop="24dp"
+    android:paddingBottom="18dp">
 
     <TextView
         android:id="@id/dialog_title"
@@ -15,19 +15,37 @@
         android:layout_height="wrap_content"
         android:text="@string/account_info"
         android:textColor="@color/white_color"
-        android:textSize="30sp"
+        android:textSize="22sp"
         android:textStyle="bold" />
 
-    <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginTop="8dp" android:background="#6CB27818"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="7dp"
+        android:background="#6CB27818"/>
 
     <LinearLayout
         android:id="@id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="50dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
-        <TextView android:layout_width="330dp" android:layout_height="match_parent" android:gravity="start|center_vertical" android:text="@string/account_user" android:textColor="@color/white_color" android:textSize="20sp"/>
-        <TextView android:id="@id/tv_userCode" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="start|center_vertical" android:singleLine="true" android:textColor="@color/white_color" android:textSize="20sp"/>
+        <TextView
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:gravity="start|center_vertical"
+            android:text="@string/account_user"
+            android:textColor="@color/white_color"
+            android:textSize="16sp"/>
+        <TextView
+            android:id="@id/tv_userCode"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="start|center_vertical"
+            android:singleLine="true"
+            android:textColor="@color/white_color"
+            android:textSize="16sp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -36,7 +54,7 @@
         android:layout_height="0dp"
         android:visibility="gone"
         android:orientation="horizontal">
-        <TextView android:layout_width="330dp" android:layout_height="wrap_content" android:text="@string/create_date"/>
+        <TextView android:layout_width="250dp" android:layout_height="wrap_content" android:text="@string/create_date"/>
         <TextView android:id="@id/tv_createDate" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
     </LinearLayout>
 
@@ -45,11 +63,24 @@
     <LinearLayout
         android:id="@id/linearLayout3"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="50dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
-        <TextView android:layout_width="330dp" android:layout_height="match_parent" android:gravity="start|center_vertical" android:text="@string/expire_date" android:textColor="@color/white_color" android:textSize="20sp"/>
-        <TextView android:id="@id/tv_expireDate" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="start|center_vertical" android:textColor="@color/white_color" android:textSize="20sp"/>
+        <TextView
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:gravity="start|center_vertical"
+            android:text="@string/expire_date"
+            android:textColor="@color/white_color"
+            android:textSize="16sp"/>
+        <TextView
+            android:id="@id/tv_expireDate"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="start|center_vertical"
+            android:textColor="@color/white_color"
+            android:textSize="16sp"/>
     </LinearLayout>
 
     <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#3CB27818"/>
@@ -57,24 +88,41 @@
     <LinearLayout
         android:id="@id/linearLayout4"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="50dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
-        <TextView android:layout_width="330dp" android:layout_height="match_parent" android:gravity="start|center_vertical" android:text="@string/is_trial" android:textColor="@color/white_color" android:textSize="20sp"/>
-        <TextView android:id="@id/tv_isTrial" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="start|center_vertical" android:textColor="@color/white_color" android:textSize="20sp"/>
+        <TextView
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:gravity="start|center_vertical"
+            android:text="@string/is_trial"
+            android:textColor="@color/white_color"
+            android:textSize="16sp"/>
+        <TextView
+            android:id="@id/tv_isTrial"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="start|center_vertical"
+            android:textColor="@color/white_color"
+            android:textSize="16sp"/>
     </LinearLayout>
 
     <TextView
         android:id="@id/dialog_app"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="4dp"
         android:text="@string/app_info"
         android:textColor="@color/white_color"
-        android:textSize="30sp"
+        android:textSize="22sp"
         android:textStyle="bold" />
 
-    <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginTop="8dp" android:background="#6CB27818"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="7dp"
+        android:background="#6CB27818"/>
 
     <LinearLayout
         android:id="@id/linearLayout5"
@@ -82,17 +130,29 @@
         android:layout_height="0dp"
         android:visibility="gone"
         android:orientation="horizontal">
-        <TextView android:layout_width="330dp" android:layout_height="wrap_content" android:text="@string/mac_address"/>
+        <TextView android:layout_width="250dp" android:layout_height="wrap_content" android:text="@string/mac_address"/>
         <TextView android:id="@id/tv_macAddress" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="50dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
-        <TextView android:layout_width="330dp" android:layout_height="match_parent" android:gravity="start|center_vertical" android:text="@string/version" android:textColor="@color/white_color" android:textSize="20sp"/>
-        <TextView android:id="@id/tv_version" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="start|center_vertical" android:textColor="@color/white_color" android:textSize="20sp"/>
+        <TextView
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:gravity="start|center_vertical"
+            android:text="@string/version"
+            android:textColor="@color/white_color"
+            android:textSize="16sp"/>
+        <TextView
+            android:id="@id/tv_version"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="start|center_vertical"
+            android:textColor="@color/white_color"
+            android:textSize="16sp"/>
     </LinearLayout>
-
 </LinearLayout>
