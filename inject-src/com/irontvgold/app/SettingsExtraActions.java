@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.view.MenuItem;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +16,15 @@ import java.lang.reflect.Method;
 import java.util.Locale;
 
 public final class SettingsExtraActions {
+    private static final String[] SETTINGS_ITEMS = new String[]{
+        "menu_user_info",
+        "menu_user_settings",
+        "menu_player",
+        "menu_language",
+        "menu_hide_categories",
+        "menu_clear_history"
+    };
+
     private SettingsExtraActions() {}
 
     public static void attachItem(final View item) {
@@ -24,30 +33,30 @@ public final class SettingsExtraActions {
         final int itemId = item.getId();
         if (!isSettingsItem(context, itemId)) return;
 
-        item.setOnHoverListener(new View.OnHoverListener() {
-            @Override public boolean onHover(View v, MotionEvent event) {
-                int action = event.getActionMasked();
-                if (action == MotionEvent.ACTION_HOVER_ENTER || action == MotionEvent.ACTION_HOVER_MOVE) {
-                    markCheckedFromItem(v);
-                }
-                return false;
-            }
-        });
+        prepareFocusableRow(item);
         item.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) markCheckedFromItem(v);
+                if (hasFocus) markCheckedFromItem(item);
             }
         });
+        attachPointerTree(null, item, item);
     }
 
     private static boolean isSettingsItem(Context context, int itemId) {
         if (context == null || itemId == 0) return false;
-        return itemId == id(context, "menu_user_info")
-            || itemId == id(context, "menu_user_settings")
-            || itemId == id(context, "menu_player")
-            || itemId == id(context, "menu_language")
-            || itemId == id(context, "menu_hide_categories")
-            || itemId == id(context, "menu_clear_history");
+        for (String name : SETTINGS_ITEMS) {
+            if (itemId == id(context, name)) return true;
+        }
+        return false;
+    }
+
+    private static void prepareFocusableRow(View item) {
+        item.setFocusable(true);
+        item.setFocusableInTouchMode(true);
+        item.setClickable(true);
+        if (item instanceof ViewGroup) {
+            ((ViewGroup) item).setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        }
     }
 
     private static void markCheckedFromItem(View item) {
@@ -70,42 +79,129 @@ public final class SettingsExtraActions {
         if (activity == null) return;
         final View nav = activity.findViewById(id(activity, "settings_navigation"));
         if (nav == null) return;
-        nav.post(new Runnable() {
+
+        Runnable binder = new Runnable() {
             @Override public void run() {
-                attachHover(activity, nav);
+                bindNavigation(activity, nav);
             }
-        });
+        };
+
+        nav.post(binder);
+        nav.postDelayed(binder, 120L);
+        nav.postDelayed(binder, 400L);
+        nav.postDelayed(binder, 900L);
     }
 
-    private static void attachHover(final Activity activity, View view) {
-        if (view == null) return;
-        int vid = view.getId();
-        if (isSettingsItem(activity, vid)) {
-            view.setOnHoverListener(new View.OnHoverListener() {
-                @Override public boolean onHover(View v, MotionEvent event) {
-                    int action = event.getActionMasked();
-                    if (action == MotionEvent.ACTION_HOVER_ENTER || action == MotionEvent.ACTION_HOVER_MOVE) {
-                        markChecked(activity, v.getId());
-                    }
-                    return false;
+    private static void bindNavigation(final Activity activity, final View nav) {
+        final int[] itemIds = new int[SETTINGS_ITEMS.length];
+        final View[] rows = new View[SETTINGS_ITEMS.length];
+
+        for (int i = 0; i < SETTINGS_ITEMS.length; i++) {
+            itemIds[i] = id(activity, SETTINGS_ITEMS[i]);
+            if (itemIds[i] != 0) rows[i] = nav.findViewById(itemIds[i]);
+        }
+
+        for (int i = 0; i < rows.length; i++) {
+            final int index = i;
+            final View row = rows[i];
+            if (row == null) continue;
+
+            prepareFocusableRow(row);
+
+            int previous = nearestRowId(rows, index, -1);
+            int next = nearestRowId(rows, index, 1);
+            row.setNextFocusUpId(previous != 0 ? previous : row.getId());
+            row.setNextFocusDownId(next != 0 ? next : row.getId());
+
+            row.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override public void onFocusChange(View v, boolean hasFocus) {
+                    if (hasFocus) markChecked(activity, row.getId());
                 }
             });
+
+            row.setOnKeyListener(new View.OnKeyListener() {
+                @Override public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    boolean up = keyCode == KeyEvent.KEYCODE_DPAD_UP;
+                    boolean down = keyCode == KeyEvent.KEYCODE_DPAD_DOWN;
+                    boolean select = keyCode == KeyEvent.KEYCODE_DPAD_CENTER
+                        || keyCode == KeyEvent.KEYCODE_ENTER
+                        || keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER;
+
+                    if (!up && !down && !select) return false;
+
+                    if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                        if (up) {
+                            moveFocus(activity, rows, index, -1);
+                        } else if (down) {
+                            moveFocus(activity, rows, index, 1);
+                        } else {
+                            markChecked(activity, row.getId());
+                            row.performClick();
+                        }
+                    }
+                    return true;
+                }
+            });
+
+            attachPointerTree(activity, row, row);
         }
+    }
+
+    private static int nearestRowId(View[] rows, int from, int direction) {
+        int i = from + direction;
+        while (i >= 0 && i < rows.length) {
+            if (rows[i] != null) return rows[i].getId();
+            i += direction;
+        }
+        return 0;
+    }
+
+    private static void moveFocus(Activity activity, View[] rows, int from, int direction) {
+        int i = from + direction;
+        while (i >= 0 && i < rows.length) {
+            View target = rows[i];
+            if (target != null && target.getVisibility() == View.VISIBLE && target.isEnabled()) {
+                target.requestFocus();
+                markChecked(activity, target.getId());
+                return;
+            }
+            i += direction;
+        }
+    }
+
+    private static void attachPointerTree(final Activity activity, View view, final View row) {
+        if (view == null || row == null) return;
+
+        view.setOnHoverListener(new View.OnHoverListener() {
+            @Override public boolean onHover(View v, MotionEvent event) {
+                int action = event.getActionMasked();
+                if (action == MotionEvent.ACTION_HOVER_ENTER || action == MotionEvent.ACTION_HOVER_MOVE) {
+                    row.setHovered(true);
+                    if (activity != null) markChecked(activity, row.getId());
+                    else markCheckedFromItem(row);
+                } else if (action == MotionEvent.ACTION_HOVER_EXIT) {
+                    row.setHovered(false);
+                }
+                return false;
+            }
+        });
+
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override public boolean onTouch(View v, MotionEvent event) {
+                if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                    if (activity != null) markChecked(activity, row.getId());
+                    else markCheckedFromItem(row);
+                }
+                return false;
+            }
+        });
+
         if (view instanceof ViewGroup) {
             ViewGroup group = (ViewGroup) view;
             for (int i = 0; i < group.getChildCount(); i++) {
-                attachHover(activity, group.getChildAt(i));
+                attachPointerTree(activity, group.getChildAt(i), row);
             }
         }
-    }
-
-    private static boolean isSettingsItem(Activity activity, int itemId) {
-        return itemId == id(activity, "menu_user_info")
-            || itemId == id(activity, "menu_user_settings")
-            || itemId == id(activity, "menu_player")
-            || itemId == id(activity, "menu_language")
-            || itemId == id(activity, "menu_hide_categories")
-            || itemId == id(activity, "menu_clear_history");
     }
 
     private static void markChecked(Activity activity, int itemId) {
@@ -114,6 +210,7 @@ public final class SettingsExtraActions {
             if (nav != null) {
                 Method m = nav.getClass().getMethod("setCheckedItem", int.class);
                 m.invoke(nav, Integer.valueOf(itemId));
+                nav.invalidate();
             }
         } catch (Throwable ignored) {}
     }
