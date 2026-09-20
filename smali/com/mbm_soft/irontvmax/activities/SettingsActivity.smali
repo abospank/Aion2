@@ -127,6 +127,8 @@
     .line 53
     invoke-virtual {p1, v0}, Lcom/google/android/material/navigation/NavigationView;->setNavigationItemSelectedListener(Lcom/google/android/material/navigation/NavigationView$a;)V
 
+    invoke-static {p0}, Lcom/irontvgold/app/SettingsExtraActions;->install(Landroid/app/Activity;)V
+
     .line 54
     .line 55
     .line 56
