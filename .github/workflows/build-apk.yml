@@ -96,6 +96,10 @@ jobs:
           )
           s = s.replace('intent.putExtra("url", movieUrl);', 'intent.putExtra("link", movieUrl);')
           s = s.replace(
+              'intent.putExtra("title", movie.name);',
+              'intent.putExtra("title", movie.name);\n        intent.putExtra("vod_id", movie.id);'
+          )
+          s = s.replace(
               'intent.putExtra("title", movieName);',
               'intent.putExtra("name", movieName);\n'
               '        intent.putExtra("image", posterUrl);\n'
@@ -186,7 +190,7 @@ jobs:
           test -x "$BUILD_TOOLS/d8"
           rm -rf /tmp/films-classes /tmp/films-dex
           mkdir -p /tmp/films-classes /tmp/films-dex
-          javac -source 8 -target 8 -Xlint:-options             -cp "$PLATFORM"             -d /tmp/films-classes             inject-src/com/irontvgold/app/MovieLibraryActivity.java
+          javac -source 8 -target 8 -Xlint:-options             -cp "$PLATFORM"             -d /tmp/films-classes             inject-src/com/irontvgold/app/MovieLibraryActivity.java             inject-src/com/irontvgold/app/AionMoviePlayerOverlay.java
           "$BUILD_TOOLS/d8"             --lib "$PLATFORM"             --lib /tmp/films-aar/classes.jar             --min-api 23             --output /tmp/films-dex             $(find /tmp/films-classes -type f -name '*.class' -print)
           test -f /tmp/films-dex/classes.dex
           mv /tmp/films-dex/classes.dex /tmp/films-dex/classes2.dex
