@@ -1716,6 +1716,22 @@
     .line 394
     invoke-virtual {v0, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
 
+    const-string v0, "username"
+
+    invoke-static {v0}, Lgu;->b(Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Ljava/lang/String;->length()I
+
+    move-result v0
+
+    if-nez v0, :cond_12
+
+    invoke-virtual {p0}, Lcom/mbm_soft/irontvmax/activities/SplashScreen;->y()V
+
+    :cond_12
+
     .line 395
     .line 396
     .line 397
