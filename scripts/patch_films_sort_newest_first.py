@@ -1,0 +1,17 @@
+from pathlib import Path
+
+p = Path('inject-src/com/irontvgold/app/MovieLibraryActivity.java')
+s = p.read_text(encoding='utf-8')
+
+# Ordering-only patch for the FILMS library.
+# No layout, dimensions, styling, focus, poster rendering, or navigation code is changed.
+old = '''    private ArrayList<Movie> fetchVodMovies() throws Exception {\n        JSONArray arr = new JSONArray(httpGet(apiUrl("get_vod_streams", "")));\n        ArrayList<Movie> out = new ArrayList<Movie>();\n        for (int i = 0; i < arr.length(); i++) {\n            JSONObject o = arr.optJSONObject(i);\n            if (o == null) continue;\n            long id = o.optLong("stream_id", -1);\n            if (id < 0) continue;\n            String ext = o.optString("container_extension", "mp4");\n            if (TextUtils.isEmpty(ext)) ext = "mp4";\n            out.add(new Movie(\n                    String.valueOf(id),\n                    o.optString("name", "Film"),\n                    o.optString("category_id", ""),\n                    o.optString("stream_icon", ""),\n                    ext\n            ));\n        }\n        return out;\n    }'''
+
+new = '''    private ArrayList<Movie> fetchVodMovies() throws Exception {\n        JSONArray arr = new JSONArray(httpGet(apiUrl("get_vod_streams", "")));\n        final HashMap<String, Long> movieSortKeys = new HashMap<String, Long>();\n        ArrayList<Movie> out = new ArrayList<Movie>();\n        for (int i = 0; i < arr.length(); i++) {\n            JSONObject o = arr.optJSONObject(i);\n            if (o == null) continue;\n            long id = o.optLong("stream_id", -1);\n            if (id < 0) continue;\n            String movieId = String.valueOf(id);\n            long added = o.optLong("added", 0L);\n            movieSortKeys.put(movieId, added > 0L ? added : id);\n            String ext = o.optString("container_extension", "mp4");\n            if (TextUtils.isEmpty(ext)) ext = "mp4";\n            out.add(new Movie(\n                    movieId,\n                    o.optString("name", "Film"),\n                    o.optString("category_id", ""),\n                    o.optString("stream_icon", ""),\n                    ext\n            ));\n        }\n\n        // Stable deterministic order: newest server addition first.\n        // If `added` is missing, stream_id is used only as a fallback key.\n        java.util.Collections.sort(out, new java.util.Comparator<Movie>() {\n            @Override public int compare(Movie a, Movie b) {\n                Long aKeyObj = movieSortKeys.get(a.id);\n                Long bKeyObj = movieSortKeys.get(b.id);\n                long aKey = aKeyObj == null ? 0L : aKeyObj.longValue();\n                long bKey = bKeyObj == null ? 0L : bKeyObj.longValue();\n                if (aKey < bKey) return 1;\n                if (aKey > bKey) return -1;\n\n                long aId = 0L;\n                long bId = 0L;\n                try { aId = Long.parseLong(a.id); } catch (Exception ignored) {}\n                try { bId = Long.parseLong(b.id); } catch (Exception ignored) {}\n                if (aId < bId) return 1;\n                if (aId > bId) return -1;\n                return a.name.compareToIgnoreCase(b.name);\n            }\n        });\n        return out;\n    }'''
+
+if old not in s:
+    raise SystemExit('fetchVodMovies ordering anchor not found')
+
+s = s.replace(old, new, 1)
+p.write_text(s, encoding='utf-8')
+print('applied FILMS ordering only: newest added first, stream_id fallback; UI unchanged')
