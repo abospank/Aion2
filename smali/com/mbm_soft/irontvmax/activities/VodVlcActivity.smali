@@ -891,7 +891,7 @@
     .line 362
     .line 363
     .line 364
-    invoke-static {p0}, Lcom/irontvgold/app/AionMoviePlayerOverlay;->install(Landroid/app/Activity;)V
+    invoke-static {p0}, Lcom/irontvgold/app/AionNativeMovieControls;->install(Landroid/app/Activity;)V
 
     return-void
 .end method
@@ -1187,9 +1187,62 @@
 .end method
 
 .method public final v()V
-    .locals 0
+    .locals 4
 
-    invoke-static {p0}, Lcom/irontvgold/app/AionMoviePlayerOverlay;->show(Landroid/app/Activity;)V
+    iget-object v0, p0, Lcom/mbm_soft/irontvmax/activities/VodVlcActivity;->controlLayout:Landroidx/constraintlayout/widget/ConstraintLayout;
+
+    invoke-virtual {v0}, Landroid/view/View;->getVisibility()I
+
+    move-result v0
+
+    const/16 v1, 0x8
+
+    if-ne v0, v1, :cond_1
+
+    iget-object v0, p0, Lcom/mbm_soft/irontvmax/activities/VodVlcActivity;->controlLayout:Landroidx/constraintlayout/widget/ConstraintLayout;
+
+    const/4 v1, 0x0
+
+    invoke-virtual {v0, v1}, Landroid/view/View;->setVisibility(I)V
+
+    iget-object v0, p0, Lcom/mbm_soft/irontvmax/activities/VodVlcActivity;->btnPlay:Landroid/widget/Button;
+
+    invoke-virtual {v0}, Landroid/view/View;->getVisibility()I
+
+    move-result v0
+
+    if-nez v0, :cond_0
+
+    iget-object v0, p0, Lcom/mbm_soft/irontvmax/activities/VodVlcActivity;->btnPlay:Landroid/widget/Button;
+
+    goto :goto_0
+
+    :cond_0
+    iget-object v0, p0, Lcom/mbm_soft/irontvmax/activities/VodVlcActivity;->btnPause:Landroid/widget/Button;
+
+    :goto_0
+    invoke-virtual {v0}, Landroid/view/View;->requestFocus()Z
+
+    :cond_1
+    iget-object v0, p0, Lcom/mbm_soft/irontvmax/activities/VodVlcActivity;->C:Landroid/os/Handler;
+
+    iget-object v1, p0, Lcom/mbm_soft/irontvmax/activities/VodVlcActivity;->A:Lll0;
+
+    invoke-virtual {v0, v1}, Landroid/os/Handler;->removeCallbacks(Ljava/lang/Runnable;)V
+
+    new-instance v0, Lll0;
+
+    const/4 v1, 0x7
+
+    invoke-direct {v0, v1, p0}, Lll0;-><init>(ILjava/lang/Object;)V
+
+    iput-object v0, p0, Lcom/mbm_soft/irontvmax/activities/VodVlcActivity;->A:Lll0;
+
+    iget-object v1, p0, Lcom/mbm_soft/irontvmax/activities/VodVlcActivity;->C:Landroid/os/Handler;
+
+    const-wide/16 v2, 0x1f40
+
+    invoke-virtual {v1, v0, v2, v3}, Landroid/os/Handler;->postDelayed(Ljava/lang/Runnable;J)Z
 
     return-void
 .end method
