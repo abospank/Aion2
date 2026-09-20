@@ -660,4 +660,7 @@
     <id name="yes_button" />
     <id name="zero_corner_chip" />
     <id name="zoom" />
+    <id name="menu_language" />
+    <id name="menu_hide_categories" />
+    <id name="menu_clear_history" />
 </resources>

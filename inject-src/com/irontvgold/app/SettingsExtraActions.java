@@ -240,7 +240,12 @@ public final class SettingsExtraActions {
     }
 
     private static int id(Context context, String name) {
-        return context.getResources().getIdentifier(name, "id", context.getPackageName());
+        int resolved = context.getResources().getIdentifier(name, "id", context.getPackageName());
+        if (resolved != 0) return resolved;
+        if ("menu_language".equals(name)) return 0x7f0a0294;
+        if ("menu_hide_categories".equals(name)) return 0x7f0a0295;
+        if ("menu_clear_history".equals(name)) return 0x7f0a0296;
+        return 0;
     }
 
     private static void showLanguage(final Activity activity) {
