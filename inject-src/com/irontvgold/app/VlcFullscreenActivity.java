@@ -119,6 +119,7 @@ public class VlcFullscreenActivity extends Activity implements IVLCVout.Callback
 
     private void buildPlayerUi() {
         root = new FrameLayout(this);
+        root.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
         root.setBackgroundColor(Color.BLACK);
         root.setFocusable(true);
         root.setFocusableInTouchMode(true);
@@ -412,6 +413,7 @@ public class VlcFullscreenActivity extends Activity implements IVLCVout.Callback
         v.setText(text);
         v.setTextColor(color);
         v.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDisplayMetrics().heightPixels * sizeH);
+        v.setTextDirection(View.TEXT_DIRECTION_FIRST_STRONG);
         v.setGravity(gravity);
         v.setTypeface(Typeface.DEFAULT, bold ? Typeface.BOLD : Typeface.NORMAL);
         v.setIncludeFontPadding(false);

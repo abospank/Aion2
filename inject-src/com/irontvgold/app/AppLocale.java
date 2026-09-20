@@ -20,7 +20,11 @@ public final class AppLocale {
             Locale.setDefault(locale);
             Configuration config = new Configuration(context.getResources().getConfiguration());
             config.setLocale(locale);
-            config.setLayoutDirection(locale);
+            // The TV layouts use fixed artwork coordinates. Mirroring the whole
+            // screen for Arabic moves controls away from their artwork and makes
+            // the movie rails overlap. Keep geometry LTR; TextView bidi still
+            // renders Arabic text RTL.
+            config.setLayoutDirection(Locale.ENGLISH);
             return context.createConfigurationContext(config);
         } catch (Throwable ignored) {
             return context;
@@ -66,7 +70,7 @@ public final class AppLocale {
         if (resources == null) return;
         Configuration config = new Configuration(resources.getConfiguration());
         config.setLocale(locale);
-        config.setLayoutDirection(locale);
+        config.setLayoutDirection(Locale.ENGLISH);
         resources.updateConfiguration(config, resources.getDisplayMetrics());
     }
 }

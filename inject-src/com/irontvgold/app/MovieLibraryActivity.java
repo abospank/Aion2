@@ -146,6 +146,7 @@ public final class MovieLibraryActivity extends Activity {
 
     private void buildUi() {
         final FrameLayout root = new FrameLayout(this);
+        root.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
         GradientDrawable bg = new GradientDrawable(
                 GradientDrawable.Orientation.TL_BR,
                 new int[]{Color.rgb(8, 5, 1), Color.rgb(1, 2, 3), Color.rgb(7, 4, 1)});
@@ -207,6 +208,7 @@ public final class MovieLibraryActivity extends Activity {
         search = new EditText(this);
         search.setSingleLine(true);
         search.setHint("⌕  " + t("Search", "Rechercher", "بحث"));
+        search.setTextDirection(View.TEXT_DIRECTION_FIRST_STRONG);
         search.setHintTextColor(Color.rgb(220, 220, 220));
         search.setTextColor(Color.WHITE);
         search.setTextSize(TypedValue.COMPLEX_UNIT_PX, sh * 0.021f);
@@ -926,6 +928,7 @@ public final class MovieLibraryActivity extends Activity {
         v.setText(text);
         v.setTextColor(color);
         v.setTextSize(TypedValue.COMPLEX_UNIT_PX, sh * sizeH);
+        v.setTextDirection(View.TEXT_DIRECTION_FIRST_STRONG);
         v.setGravity(gravity);
         v.setTypeface(Typeface.DEFAULT, bold ? Typeface.BOLD : Typeface.NORMAL);
         v.setIncludeFontPadding(false);

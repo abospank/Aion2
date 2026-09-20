@@ -133,6 +133,7 @@ public final class MovieDetailsActivity extends Activity {
 
     private void buildUi() {
         final FrameLayout root = new FrameLayout(this);
+        root.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
         root.setBackgroundColor(Color.BLACK);
         setContentView(root);
 
@@ -751,6 +752,7 @@ public final class MovieDetailsActivity extends Activity {
         v.setText(text);
         v.setTextColor(color);
         v.setTextSize(TypedValue.COMPLEX_UNIT_PX, sh * sizeH);
+        v.setTextDirection(View.TEXT_DIRECTION_FIRST_STRONG);
         v.setGravity(gravity);
         v.setTypeface(Typeface.DEFAULT, bold ? Typeface.BOLD : Typeface.NORMAL);
         v.setIncludeFontPadding(false);

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout android:layout_width="match_parent" android:layout_height="match_parent" android:background="#00000000"
+<FrameLayout android:layout_width="match_parent" android:layout_height="match_parent" android:background="#00000000" android:layoutDirection="ltr"
   xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- Transparent focus/click overlay aligned to the supplied 1670x942 AION TV GOLD artwork. -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layoutDirection="ltr"
         android:background="#00000000">
 
         <!-- Localized text panels cover the labels baked into the supplied artwork.
