@@ -84,14 +84,16 @@ replace_once(
 
 # The initial poster area is a plain loading message, never an empty-film card.
 replace_once(
-    '        setCategoryStatus("CHARGEMENT...");\n        rebuildPosterGrid();',
-    '        setCategoryStatus("CHARGEMENT...");\n        showPosterStatus("CHARGEMENT...");',
+    '        setCategoryStatus(t("LOADING…", "CHARGEMENT…", "جارٍ التحميل…"));\n'
+    '        rebuildPosterGrid();',
+    '        setCategoryStatus(t("LOADING…", "CHARGEMENT…", "جارٍ التحميل…"));\n'
+    '        showPosterStatus(t("LOADING…", "CHARGEMENT…", "جارٍ التحميل…"));',
     'initial loading state')
 
 
 load_catalog = r'''    private void loadCatalog() {
-        setCategoryStatus("CHARGEMENT...");
-        showPosterStatus("CHARGEMENT...");
+        setCategoryStatus(t("LOADING…", "CHARGEMENT…", "جارٍ التحميل…"));
+        showPosterStatus(t("LOADING…", "CHARGEMENT…", "جارٍ التحميل…"));
         io.execute(new Runnable() {
             @Override public void run() {
                 boolean cacheLoaded = false;
@@ -159,7 +161,7 @@ load_catalog = r'''    private void loadCatalog() {
         categories.clear();
         allMovies.clear();
         allMovies.addAll(loadedMovies);
-        categories.add(new Category(ALL, "TOUS LES FILMS", allMovies.size()));
+        categories.add(new Category(ALL, t("ALL MOVIES", "TOUS LES FILMS", "كل الأفلام"), allMovies.size()));
         for (Category c : loadedCategories) {
             Integer count = counts.get(c.id);
             c.count = count == null ? 0 : count;
@@ -176,7 +178,8 @@ load_catalog = r'''    private void loadCatalog() {
         if (imm != null) imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
         if (announce) {
             Toast.makeText(MovieLibraryActivity.this,
-                    allMovies.size() + " films chargés", Toast.LENGTH_SHORT).show();
+                    allMovies.size() + " " + t("movies loaded", "films chargés", "فيلم تم تحميله"),
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -187,7 +190,7 @@ load_catalog = r'''    private void loadCatalog() {
             JSONObject o = arr.optJSONObject(i);
             if (o == null) continue;
             String id = o.optString("category_id", "");
-            String name = o.optString("category_name", "Catégorie");
+            String name = o.optString("category_name", t("Category", "Catégorie", "تصنيف"));
             if (id.length() > 0) out.add(new Category(id, name, 0));
         }
         return out;
@@ -207,7 +210,7 @@ load_catalog = r'''    private void loadCatalog() {
             movieSortKeys.put(movieId, added > 0L ? added : id);
             String ext = o.optString("container_extension", "mp4");
             if (TextUtils.isEmpty(ext)) ext = "mp4";
-            out.add(new Movie(movieId, o.optString("name", "Film"),
+            out.add(new Movie(movieId, o.optString("name", t("Movie", "Film", "فيلم")),
                     o.optString("category_id", ""), o.optString("stream_icon", ""), ext));
         }
         java.util.Collections.sort(out, new java.util.Comparator<Movie>() {
@@ -307,7 +310,7 @@ replace_once(
     'poster generation')
 
 empty_old = '''        if (visibleMovies.isEmpty()) {
-            TextView empty = label("AUCUN FILM", 0.025f, GOLD_BRIGHT, Gravity.CENTER, true);
+            TextView empty = label(t("NO MOVIES", "AUCUN FILM", "لا توجد أفلام"), 0.025f, GOLD_BRIGHT, Gravity.CENTER, true);
             empty.setBackground(round(Color.rgb(16, 11, 4), GOLD_DARK, dp(14), dp(1)));
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(pW(0.240f), posterCardH);
             lp.topMargin = dp(20);
@@ -315,7 +318,7 @@ empty_old = '''        if (visibleMovies.isEmpty()) {
             return;
         }'''
 empty_new = '''        if (visibleMovies.isEmpty()) {
-            showPosterStatus("AUCUN FILM");
+            showPosterStatus(t("NO MOVIES", "AUCUN FILM", "لا توجد أفلام"));
             return;
         }'''
 replace_once(empty_old, empty_new, 'empty poster state')

@@ -83,7 +83,7 @@
                 android:gravity="center_vertical"
                 android:paddingStart="16.0dp"
                 android:paddingEnd="12.0dp"
-                android:text="Toutes les catégories"
+                android:text="@string/all_categories"
                 android:textColor="@android:color/white"
                 android:textSize="17.0sp"
                 android:textStyle="bold" />
@@ -127,7 +127,7 @@
                 android:gravity="center_vertical"
                 android:paddingStart="16.0dp"
                 android:paddingEnd="12.0dp"
-                android:text="Chaînes TV"
+                android:text="@string/tv_channels"
                 android:textColor="@android:color/white"
                 android:textSize="17.0sp"
                 android:textStyle="bold" />

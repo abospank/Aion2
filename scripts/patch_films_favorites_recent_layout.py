@@ -55,11 +55,11 @@ replace_once(
 
 # Insert FAVORIS and RÉCEMMENT VU immediately below ALL in both cached/network catalogs.
 replace_once(
-    '        categories.add(new Category(ALL, "TOUS LES FILMS", allMovies.size()));\n'
+    '        categories.add(new Category(ALL, t("ALL MOVIES", "TOUS LES FILMS", "كل الأفلام"), allMovies.size()));\n'
     '        for (Category c : loadedCategories) {',
-    '        categories.add(new Category(ALL, "TOUS LES FILMS", allMovies.size()));\n'
-    '        categories.add(new Category(FAVORITES, "FAVORIS", favoriteMovieCount()));\n'
-    '        categories.add(new Category(RECENT, "RÉCEMMENT VU", recentMovieCount()));\n'
+    '        categories.add(new Category(ALL, t("ALL MOVIES", "TOUS LES FILMS", "كل الأفلام"), allMovies.size()));\n'
+    '        categories.add(new Category(FAVORITES, t("FAVOURITES", "FAVORIS", "المفضلة"), favoriteMovieCount()));\n'
+    '        categories.add(new Category(RECENT, t("RECENTLY WATCHED", "RÉCEMMENT VU", "شوهد مؤخرًا"), recentMovieCount()));\n'
     '        for (Category c : loadedCategories) {',
     'special category insertion')
 
@@ -152,10 +152,11 @@ replace_once(
 
 # Add explicit star + recent-clock artwork before the generic category icon cases.
 icon_anchor = '''            if (name.contains("NOUV") || name.matches(".*20[0-9][0-9].*")) {'''
-icon_replacement = '''            if (name.contains("FAVOR")) {
+icon_replacement = '''            if (name.contains("FAVOR") || name.contains("مفض")) {
                 drawStar(canvas, cx, cy, r, r * 0.45f, paint);
             } else if (name.contains("RÉCEMMENT") || name.contains("RECEMMENT") ||
-                       name.contains("RÉCENT") || name.contains("RECENT")) {
+                       name.contains("RÉCENT") || name.contains("RECENT") ||
+                       name.contains("مؤخر")) {
                 canvas.drawCircle(cx, cy, r, paint);
                 canvas.drawLine(cx, cy, cx, cy - r * 0.55f, paint);
                 canvas.drawLine(cx, cy, cx + r * 0.48f, cy + r * 0.20f, paint);

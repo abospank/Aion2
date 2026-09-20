@@ -215,4 +215,6 @@
     <string name="last_update_now">آخر تحديث: الآن</string>
     <string name="direct_with_epg">بث مباشر مع دليل البرامج</string>
     <string name="multi_screen">شاشات متعددة</string>
+    <string name="all_categories">كل التصنيفات</string>
+    <string name="tv_channels">القنوات التلفزيونية</string>
 </resources>

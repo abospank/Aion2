@@ -215,4 +215,6 @@
     <string name="last_update_now">Dernière mise à jour : maintenant</string>
     <string name="direct_with_epg">Direct avec EPG</string>
     <string name="multi_screen">Multi-écran</string>
+    <string name="all_categories">Toutes les catégories</string>
+    <string name="tv_channels">Chaînes TV</string>
 </resources>
