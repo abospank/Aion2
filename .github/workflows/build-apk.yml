@@ -13,6 +13,7 @@ on:
       - "lib/**"
       - "unknown/**"
       - "original/**"
+      - "scripts/**"
       - ".github/workflows/build-apk.yml"
 
 permissions:
@@ -24,6 +25,30 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Reconstruct exact AION home interface
+        shell: bash
+        run: |
+          set -euxo pipefail
+          cat scripts/assets/home_bg_lossless_part0.txt \
+              scripts/assets/home_bg_lossless_part1.txt \
+              scripts/assets/home_bg_lossless_part2.txt \
+              scripts/assets/home_bg_lossless_part3.txt \
+              scripts/assets/home_bg_lossless_part4.txt \
+            | tr -d '\\r\\n' \
+            | base64 --decode > /tmp/app_bg.webp
+
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('/tmp/app_bg.webp')
+          b = p.read_bytes()
+          if not b.startswith(b'RIFF') or b'WEBP' not in b[:16]:
+              raise SystemExit('invalid reconstructed WebP')
+          print(f'Reconstructed exact lossless home interface: {len(b)} bytes')
+          PY
+
+          rm -f res/drawable/app_bg.jpg res/drawable/app_bg.png res/drawable/app_bg.webp
+          mv /tmp/app_bg.webp res/drawable/app_bg.webp
 
       - name: Setup Java
         uses: actions/setup-java@v4
