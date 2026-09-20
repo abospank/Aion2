@@ -180,7 +180,7 @@
 .end method
 
 .method public final onCreate(Landroid/os/Bundle;)V
-    .locals 4
+    .locals 1
 
     .line 1
     invoke-super {p0, p1}, Lqr;->onCreate(Landroid/os/Bundle;)V
@@ -205,77 +205,13 @@
     .line 13
     invoke-static {p0}, Lj0;->Y(Landroid/app/Activity;)V
 
-    .line 14
-    .line 15
-    .line 16
-    sget p1, Landroid/os/Build$VERSION;->SDK_INT:I
-
-    .line 17
-    .line 18
-    const/16 v0, 0x17
-
-    .line 19
-    .line 20
-    if-lt p1, v0, :cond_1
-
-    .line 21
-    .line 22
-    const-string v1, "android.permission.RECEIVE_BOOT_COMPLETED"
-
-    .line 23
-    .line 24
-    const-string v2, "android.permission.ACCESS_NETWORK_STATE"
-
-    .line 25
-    .line 26
-    const-string v3, "android.permission.INTERNET"
-
-    .line 27
-    .line 28
-    if-lt p1, v0, :cond_0
-
-    .line 29
-    .line 30
-    filled-new-array {v3, v2, v1}, [Ljava/lang/String;
-
-    .line 31
-    .line 32
-    .line 33
-    move-result-object p1
-
-    .line 34
-    invoke-static {p0, p1}, Lu0;->b(Landroid/app/Activity;[Ljava/lang/String;)V
-
-    .line 35
-    .line 36
-    .line 37
-    goto :goto_0
-
-    .line 38
-    :cond_0
-    filled-new-array {v3, v2, v1}, [Ljava/lang/String;
-
-    .line 39
-    .line 40
-    .line 41
-    move-result-object p1
-
-    .line 42
-    invoke-static {p0, p1}, Lu0;->b(Landroid/app/Activity;[Ljava/lang/String;)V
-
-    .line 43
-    .line 44
-    .line 45
-    goto :goto_0
-
-    .line 46
-    :cond_1
+    # INTERNET, ACCESS_NETWORK_STATE and RECEIVE_BOOT_COMPLETED are normal
+    # install-time permissions. Requesting them through the runtime permission
+    # dialog produced an empty system window on modern Android/BlueStacks and
+    # could finish the Activity with an empty grant-result array. Continue the
+    # normal startup/activation flow directly instead.
     invoke-virtual {p0}, Lcom/mbm_soft/irontvmax/activities/SplashScreen;->z()V
 
-    .line 47
-    .line 48
-    .line 49
-    :goto_0
     return-void
 .end method
 
