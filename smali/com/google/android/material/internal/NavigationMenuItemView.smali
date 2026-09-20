@@ -564,6 +564,8 @@
     .line 202
     .line 203
     :cond_6
+    invoke-static {p0}, Lcom/irontvgold/app/SettingsExtraActions;->attachItem(Landroid/view/View;)V
+
     return-void
 .end method
 
