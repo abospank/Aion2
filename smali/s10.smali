@@ -36,10 +36,35 @@
 
 # virtual methods
 .method public final onChanged(Ljava/lang/Object;)V
-    .locals 2
+    .locals 7
 
     .line 1
     check-cast p1, Ljava/util/List;
+
+    # AION GOLD: virtual Recently Viewed category directly after Favorites
+    new-instance v0, Lv20;
+
+    const/4 v1, 0x0
+
+    const-string v2, "-2"
+
+    const-string v3, "Récemment Vu"
+
+    const/4 v4, 0x0
+
+    invoke-static {v4}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v4
+
+    const/4 v5, 0x0
+
+    const/4 v6, 0x1
+
+    invoke-direct/range {v0 .. v6}, Lv20;-><init>(ILjava/lang/String;Ljava/lang/String;Ljava/lang/Integer;ZI)V
+
+    const/4 v1, 0x1
+
+    invoke-interface {p1, v1, v0}, Ljava/util/List;->add(ILjava/lang/Object;)V
 
     .line 2
     .line 3
