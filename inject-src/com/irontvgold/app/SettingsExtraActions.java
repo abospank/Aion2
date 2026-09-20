@@ -7,12 +7,67 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 import java.lang.reflect.Method;
 import java.util.Locale;
 
 public final class SettingsExtraActions {
     private SettingsExtraActions() {}
+
+    public static void install(final Activity activity) {
+        if (activity == null) return;
+        final View nav = activity.findViewById(id(activity, "settings_navigation"));
+        if (nav == null) return;
+        nav.post(new Runnable() {
+            @Override public void run() {
+                attachHover(activity, nav);
+            }
+        });
+    }
+
+    private static void attachHover(final Activity activity, View view) {
+        if (view == null) return;
+        int vid = view.getId();
+        if (isSettingsItem(activity, vid)) {
+            view.setOnHoverListener(new View.OnHoverListener() {
+                @Override public boolean onHover(View v, MotionEvent event) {
+                    int action = event.getActionMasked();
+                    if (action == MotionEvent.ACTION_HOVER_ENTER || action == MotionEvent.ACTION_HOVER_MOVE) {
+                        markChecked(activity, v.getId());
+                    }
+                    return false;
+                }
+            });
+        }
+        if (view instanceof ViewGroup) {
+            ViewGroup group = (ViewGroup) view;
+            for (int i = 0; i < group.getChildCount(); i++) {
+                attachHover(activity, group.getChildAt(i));
+            }
+        }
+    }
+
+    private static boolean isSettingsItem(Activity activity, int itemId) {
+        return itemId == id(activity, "menu_user_info")
+            || itemId == id(activity, "menu_user_settings")
+            || itemId == id(activity, "menu_player")
+            || itemId == id(activity, "menu_language")
+            || itemId == id(activity, "menu_hide_categories")
+            || itemId == id(activity, "menu_clear_history");
+    }
+
+    private static void markChecked(Activity activity, int itemId) {
+        try {
+            View nav = activity.findViewById(id(activity, "settings_navigation"));
+            if (nav != null) {
+                Method m = nav.getClass().getMethod("setCheckedItem", int.class);
+                m.invoke(nav, Integer.valueOf(itemId));
+            }
+        } catch (Throwable ignored) {}
+    }
 
     public static boolean handle(Activity activity, int itemId) {
         if (activity == null) return false;
@@ -21,14 +76,17 @@ public final class SettingsExtraActions {
         int clear = id(activity, "menu_clear_history");
 
         if (itemId == language && language != 0) {
+            markChecked(activity, itemId);
             showLanguage(activity);
             return true;
         }
         if (itemId == hide && hide != 0) {
+            markChecked(activity, itemId);
             toggleHideCategories(activity);
             return true;
         }
         if (itemId == clear && clear != 0) {
+            markChecked(activity, itemId);
             clearHistory(activity);
             return true;
         }
