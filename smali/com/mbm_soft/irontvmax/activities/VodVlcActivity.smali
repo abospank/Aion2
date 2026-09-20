@@ -149,6 +149,8 @@
 .method public final onBackPressed()V
     .locals 1
 
+    invoke-static {p0}, Lcom/irontvgold/app/AionNativeMovieControls;->save(Landroid/app/Activity;)V
+
     iget-object v0, p0, Lcom/mbm_soft/irontvmax/activities/VodVlcActivity;->y:Lorg/videolan/libvlc/MediaPlayer;
 
     if-eqz v0, :cond_0
@@ -899,6 +901,8 @@
 .method public final onDestroy()V
     .locals 1
 
+    invoke-static {p0}, Lcom/irontvgold/app/AionNativeMovieControls;->destroy(Landroid/app/Activity;)V
+
     invoke-super {p0}, Ls2;->onDestroy()V
 
     iget-object v0, p0, Lcom/mbm_soft/irontvmax/activities/VodVlcActivity;->y:Lorg/videolan/libvlc/MediaPlayer;
@@ -919,6 +923,8 @@
 
 .method public final onPause()V
     .locals 1
+
+    invoke-static {p0}, Lcom/irontvgold/app/AionNativeMovieControls;->save(Landroid/app/Activity;)V
 
     invoke-super {p0}, Lqr;->onPause()V
 
@@ -1065,6 +1071,8 @@
 
 .method public final onStop()V
     .locals 1
+
+    invoke-static {p0}, Lcom/irontvgold/app/AionNativeMovieControls;->save(Landroid/app/Activity;)V
 
     invoke-super {p0}, Ls2;->onStop()V
 
