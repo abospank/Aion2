@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="settings_outer_margin_h">58dp</dimen>
+    <dimen name="settings_outer_margin_v">58dp</dimen>
+    <dimen name="settings_menu_row_height">56dp</dimen>
+    <dimen name="settings_menu_text_size">16sp</dimen>
+    <dimen name="settings_icon_size">28dp</dimen>
+    <dimen name="settings_icon_padding">20dp</dimen>
+    <dimen name="settings_nav_pad_left">18dp</dimen>
+    <dimen name="settings_nav_pad_right">14dp</dimen>
+
+    <dimen name="settings_detail_pad_h">10dp</dimen>
+    <dimen name="settings_detail_pad_top">24dp</dimen>
+    <dimen name="settings_detail_pad_bottom">18dp</dimen>
+    <dimen name="settings_title_size">22sp</dimen>
+    <dimen name="settings_body_size">16sp</dimen>
+    <dimen name="settings_info_row_height">50dp</dimen>
+    <dimen name="settings_title_gap">7dp</dimen>
+    <dimen name="settings_section_gap">4dp</dimen>
+
+    <dimen name="settings_control_height">44dp</dimen>
+    <dimen name="settings_control_text_size">15sp</dimen>
+    <dimen name="settings_control_gap">7dp</dimen>
+    <dimen name="settings_button_width">180dp</dimen>
+</resources>

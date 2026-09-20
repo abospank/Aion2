@@ -2,10 +2,10 @@
 <com.google.android.material.internal.NavigationMenuItemView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="56dp"
-    android:minHeight="56dp"
-    android:paddingLeft="18dp"
-    android:paddingRight="14dp"
+    android:layout_height="@dimen/settings_menu_row_height"
+    android:minHeight="@dimen/settings_menu_row_height"
+    android:paddingLeft="@dimen/settings_nav_pad_left"
+    android:paddingRight="@dimen/settings_nav_pad_right"
     android:focusable="true"
     android:foreground="@null"
     android:stateListAnimator="@null" />
