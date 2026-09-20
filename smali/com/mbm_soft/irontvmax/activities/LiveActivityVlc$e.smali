@@ -124,22 +124,8 @@
 
     .line 40
     :try_start_0
-    const-string v1, "selectedChannelPosition"
+    const/4 v1, 0x0
 
-    .line 41
-    .line 42
-    sget-object v2, Lgu;->a:Landroid/content/SharedPreferences;
-
-    .line 43
-    .line 44
-    invoke-interface {v2, v1, v0}, Landroid/content/SharedPreferences;->getInt(Ljava/lang/String;I)I
-
-    .line 45
-    .line 46
-    .line 47
-    move-result v1
-
-    .line 48
     iput v1, p1, Lcom/mbm_soft/irontvmax/activities/LiveActivityVlc;->w:I
 
     .line 49

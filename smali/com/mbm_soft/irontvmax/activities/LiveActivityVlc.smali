@@ -521,6 +521,8 @@
     .line 1
     invoke-virtual {p0}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
 
+    invoke-static {p1}, Laionrecent;->a(Lh30;)V
+
     .line 2
     .line 3
     .line 4
@@ -837,6 +839,8 @@
 
     .line 7
     if-eqz v0, :cond_3
+
+    invoke-static {v0}, Laionrecent;->a(Lh30;)V
 
     .line 8
     .line 9

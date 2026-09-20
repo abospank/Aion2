@@ -142,34 +142,65 @@
 .end method
 
 .method public final b(Ljava/lang/String;)Lss0;
-    .locals 2
+    .locals 6
 
-    const/4 v0, 0x1
+    const-string v0, "-2"
+    invoke-virtual {v0, p1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    move-result v0
+    if-eqz v0, :normal_category
 
-    const-string v1, "SELECT id, num, name, streamType, streamId, streamIcon, epgChannelId, added, categoryId, customSid, tvArchive, directSource, tvArchiveDuration, (SELECT CASE WHEN isFavorite THEN 1 ELSE 0 END FROM item_settings_table s WHERE s.entityId = CAST(streamId AS TEXT) AND s.origin = 1 LIMIT 1) AS favorite, (SELECT CASE WHEN isLocked THEN 1 ELSE 0 END FROM item_settings_table s WHERE s.entityId = CAST(streamId AS TEXT) AND s.origin = 1 LIMIT 1) AS locked FROM live_table WHERE categoryId = ? ORDER BY num ASC"
+    const-string v0, "recentLiveIds"
+    invoke-static {v0}, Lgu;->b(Ljava/lang/String;)Ljava/lang/String;
+    move-result-object v0
 
-    invoke-static {v0, v1}, Lno0;->Q(ILjava/lang/String;)Lno0;
+    invoke-virtual {v0}, Ljava/lang/String;->length()I
+    move-result v1
+    if-nez v1, :recent_nonempty
 
+    const-string v1, "SELECT id, num, name, streamType, streamId, streamIcon, epgChannelId, added, categoryId, customSid, tvArchive, directSource, tvArchiveDuration, favorite, locked FROM live_table WHERE 1=0"
+    goto :recent_query_ready
+
+:recent_nonempty
+    new-instance v1, Ljava/lang/StringBuilder;
+    invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
+    const-string v2, "SELECT id, num, name, streamType, streamId, streamIcon, epgChannelId, added, categoryId, customSid, tvArchive, directSource, tvArchiveDuration, favorite, locked FROM live_table WHERE streamId IN ("
+    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    const-string v2, ") ORDER BY instr(',' || '"
+    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    const-string v2, "' || ',', ',' || streamId || ',') ASC"
+    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {v1}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
     move-result-object v1
 
-    if-nez p1, :cond_0
+:recent_query_ready
+    const/4 v2, 0x0
+    invoke-static {v2, v1}, Lno0;->Q(ILjava/lang/String;)Lno0;
+    move-result-object v1
+    new-instance v2, Ld30;
+    invoke-direct {v2, p0, v1}, Ld30;-><init>(Lf30;Lno0;)V
+    invoke-static {v2}, Lql0;->f(Ljava/util/concurrent/Callable;)Lss0;
+    move-result-object v0
+    return-object v0
 
+:normal_category
+    const/4 v0, 0x1
+    const-string v1, "SELECT id, num, name, streamType, streamId, streamIcon, epgChannelId, added, categoryId, customSid, tvArchive, directSource, tvArchiveDuration, (SELECT CASE WHEN isFavorite THEN 1 ELSE 0 END FROM item_settings_table s WHERE s.entityId = CAST(streamId AS TEXT) AND s.origin = 1 LIMIT 1) AS favorite, (SELECT CASE WHEN isLocked THEN 1 ELSE 0 END FROM item_settings_table s WHERE s.entityId = CAST(streamId AS TEXT) AND s.origin = 1 LIMIT 1) AS locked FROM live_table WHERE categoryId = ? ORDER BY num ASC"
+    invoke-static {v0, v1}, Lno0;->Q(ILjava/lang/String;)Lno0;
+    move-result-object v1
+    if-nez p1, :bind_category
     invoke-virtual {v1, v0}, Lno0;->o(I)V
+    goto :make_normal
 
-    goto :goto_0
-
-    :cond_0
+:bind_category
     invoke-virtual {v1, v0, p1}, Lno0;->j(ILjava/lang/String;)V
 
-    :goto_0
+:make_normal
     new-instance p1, Ld30;
-
     invoke-direct {p1, p0, v1}, Ld30;-><init>(Lf30;Lno0;)V
-
     invoke-static {p1}, Lql0;->f(Ljava/util/concurrent/Callable;)Lss0;
-
     move-result-object p1
-
     return-object p1
 .end method
 

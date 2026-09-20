@@ -1350,6 +1350,8 @@
     .line 7
     if-eqz v0, :cond_2
 
+    invoke-static {v0}, Laionrecent;->a(Lh30;)V
+
     .line 8
     .line 9
     :try_start_0
