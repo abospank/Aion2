@@ -208,10 +208,13 @@
     <string name="wrong_old_password">كلمة المرور القديمة غير صحيحة.</string>
     <string name="language">اللغة</string>
     <string name="hide_categories">إخفاء التصنيفات</string>
+    <string name="show_categories">إظهار التصنيفات</string>
     <string name="clear_history">مسح السجل</string>
     <string name="categories_hidden">تم إخفاء التصنيفات</string>
     <string name="categories_shown">تم إظهار التصنيفات</string>
     <string name="history_cleared">تم مسح السجل</string>
+    <string name="clear_history_confirm">هل تريد مسح سجل المشاهدة ومواضع استكمال التشغيل؟</string>
+    <string name="confirm">تأكيد</string>
     <string name="last_update_now">آخر تحديث: الآن</string>
     <string name="direct_with_epg">بث مباشر مع دليل البرامج</string>
     <string name="multi_screen">شاشات متعددة</string>

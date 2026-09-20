@@ -82,6 +82,7 @@ jobs:
           python3 scripts/patch_films_unify_frame_gold.py
           python3 scripts/patch_films_poster_edge_motion.py
           python3 scripts/patch_runtime_app_localization.py
+          python3 scripts/patch_films_hide_categories_preference.py
 
           python3 - <<'PY'
           from pathlib import Path
