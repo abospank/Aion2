@@ -1,29 +1,370 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout android:id="@id/player_root" android:layout_width="match_parent" android:layout_height="match_parent" android:keepScreenOn="true" android:layoutDirection="ltr"
-  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-    <org.videolan.libvlc.util.VLCVideoLayout android:id="@id/video_layout" android:fitsSystemWindows="false" android:layout_width="match_parent" android:layout_height="match_parent" />
-    <ProgressBar android:layout_gravity="center" android:id="@id/loading" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
-    <androidx.constraintlayout.widget.ConstraintLayout android:id="@id/menu_layout" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="0.0dp" android:layout_margin="@dimen/_3sdp" app:layout_constraintBottom_toTopOf="@id/channel_details_layout" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent">
-        <androidx.appcompat.widget.SearchView android:id="@id/channel_search_view" android:background="@color/transparent_title_bg" android:visibility="gone" android:layout_width="0.0dp" android:layout_height="wrap_content" android:layout_margin="@dimen/_3sdp" app:layout_constraintEnd_toEndOf="@id/rv_channels" app:layout_constraintStart_toStartOf="@id/rv_packages" app:layout_constraintTop_toTopOf="parent" style="@style/SearchViewStyle" />
-        <ListView android:id="@id/rv_packages" android:background="@color/transparent_title_bg" android:focusable="true" android:focusableInTouchMode="true" android:scrollbars="none" android:layout_width="@dimen/_80sdp" android:layout_height="0.0dp" android:layout_margin="@dimen/_3sdp" android:listSelector="@drawable/button_style" android:divider="@null" android:dividerHeight="@dimen/_3sdp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/channel_search_view" />
-        <ListView android:id="@id/rv_channels" android:background="@color/transparent_title_bg" android:focusable="true" android:focusableInTouchMode="true" android:scrollbars="none" android:nextFocusRight="@id/rv_epg_programs" android:layout_width="@dimen/_120sdp" android:layout_height="0.0dp" android:layout_margin="@dimen/_3sdp" android:listSelector="@drawable/button_style" android:dividerHeight="@dimen/_3sdp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toEndOf="@id/rv_packages" app:layout_constraintTop_toBottomOf="@id/channel_search_view" />
-        <ListView android:id="@id/rv_epg_programs" android:background="@color/transparent_title_bg" android:focusable="true" android:focusableInTouchMode="true" android:visibility="gone" android:scrollbars="none" android:layout_width="@dimen/_130sdp" android:layout_height="0.0dp" android:layout_margin="@dimen/_3sdp" android:listSelector="@drawable/button_style" android:dividerHeight="@dimen/_3sdp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toEndOf="@id/rv_channels" app:layout_constraintTop_toBottomOf="@id/channel_search_view" />
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true"
+    android:layoutDirection="ltr">
+
+    <org.videolan.libvlc.util.VLCVideoLayout
+        android:id="@id/video_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="false" />
+
+    <ProgressBar
+        android:id="@id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@id/menu_layout"
+        android:layout_width="0.0dp"
+        android:layout_height="0.0dp"
+        android:layout_margin="14.0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/channel_details_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/aion_live_logo"
+            android:layout_width="220.0dp"
+            android:layout_height="82.0dp"
+            android:contentDescription="@string/app_name"
+            android:scaleType="fitCenter"
+            android:src="@drawable/app_logo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@id/timeNow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18.0dp"
+            android:layout_marginEnd="18.0dp"
+            android:fontFamily="sans"
+            android:textColor="@android:color/white"
+            android:textSize="28.0sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@id/channel_search_view"
+            android:layout_width="300.0dp"
+            android:layout_height="48.0dp"
+            android:layout_marginTop="14.0dp"
+            android:layout_marginEnd="22.0dp"
+            android:background="@drawable/aion_search_field"
+            android:iconifiedByDefault="false"
+            android:queryHint="Rechercher une chaîne..."
+            android:visibility="gone"
+            app:layout_constraintEnd_toStartOf="@id/timeNow"
+            app:layout_constraintTop_toTopOf="parent"
+            style="@style/SearchViewStyle" />
+
+        <LinearLayout
+            android:id="@+id/aion_categories_panel"
+            android:layout_width="0.0dp"
+            android:layout_height="0.0dp"
+            android:layout_marginTop="88.0dp"
+            android:orientation="vertical"
+            android:background="@drawable/aion_gold_panel"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.28">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="52.0dp"
+                android:background="@drawable/aion_gold_header"
+                android:drawableStart="@drawable/aion_grid_gold"
+                android:drawablePadding="12.0dp"
+                android:gravity="center_vertical"
+                android:paddingStart="16.0dp"
+                android:paddingEnd="12.0dp"
+                android:text="Toutes les catégories"
+                android:textColor="@android:color/white"
+                android:textSize="17.0sp"
+                android:textStyle="bold" />
+
+            <ListView
+                android:id="@id/rv_packages"
+                android:layout_width="match_parent"
+                android:layout_height="0.0dp"
+                android:layout_weight="1.0"
+                android:background="@android:color/transparent"
+                android:cacheColorHint="@android:color/transparent"
+                android:clipToPadding="false"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="2.0dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:listSelector="@drawable/aion_row_selector"
+                android:padding="5.0dp"
+                android:scrollbars="none" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/aion_channels_panel"
+            android:layout_width="0.0dp"
+            android:layout_height="0.0dp"
+            android:layout_marginStart="14.0dp"
+            android:layout_marginTop="88.0dp"
+            android:orientation="vertical"
+            android:background="@drawable/aion_gold_panel"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/aion_categories_panel"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.30">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="52.0dp"
+                android:background="@drawable/aion_gold_header"
+                android:drawableStart="@drawable/ic_live_tv_white_36dp"
+                android:drawablePadding="12.0dp"
+                android:gravity="center_vertical"
+                android:paddingStart="16.0dp"
+                android:paddingEnd="12.0dp"
+                android:text="Chaînes TV"
+                android:textColor="@android:color/white"
+                android:textSize="17.0sp"
+                android:textStyle="bold" />
+
+            <ListView
+                android:id="@id/rv_channels"
+                android:layout_width="match_parent"
+                android:layout_height="0.0dp"
+                android:layout_weight="1.0"
+                android:background="@android:color/transparent"
+                android:cacheColorHint="@android:color/transparent"
+                android:clipToPadding="false"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="2.0dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:listSelector="@drawable/aion_row_selector"
+                android:nextFocusRight="@id/rv_epg_programs"
+                android:padding="5.0dp"
+                android:scrollbars="none" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@id/rv_epg_programs"
+            android:layout_width="0.0dp"
+            android:layout_height="0.0dp"
+            android:layout_marginStart="14.0dp"
+            android:layout_marginTop="88.0dp"
+            android:background="@drawable/aion_gold_panel"
+            android:cacheColorHint="@android:color/transparent"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="2.0dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:listSelector="@drawable/aion_row_selector"
+            android:padding="6.0dp"
+            android:scrollbars="none"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/aion_channels_panel"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.24" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-    <androidx.constraintlayout.widget.ConstraintLayout android:id="@id/channel_details_layout" android:background="@color/black_transparent_c80" android:focusable="false" android:visibility="gone" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/_4sdp" android:layout_marginStart="@dimen/_4sdp" android:layout_marginEnd="@dimen/_4sdp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent">
-        <ImageView android:id="@id/iv_channel_image" android:layout_width="@dimen/_70sdp" android:layout_height="@dimen/_70sdp" android:layout_marginTop="@dimen/_3sdp" android:layout_marginBottom="@dimen/_3sdp" android:scaleType="fitCenter" android:layout_marginStart="@dimen/_3sdp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
-        <TextView android:textSize="@dimen/_12ssp" android:textColor="@color/white_color" android:id="@id/channelNumber" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/_3sdp" android:textDirection="ltr" android:layout_marginStart="@dimen/_3sdp" app:layout_constraintStart_toEndOf="@id/view5" app:layout_constraintTop_toTopOf="parent" />
-        <View android:id="@id/view5" android:background="@color/grey_dark" android:layout_width="1.0dp" android:layout_height="0.0dp" android:layout_marginStart="@dimen/_3sdp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toEndOf="@id/iv_channel_image" app:layout_constraintTop_toTopOf="parent" />
-        <TextView android:textSize="@dimen/_12ssp" android:textColor="@color/white_color" android:id="@id/channelName" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textDirection="ltr" android:layout_marginStart="@dimen/_3sdp" app:layout_constraintBottom_toBottomOf="@id/channelNumber" app:layout_constraintStart_toEndOf="@id/channelNumber" app:layout_constraintTop_toTopOf="@id/channelNumber" />
-        <TextView android:textSize="@dimen/_12ssp" android:textColor="@color/white_color" android:id="@id/timeNow" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textDirection="ltr" android:layout_marginEnd="@dimen/_3sdp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="@id/channelNumber" />
-        <TextView android:textSize="@dimen/_8ssp" android:textColor="@color/white_color" android:id="@id/channelGroup" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/_3sdp" android:textDirection="ltr" app:layout_constraintStart_toEndOf="@id/view5" app:layout_constraintTop_toBottomOf="@id/channelNumber" />
-        <TextView android:textSize="@dimen/_8ssp" android:textColor="@color/white_color" android:gravity="start" android:id="@id/egp_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textDirection="ltr" android:layout_marginStart="24.0dp" app:layout_constraintBottom_toBottomOf="@id/channelName" app:layout_constraintStart_toEndOf="@id/channelName" app:layout_constraintTop_toTopOf="@id/channelName" />
-        <TextView android:textSize="@dimen/_8ssp" android:textColor="@color/white_color" android:gravity="start" android:id="@id/egp_description" android:layout_width="0.0dp" android:layout_height="0.0dp" android:layout_marginBottom="@dimen/_3sdp" android:maxLines="2" android:textDirection="ltr" android:layout_marginStart="@dimen/_3sdp" android:layout_marginEnd="@dimen/_3sdp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toEndOf="@id/view5" app:layout_constraintTop_toBottomOf="@id/channelName" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@id/channel_details_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14.0dp"
+        android:layout_marginEnd="14.0dp"
+        android:layout_marginBottom="12.0dp"
+        android:background="@drawable/aion_gold_panel"
+        android:focusable="false"
+        android:padding="8.0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@id/iv_channel_image"
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_70sdp"
+            android:layout_marginStart="@dimen/_3sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:layout_marginBottom="@dimen/_3sdp"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@id/view5"
+            android:layout_width="1.0dp"
+            android:layout_height="0.0dp"
+            android:layout_marginStart="@dimen/_3sdp"
+            android:background="#66E0B43C"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_channel_image"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@id/channelNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_3sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:textColor="#FFFFD65A"
+            android:textDirection="ltr"
+            android:textSize="@dimen/_12ssp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/view5"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@id/channelName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_3sdp"
+            android:textColor="@color/white_color"
+            android:textDirection="ltr"
+            android:textSize="@dimen/_12ssp"
+            app:layout_constraintBottom_toBottomOf="@id/channelNumber"
+            app:layout_constraintStart_toEndOf="@id/channelNumber"
+            app:layout_constraintTop_toTopOf="@id/channelNumber" />
+
+        <TextView
+            android:id="@id/channelGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:textColor="@color/white_color"
+            android:textDirection="ltr"
+            android:textSize="@dimen/_8ssp"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@id/view5"
+            app:layout_constraintTop_toBottomOf="@id/channelNumber" />
+
+        <TextView
+            android:id="@id/egp_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24.0dp"
+            android:gravity="start"
+            android:textColor="#FFFFD65A"
+            android:textDirection="ltr"
+            android:textSize="@dimen/_8ssp"
+            app:layout_constraintBottom_toBottomOf="@id/channelName"
+            app:layout_constraintStart_toEndOf="@id/channelName"
+            app:layout_constraintTop_toTopOf="@id/channelName" />
+
+        <TextView
+            android:id="@id/egp_description"
+            android:layout_width="0.0dp"
+            android:layout_height="0.0dp"
+            android:layout_marginStart="@dimen/_3sdp"
+            android:layout_marginEnd="@dimen/_3sdp"
+            android:layout_marginBottom="@dimen/_3sdp"
+            android:gravity="start"
+            android:maxLines="2"
+            android:textColor="@color/white_color"
+            android:textDirection="ltr"
+            android:textSize="@dimen/_8ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/view5"
+            app:layout_constraintTop_toBottomOf="@id/channelName" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-    <androidx.constraintlayout.widget.ConstraintLayout android:id="@id/tools_layout" android:background="@color/black_transparent_c80" android:visibility="gone" android:nextFocusLeft="@id/rv_epg_programs" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/_3sdp" android:layout_marginEnd="@dimen/_3sdp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent">
-        <Button android:id="@id/btn_search" android:background="@drawable/search_button_style" android:focusable="true" android:layout_width="@dimen/_25sdp" android:layout_height="@dimen/_25sdp" android:layout_marginTop="@dimen/_3sdp" android:layout_marginStart="@dimen/_3sdp" android:layout_marginEnd="@dimen/_3sdp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" style="?android:buttonBarButtonStyle" />
-        <Button android:enabled="false" android:id="@id/track_selector" android:background="@drawable/ic_subtitle_style" android:focusable="true" android:visibility="gone" android:layout_width="@dimen/_25sdp" android:layout_height="@dimen/_25sdp" android:layout_marginTop="@dimen/_3sdp" android:layout_marginBottom="@dimen/_3sdp" android:scaleType="fitXY" android:layout_marginStart="@dimen/_3sdp" android:layout_marginEnd="@dimen/_3sdp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/btn_search" style="?android:buttonBarButtonStyle" />
-        <Button android:id="@id/aspect_ratio" android:background="@drawable/ic_aspect_ratio_style" android:focusable="true" android:layout_width="@dimen/_25sdp" android:layout_height="@dimen/_25sdp" android:layout_marginTop="@dimen/_3sdp" android:layout_marginBottom="@dimen/_3sdp" android:layout_marginStart="@dimen/_3sdp" android:layout_marginEnd="@dimen/_3sdp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/track_selector" style="?android:buttonBarButtonStyle" />
-        <Button android:id="@id/refresh_epg" android:background="@drawable/ic_epg_style" android:focusable="true" android:layout_width="@dimen/_25sdp" android:layout_height="@dimen/_25sdp" android:layout_marginTop="@dimen/_3sdp" android:layout_marginBottom="@dimen/_3sdp" android:layout_marginStart="@dimen/_3sdp" android:layout_marginEnd="@dimen/_3sdp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/aspect_ratio" style="?android:buttonBarButtonStyle" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@id/tools_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_3sdp"
+        android:layout_marginEnd="14.0dp"
+        android:background="@drawable/aion_gold_tool_panel"
+        android:nextFocusLeft="@id/rv_epg_programs"
+        android:padding="5.0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@id/btn_search"
+            android:layout_width="@dimen/_25sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:layout_margin="@dimen/_3sdp"
+            android:background="@drawable/search_button_style"
+            android:focusable="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            style="?android:buttonBarButtonStyle" />
+
+        <Button
+            android:id="@id/track_selector"
+            android:visibility="gone"
+            android:layout_width="@dimen/_25sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:layout_margin="@dimen/_3sdp"
+            android:background="@drawable/ic_subtitle_style"
+            android:enabled="false"
+            android:focusable="true"
+            android:scaleType="fitXY"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_search"
+            style="?android:buttonBarButtonStyle" />
+
+        <Button
+            android:id="@id/aspect_ratio"
+            android:layout_width="@dimen/_25sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:layout_margin="@dimen/_3sdp"
+            android:background="@drawable/ic_aspect_ratio_style"
+            android:focusable="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/track_selector"
+            style="?android:buttonBarButtonStyle" />
+
+        <Button
+            android:id="@id/refresh_epg"
+            android:layout_width="@dimen/_25sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:layout_margin="@dimen/_3sdp"
+            android:background="@drawable/ic_epg_style"
+            android:focusable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/aspect_ratio"
+            style="?android:buttonBarButtonStyle" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-    <TextView android:textSize="@dimen/_8ssp" android:textStyle="bold" android:textColor="@color/white_color" android:id="@id/input_key" android:background="@color/black_transparent_c80" android:padding="@dimen/_3sdp" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="@dimen/_3sdp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@id/input_key"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_3sdp"
+        android:background="@drawable/aion_gold_tool_panel"
+        android:padding="@dimen/_3sdp"
+        android:textColor="@color/white_color"
+        android:textSize="@dimen/_8ssp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

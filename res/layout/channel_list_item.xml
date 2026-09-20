@@ -1,10 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent" android:layout_height="@dimen/_25sdp" android:layout_marginTop="@dimen/_1sdp" android:layout_marginBottom="@dimen/_1sdp" android:layoutDirection="ltr"
-  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-    <ImageView android:id="@id/iv_channel_image" android:layout_width="@dimen/_25sdp" android:layout_height="@dimen/_25sdp" android:src="@drawable/app_logo" android:scaleType="fitCenter" android:layout_marginStart="@dimen/_3sdp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toEndOf="@id/tv_channel_number" app:layout_constraintTop_toTopOf="parent" />
-    <TextView android:textSize="@dimen/_8ssp" android:textColor="@android:color/white" android:id="@id/tv_channel_number" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="@dimen/_3sdp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
-    <TextView android:enabled="true" android:textSize="@dimen/_8ssp" android:textColor="@color/white_color" android:ellipsize="marquee" android:id="@id/tv_channel_name" android:layout_width="0.0dp" android:layout_height="wrap_content" android:singleLine="true" android:marqueeRepeatLimit="marquee_forever" android:layout_marginStart="@dimen/_3sdp" android:layout_marginEnd="@dimen/_2sdp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toStartOf="@id/iv_channel_fav" app:layout_constraintStart_toEndOf="@id/iv_channel_image" app:layout_constraintTop_toTopOf="parent" />
-    <ImageView android:id="@id/iv_channel_fav" android:background="@drawable/ic_favorite_white_24dp" android:visibility="gone" android:layout_width="@dimen/_20sdp" android:layout_height="@dimen/_20sdp" android:layout_margin="@dimen/_2sdp" android:scaleType="fitXY" app:layout_constraintBottom_toBottomOf="@id/tv_channel_name" app:layout_constraintEnd_toStartOf="@id/iv_channel_lock" app:layout_constraintTop_toTopOf="@id/tv_channel_name" />
-    <ImageView android:id="@id/iv_channel_lock" android:background="@drawable/ic_lock_white_24dp" android:visibility="gone" android:layout_width="@dimen/_20sdp" android:layout_height="@dimen/_20sdp" android:layout_margin="@dimen/_2sdp" android:scaleType="fitXY" app:layout_constraintBottom_toBottomOf="@id/tv_channel_name" app:layout_constraintEnd_toStartOf="@id/iv_channel_archive" app:layout_constraintTop_toTopOf="@id/tv_channel_name" />
-    <ImageView android:id="@id/iv_channel_archive" android:background="@drawable/ic_baseline_update_24" android:visibility="gone" android:layout_width="@dimen/_20sdp" android:layout_height="@dimen/_20sdp" android:layout_margin="@dimen/_2sdp" android:scaleType="fitXY" app:layout_constraintBottom_toBottomOf="@id/tv_channel_name" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="@id/tv_channel_name" />
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="46.0dp"
+    android:layoutDirection="ltr"
+    android:background="@android:color/transparent">
+
+    <TextView
+        android:id="@id/tv_channel_number"
+        android:layout_width="42.0dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textColor="#FFFFE28A"
+        android:textSize="13.0sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@id/iv_channel_image"
+        android:layout_width="38.0dp"
+        android:layout_height="34.0dp"
+        android:layout_marginStart="4.0dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/app_logo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_channel_number"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@id/tv_channel_name"
+        android:layout_width="0.0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="8.0dp"
+        android:layout_marginEnd="6.0dp"
+        android:ellipsize="marquee"
+        android:enabled="true"
+        android:gravity="center_vertical|start"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"
+        android:textColor="@color/white_color"
+        android:textSize="14.0sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/aion_channel_plus"
+        app:layout_constraintStart_toEndOf="@id/iv_channel_image"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/aion_channel_plus"
+        android:layout_width="22.0dp"
+        android:layout_height="22.0dp"
+        android:layout_marginEnd="8.0dp"
+        android:background="@drawable/aion_plus_badge"
+        android:gravity="center"
+        android:text="+"
+        android:textColor="#FFFFD54A"
+        android:textSize="15.0sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@id/iv_channel_fav"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:layout_margin="@dimen/_2sdp"
+        android:background="@drawable/ic_favorite_white_24dp"
+        android:scaleType="fitXY"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/tv_channel_name"
+        app:layout_constraintEnd_toStartOf="@id/aion_channel_plus"
+        app:layout_constraintTop_toTopOf="@id/tv_channel_name" />
+
+    <ImageView
+        android:id="@id/iv_channel_lock"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:layout_margin="@dimen/_2sdp"
+        android:background="@drawable/ic_lock_white_24dp"
+        android:scaleType="fitXY"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/tv_channel_name"
+        app:layout_constraintEnd_toStartOf="@id/iv_channel_archive"
+        app:layout_constraintTop_toTopOf="@id/tv_channel_name" />
+
+    <ImageView
+        android:id="@id/iv_channel_archive"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:layout_margin="@dimen/_2sdp"
+        android:background="@drawable/ic_baseline_update_24"
+        android:scaleType="fitXY"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/tv_channel_name"
+        app:layout_constraintEnd_toStartOf="@id/aion_channel_plus"
+        app:layout_constraintTop_toTopOf="@id/tv_channel_name" />
 </androidx.constraintlayout.widget.ConstraintLayout>
