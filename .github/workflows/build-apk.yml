@@ -74,6 +74,8 @@ jobs:
           python3 scripts/patch_films_details_polish_v2.py
           python3 scripts/patch_films_details_reference_layout.py
           python3 scripts/patch_films_details_final_shading_spacing.py
+          python3 scripts/patch_vlc_seekbar_interactive.py
+          python3 scripts/patch_vlc_player_reference_design.py
           python3 scripts/patch_films_details_screen.py
           python3 scripts/patch_films_category_pointer_sync.py
           python3 scripts/patch_films_footer_clean_black_v3.py
