@@ -147,7 +147,7 @@ jobs:
           EOF
           echo "rootProject.name='aion2-films-port'" > /tmp/films-gradle/settings.gradle
           gradle -p /tmp/films-gradle --no-daemon copyFilmsDeps
-          AAR="$(find /tmp/films-deps -maxdepth 1 -type f -name '*.aar' | head -1)"
+          AAR="$(find /tmp/films-deps -maxdepth 1 -type f -name 'libvlc*.aar' | head -1)"
           test -n "$AAR"
           mkdir -p /tmp/films-aar
           unzip -q "$AAR" -d /tmp/films-aar
