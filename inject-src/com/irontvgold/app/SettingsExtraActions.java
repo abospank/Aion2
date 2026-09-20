@@ -5,14 +5,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewParent;
 import android.widget.Toast;
 import java.lang.reflect.Method;
-import java.util.Locale;
 
 public final class SettingsExtraActions {
     private static final String[] SETTINGS_ITEMS = new String[]{
@@ -37,15 +34,7 @@ public final class SettingsExtraActions {
                 if (hasFocus) markCheckedFromItem(item);
             }
         });
-
-        item.setOnHoverListener(new View.OnHoverListener() {
-            @Override public boolean onHover(View v, MotionEvent event) {
-                if (event.getActionMasked() == MotionEvent.ACTION_HOVER_ENTER) {
-                    markCheckedFromItem(item);
-                }
-                return false;
-            }
-        });
+        item.setOnHoverListener(null);
     }
 
     private static boolean isSettingsItem(Context context, int itemId) {
@@ -92,9 +81,7 @@ public final class SettingsExtraActions {
         try {
             Method getChecked = navigationView.getClass().getMethod("getCheckedItem");
             Object checked = getChecked.invoke(navigationView);
-            if (checked instanceof MenuItem && ((MenuItem) checked).getItemId() == itemId) {
-                return;
-            }
+            if (checked instanceof MenuItem && ((MenuItem) checked).getItemId() == itemId) return;
         } catch (Throwable ignored) {}
 
         try {
@@ -144,6 +131,14 @@ public final class SettingsExtraActions {
         return 0;
     }
 
+    private static String text(Context context, String name, String fallback) {
+        try {
+            int stringId = context.getResources().getIdentifier(name, "string", context.getPackageName());
+            if (stringId != 0) return context.getString(stringId);
+        } catch (Throwable ignored) {}
+        return fallback;
+    }
+
     private static void showLanguage(final Activity activity) {
         final String[] labels = new String[]{"Français", "English", "العربية"};
         final String[] tags = new String[]{"fr", "en", "ar"};
@@ -153,25 +148,18 @@ public final class SettingsExtraActions {
         for (int i = 0; i < tags.length; i++) if (tags[i].equals(current)) checked = i;
 
         new AlertDialog.Builder(activity)
-            .setTitle("Langue")
+            .setTitle(text(activity, "language", "Language"))
             .setSingleChoiceItems(labels, checked, new DialogInterface.OnClickListener() {
                 @Override public void onClick(DialogInterface dialog, int which) {
                     if (which < 0 || which >= tags.length) return;
-                    String tag = tags[which];
                     activity.getSharedPreferences("aion_settings", Context.MODE_PRIVATE)
-                        .edit().putString("language", tag).apply();
-                    try {
-                        Locale locale = new Locale(tag);
-                        Locale.setDefault(locale);
-                        Configuration config = new Configuration(activity.getResources().getConfiguration());
-                        config.setLocale(locale);
-                        activity.getResources().updateConfiguration(config, activity.getResources().getDisplayMetrics());
-                    } catch (Throwable ignored) {}
+                        .edit().putString("language", tags[which]).commit();
+                    AppLocale.apply(activity);
                     dialog.dismiss();
                     activity.recreate();
                 }
             })
-            .setNegativeButton("Annuler", null)
+            .setNegativeButton(text(activity, "cancel", "Cancel"), null)
             .show();
     }
 
@@ -180,7 +168,8 @@ public final class SettingsExtraActions {
         boolean next = !prefs.getBoolean("hide_categories", false);
         prefs.edit().putBoolean("hide_categories", next).apply();
         Toast.makeText(activity,
-            next ? "Hide Categories activé" : "Hide Categories désactivé",
+            text(activity, next ? "categories_hidden" : "categories_shown",
+                next ? "Categories hidden" : "Categories visible"),
             Toast.LENGTH_SHORT).show();
     }
 
@@ -194,6 +183,7 @@ public final class SettingsExtraActions {
             d.setAccessible(true);
             d.invoke(null, "recentLiveIds", "");
         } catch (Throwable ignored) {}
-        Toast.makeText(activity, "Historique effacé", Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, text(activity, "history_cleared", "History cleared"),
+            Toast.LENGTH_SHORT).show();
     }
 }

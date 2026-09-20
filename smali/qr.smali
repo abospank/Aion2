@@ -606,6 +606,8 @@
 .method public onCreate(Landroid/os/Bundle;)V
     .locals 2
 
+    invoke-static {p0}, Lcom/irontvgold/app/AppLocale;->apply(Landroid/content/Context;)V
+
     .line 1
     invoke-super {p0, p1}, Landroidx/activity/ComponentActivity;->onCreate(Landroid/os/Bundle;)V
 

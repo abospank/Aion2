@@ -550,6 +550,8 @@
     .line 1
     invoke-super {p0}, Landroid/app/Application;->onCreate()V
 
+    invoke-static {p0}, Lcom/irontvgold/app/AppLocale;->apply(Landroid/content/Context;)V
+
     .line 2
     .line 3
     .line 4
