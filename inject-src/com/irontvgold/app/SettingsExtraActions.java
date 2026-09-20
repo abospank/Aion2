@@ -10,12 +10,61 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.Toast;
 import java.lang.reflect.Method;
 import java.util.Locale;
 
 public final class SettingsExtraActions {
     private SettingsExtraActions() {}
+
+    public static void attachItem(final View item) {
+        if (item == null) return;
+        final Context context = item.getContext();
+        final int itemId = item.getId();
+        if (!isSettingsItem(context, itemId)) return;
+
+        item.setOnHoverListener(new View.OnHoverListener() {
+            @Override public boolean onHover(View v, MotionEvent event) {
+                int action = event.getActionMasked();
+                if (action == MotionEvent.ACTION_HOVER_ENTER || action == MotionEvent.ACTION_HOVER_MOVE) {
+                    markCheckedFromItem(v);
+                }
+                return false;
+            }
+        });
+        item.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) markCheckedFromItem(v);
+            }
+        });
+    }
+
+    private static boolean isSettingsItem(Context context, int itemId) {
+        if (context == null || itemId == 0) return false;
+        return itemId == id(context, "menu_user_info")
+            || itemId == id(context, "menu_user_settings")
+            || itemId == id(context, "menu_player")
+            || itemId == id(context, "menu_language")
+            || itemId == id(context, "menu_hide_categories")
+            || itemId == id(context, "menu_clear_history");
+    }
+
+    private static void markCheckedFromItem(View item) {
+        if (item == null) return;
+        try {
+            ViewParent parent = item.getParent();
+            while (parent != null) {
+                if ("com.google.android.material.navigation.NavigationView".equals(parent.getClass().getName())) {
+                    Method m = parent.getClass().getMethod("setCheckedItem", int.class);
+                    m.invoke(parent, Integer.valueOf(item.getId()));
+                    item.refreshDrawableState();
+                    return;
+                }
+                parent = parent.getParent();
+            }
+        } catch (Throwable ignored) {}
+    }
 
     public static void install(final Activity activity) {
         if (activity == null) return;
