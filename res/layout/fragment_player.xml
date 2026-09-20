@@ -1,21 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout android:orientation="vertical" android:padding="@dimen/_3sdp" android:layout_width="match_parent" android:layout_height="match_parent"
-  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-    <TextView android:textSize="@dimen/_12ssp" android:textStyle="bold" android:textColor="@color/white_color" android:gravity="center" android:id="@id/dialog_title" android:padding="@dimen/_3sdp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/_15sdp" android:text="@string/select_player" android:layout_marginStart="@dimen/_3sdp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
-    <LinearLayout android:gravity="center" android:id="@id/linearLayout" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/_3sdp" android:layout_marginStart="@dimen/_3sdp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/dialog_title">
-        <TextView android:textSize="@dimen/_8ssp" android:textStyle="bold" android:textColor="@color/white_color" android:padding="@dimen/_3sdp" android:layout_width="@dimen/_100sdp" android:layout_height="wrap_content" android:layout_margin="@dimen/_3sdp" android:text="@string/live" />
-        <Spinner android:layout_gravity="center" android:id="@id/spinner_live" android:background="@drawable/button_style" android:padding="@dimen/_3sdp" android:focusable="true" android:layout_width="@dimen/_150sdp" android:layout_height="wrap_content" android:layout_margin="@dimen/_3sdp" android:popupBackground="@color/grey_dark" />
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingStart="24dp"
+    android:paddingEnd="34dp"
+    android:paddingTop="40dp">
+
+    <TextView
+        android:id="@id/dialog_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/select_player"
+        android:textColor="@color/white_color"
+        android:textSize="30sp"
+        android:textStyle="bold"/>
+
+    <LinearLayout
+        android:id="@id/linearLayout"
+        android:layout_width="620dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="18dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <TextView android:layout_width="230dp" android:layout_height="match_parent" android:gravity="start|center_vertical" android:text="@string/live" android:textColor="@color/white_color" android:textSize="20sp"/>
+        <Spinner android:id="@id/spinner_live" android:layout_width="360dp" android:layout_height="52dp" android:background="@drawable/button_style" android:focusable="true" android:popupBackground="@color/grey_dark"/>
     </LinearLayout>
-    <LinearLayout android:gravity="center" android:id="@id/linearLayout9" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/_3sdp" android:layout_marginStart="@dimen/_3sdp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/linearLayout">
-        <TextView android:textSize="@dimen/_8ssp" android:textStyle="bold" android:textColor="@color/white_color" android:padding="@dimen/_3sdp" android:layout_width="@dimen/_100sdp" android:layout_height="wrap_content" android:layout_margin="@dimen/_3sdp" android:text="@string/movies" />
-        <Spinner android:layout_gravity="center" android:id="@id/spinner_movies" android:background="@drawable/button_style" android:padding="@dimen/_3sdp" android:focusable="true" android:layout_width="@dimen/_150sdp" android:layout_height="wrap_content" android:layout_margin="@dimen/_3sdp" android:popupBackground="@color/grey_dark" />
+
+    <LinearLayout
+        android:id="@id/linearLayout9"
+        android:layout_width="620dp"
+        android:layout_height="70dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <TextView android:layout_width="230dp" android:layout_height="match_parent" android:gravity="start|center_vertical" android:text="@string/movies" android:textColor="@color/white_color" android:textSize="20sp"/>
+        <Spinner android:id="@id/spinner_movies" android:layout_width="360dp" android:layout_height="52dp" android:background="@drawable/button_style" android:focusable="true" android:popupBackground="@color/grey_dark"/>
     </LinearLayout>
-    <LinearLayout android:gravity="center" android:id="@id/linearLayout8" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/_3sdp" android:layout_marginStart="@dimen/_3sdp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/linearLayout9">
-        <TextView android:textSize="@dimen/_8ssp" android:textStyle="bold" android:textColor="@color/white_color" android:padding="@dimen/_3sdp" android:layout_width="@dimen/_100sdp" android:layout_height="wrap_content" android:layout_margin="@dimen/_3sdp" android:text="@string/series" />
-        <Spinner android:layout_gravity="center" android:id="@id/spinner_series" android:background="@drawable/button_style" android:padding="@dimen/_3sdp" android:focusable="true" android:layout_width="@dimen/_150sdp" android:layout_height="wrap_content" android:layout_margin="@dimen/_3sdp" android:popupBackground="@color/grey_dark" />
+
+    <LinearLayout
+        android:id="@id/linearLayout8"
+        android:layout_width="620dp"
+        android:layout_height="70dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <TextView android:layout_width="230dp" android:layout_height="match_parent" android:gravity="start|center_vertical" android:text="@string/series" android:textColor="@color/white_color" android:textSize="20sp"/>
+        <Spinner android:id="@id/spinner_series" android:layout_width="360dp" android:layout_height="52dp" android:background="@drawable/button_style" android:focusable="true" android:popupBackground="@color/grey_dark"/>
     </LinearLayout>
-    <LinearLayout android:gravity="center" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/_3sdp" android:layout_marginStart="@dimen/_3sdp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/linearLayout8">
-        <TextView android:textSize="@dimen/_8ssp" android:textStyle="bold" android:textColor="@color/white_color" android:padding="@dimen/_3sdp" android:layout_width="@dimen/_100sdp" android:layout_height="wrap_content" android:layout_margin="@dimen/_3sdp" android:text="@string/on_demand" />
-        <Spinner android:layout_gravity="center" android:id="@id/spinner_ondemand" android:background="@drawable/button_style" android:padding="@dimen/_3sdp" android:focusable="true" android:layout_width="@dimen/_150sdp" android:layout_height="wrap_content" android:layout_margin="@dimen/_3sdp" android:popupBackground="@color/grey_dark" />
+
+    <LinearLayout
+        android:layout_width="620dp"
+        android:layout_height="70dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+        <TextView android:layout_width="230dp" android:layout_height="match_parent" android:text="@string/on_demand" android:textColor="@color/white_color" android:textSize="20sp"/>
+        <Spinner android:id="@id/spinner_ondemand" android:layout_width="360dp" android:layout_height="52dp" android:background="@drawable/button_style" android:focusable="true" android:popupBackground="@color/grey_dark"/>
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
