@@ -34,17 +34,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/aion_live_logo"
-            android:layout_width="220.0dp"
-            android:layout_height="82.0dp"
-            android:contentDescription="@string/app_name"
-            android:scaleType="fitCenter"
-            android:src="@drawable/app_logo"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <TextView
             android:id="@id/timeNow"
             android:layout_width="wrap_content"
@@ -76,13 +65,13 @@
             android:id="@+id/aion_categories_panel"
             android:layout_width="0.0dp"
             android:layout_height="0.0dp"
-            android:layout_marginTop="88.0dp"
+            android:layout_marginTop="46.0dp"
             android:orientation="vertical"
             android:background="@drawable/aion_gold_panel"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.28">
+            app:layout_constraintWidth_percent="0.23">
 
             <TextView
                 android:layout_width="match_parent"
@@ -120,13 +109,13 @@
             android:layout_width="0.0dp"
             android:layout_height="0.0dp"
             android:layout_marginStart="14.0dp"
-            android:layout_marginTop="88.0dp"
+            android:layout_marginTop="46.0dp"
             android:orientation="vertical"
             android:background="@drawable/aion_gold_panel"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/aion_categories_panel"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.30">
+            app:layout_constraintWidth_percent="0.29">
 
             <TextView
                 android:layout_width="match_parent"
@@ -165,7 +154,7 @@
             android:layout_width="0.0dp"
             android:layout_height="0.0dp"
             android:layout_marginStart="14.0dp"
-            android:layout_marginTop="88.0dp"
+            android:layout_marginTop="46.0dp"
             android:background="@drawable/aion_gold_panel"
             android:cacheColorHint="@android:color/transparent"
             android:divider="@android:color/transparent"
@@ -315,7 +304,6 @@
 
         <Button
             android:id="@id/track_selector"
-            android:visibility="gone"
             android:layout_width="@dimen/_25sdp"
             android:layout_height="@dimen/_25sdp"
             android:layout_margin="@dimen/_3sdp"
@@ -330,11 +318,11 @@
 
         <Button
             android:id="@id/aspect_ratio"
-            android:layout_width="@dimen/_25sdp"
-            android:layout_height="@dimen/_25sdp"
-            android:layout_margin="@dimen/_3sdp"
-            android:background="@drawable/ic_aspect_ratio_style"
-            android:focusable="true"
+            android:layout_width="1.0dp"
+            android:layout_height="1.0dp"
+            android:background="@android:color/transparent"
+            android:focusable="false"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/track_selector"
@@ -350,7 +338,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/aspect_ratio"
+            app:layout_constraintTop_toBottomOf="@id/track_selector"
             style="?android:buttonBarButtonStyle" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
