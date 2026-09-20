@@ -6,10 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.Toast;
 import java.lang.reflect.Method;
@@ -33,13 +32,20 @@ public final class SettingsExtraActions {
         final int itemId = item.getId();
         if (!isSettingsItem(context, itemId)) return;
 
-        prepareFocusableRow(item);
         item.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) markCheckedFromItem(item);
             }
         });
-        attachPointerTree(null, item, item);
+
+        item.setOnHoverListener(new View.OnHoverListener() {
+            @Override public boolean onHover(View v, MotionEvent event) {
+                if (event.getActionMasked() == MotionEvent.ACTION_HOVER_ENTER) {
+                    markCheckedFromItem(item);
+                }
+                return false;
+            }
+        });
     }
 
     private static boolean isSettingsItem(Context context, int itemId) {
@@ -50,24 +56,13 @@ public final class SettingsExtraActions {
         return false;
     }
 
-    private static void prepareFocusableRow(View item) {
-        item.setFocusable(true);
-        item.setFocusableInTouchMode(true);
-        item.setClickable(true);
-        if (item instanceof ViewGroup) {
-            ((ViewGroup) item).setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-        }
-    }
-
     private static void markCheckedFromItem(View item) {
         if (item == null) return;
         try {
             ViewParent parent = item.getParent();
             while (parent != null) {
                 if ("com.google.android.material.navigation.NavigationView".equals(parent.getClass().getName())) {
-                    Method m = parent.getClass().getMethod("setCheckedItem", int.class);
-                    m.invoke(parent, Integer.valueOf(item.getId()));
-                    item.refreshDrawableState();
+                    setCheckedIfChanged(parent, item.getId());
                     return;
                 }
                 parent = parent.getParent();
@@ -80,138 +75,39 @@ public final class SettingsExtraActions {
         final View nav = activity.findViewById(id(activity, "settings_navigation"));
         if (nav == null) return;
 
-        Runnable binder = new Runnable() {
+        nav.post(new Runnable() {
             @Override public void run() {
-                bindNavigation(activity, nav);
+                for (String name : SETTINGS_ITEMS) {
+                    int itemId = id(activity, name);
+                    if (itemId == 0) continue;
+                    View item = nav.findViewById(itemId);
+                    if (item != null) attachItem(item);
+                }
             }
-        };
-
-        nav.post(binder);
-        nav.postDelayed(binder, 120L);
-        nav.postDelayed(binder, 400L);
-        nav.postDelayed(binder, 900L);
+        });
     }
 
-    private static void bindNavigation(final Activity activity, final View nav) {
-        final int[] itemIds = new int[SETTINGS_ITEMS.length];
-        final View[] rows = new View[SETTINGS_ITEMS.length];
-
-        for (int i = 0; i < SETTINGS_ITEMS.length; i++) {
-            itemIds[i] = id(activity, SETTINGS_ITEMS[i]);
-            if (itemIds[i] != 0) rows[i] = nav.findViewById(itemIds[i]);
-        }
-
-        for (int i = 0; i < rows.length; i++) {
-            final int index = i;
-            final View row = rows[i];
-            if (row == null) continue;
-
-            prepareFocusableRow(row);
-
-            int previous = nearestRowId(rows, index, -1);
-            int next = nearestRowId(rows, index, 1);
-            row.setNextFocusUpId(previous != 0 ? previous : row.getId());
-            row.setNextFocusDownId(next != 0 ? next : row.getId());
-
-            row.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override public void onFocusChange(View v, boolean hasFocus) {
-                    if (hasFocus) markChecked(activity, row.getId());
-                }
-            });
-
-            row.setOnKeyListener(new View.OnKeyListener() {
-                @Override public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    boolean up = keyCode == KeyEvent.KEYCODE_DPAD_UP;
-                    boolean down = keyCode == KeyEvent.KEYCODE_DPAD_DOWN;
-                    boolean select = keyCode == KeyEvent.KEYCODE_DPAD_CENTER
-                        || keyCode == KeyEvent.KEYCODE_ENTER
-                        || keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER;
-
-                    if (!up && !down && !select) return false;
-
-                    if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                        if (up) {
-                            moveFocus(activity, rows, index, -1);
-                        } else if (down) {
-                            moveFocus(activity, rows, index, 1);
-                        } else {
-                            markChecked(activity, row.getId());
-                            row.performClick();
-                        }
-                    }
-                    return true;
-                }
-            });
-
-            attachPointerTree(activity, row, row);
-        }
-    }
-
-    private static int nearestRowId(View[] rows, int from, int direction) {
-        int i = from + direction;
-        while (i >= 0 && i < rows.length) {
-            if (rows[i] != null) return rows[i].getId();
-            i += direction;
-        }
-        return 0;
-    }
-
-    private static void moveFocus(Activity activity, View[] rows, int from, int direction) {
-        int i = from + direction;
-        while (i >= 0 && i < rows.length) {
-            View target = rows[i];
-            if (target != null && target.getVisibility() == View.VISIBLE && target.isEnabled()) {
-                target.requestFocus();
-                markChecked(activity, target.getId());
+    private static void setCheckedIfChanged(Object navigationView, int itemId) {
+        if (navigationView == null || itemId == 0) return;
+        try {
+            Method getChecked = navigationView.getClass().getMethod("getCheckedItem");
+            Object checked = getChecked.invoke(navigationView);
+            if (checked instanceof MenuItem && ((MenuItem) checked).getItemId() == itemId) {
                 return;
             }
-            i += direction;
-        }
-    }
+        } catch (Throwable ignored) {}
 
-    private static void attachPointerTree(final Activity activity, View view, final View row) {
-        if (view == null || row == null) return;
-
-        view.setOnHoverListener(new View.OnHoverListener() {
-            @Override public boolean onHover(View v, MotionEvent event) {
-                int action = event.getActionMasked();
-                if (action == MotionEvent.ACTION_HOVER_ENTER || action == MotionEvent.ACTION_HOVER_MOVE) {
-                    row.setHovered(true);
-                    if (activity != null) markChecked(activity, row.getId());
-                    else markCheckedFromItem(row);
-                } else if (action == MotionEvent.ACTION_HOVER_EXIT) {
-                    row.setHovered(false);
-                }
-                return false;
-            }
-        });
-
-        view.setOnTouchListener(new View.OnTouchListener() {
-            @Override public boolean onTouch(View v, MotionEvent event) {
-                if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                    if (activity != null) markChecked(activity, row.getId());
-                    else markCheckedFromItem(row);
-                }
-                return false;
-            }
-        });
-
-        if (view instanceof ViewGroup) {
-            ViewGroup group = (ViewGroup) view;
-            for (int i = 0; i < group.getChildCount(); i++) {
-                attachPointerTree(activity, group.getChildAt(i), row);
-            }
-        }
+        try {
+            Method setChecked = navigationView.getClass().getMethod("setCheckedItem", int.class);
+            setChecked.invoke(navigationView, Integer.valueOf(itemId));
+        } catch (Throwable ignored) {}
     }
 
     private static void markChecked(Activity activity, int itemId) {
+        if (activity == null || itemId == 0) return;
         try {
             View nav = activity.findViewById(id(activity, "settings_navigation"));
-            if (nav != null) {
-                Method m = nav.getClass().getMethod("setCheckedItem", int.class);
-                m.invoke(nav, Integer.valueOf(itemId));
-                nav.invalidate();
-            }
+            if (nav != null) setCheckedIfChanged(nav, itemId);
         } catch (Throwable ignored) {}
     }
 
