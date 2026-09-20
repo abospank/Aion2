@@ -45,6 +45,18 @@
 
 
 # virtual methods
+.method protected attachBaseContext(Landroid/content/Context;)V
+    .locals 1
+
+    invoke-static {p1}, Lcom/irontvgold/app/AppLocale;->wrap(Landroid/content/Context;)Landroid/content/Context;
+
+    move-result-object v0
+
+    invoke-super {p0, v0}, Landroid/app/Application;->attachBaseContext(Landroid/content/Context;)V
+
+    return-void
+.end method
+
 .method public final a()Lgk;
     .locals 1
 

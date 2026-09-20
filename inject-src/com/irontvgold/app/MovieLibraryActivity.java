@@ -100,6 +100,15 @@ public final class MovieLibraryActivity extends Activity {
     private LinearLayout posterStrip;
 
     @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(AppLocale.wrap(base));
+    }
+
+    private String t(String english, String french, String arabic) {
+        return AppLocale.pick(this, english, french, arabic);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -187,17 +196,17 @@ public final class MovieLibraryActivity extends Activity {
         LinearLayout title = new LinearLayout(this);
         title.setOrientation(LinearLayout.VERTICAL);
         title.setGravity(Gravity.CENTER);
-        TextView films = label("▰  FILMS", 0.044f, GOLD_BRIGHT, Gravity.CENTER, true);
+        TextView films = label("▰  " + t("MOVIES", "FILMS", "الأفلام"), 0.044f, GOLD_BRIGHT, Gravity.CENTER, true);
         films.setLetterSpacing(0.10f);
         title.addView(films, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 0.66f));
-        TextView sub = label("B I B L I O T H È Q U E", 0.015f, GOLD_BRIGHT, Gravity.CENTER, false);
+        TextView sub = label(t("L I B R A R Y", "B I B L I O T H È Q U E", "المكتبة"), 0.015f, GOLD_BRIGHT, Gravity.CENTER, false);
         sub.setLetterSpacing(0.14f);
         title.addView(sub, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 0.34f));
         root.addView(title, place(0.445f, 0.030f, 0.210f, 0.092f));
 
         search = new EditText(this);
         search.setSingleLine(true);
-        search.setHint("⌕  Rechercher");
+        search.setHint("⌕  " + t("Search", "Rechercher", "بحث"));
         search.setHintTextColor(Color.rgb(220, 220, 220));
         search.setTextColor(Color.WHITE);
         search.setTextSize(TypedValue.COMPLEX_UNIT_PX, sh * 0.021f);
@@ -313,16 +322,16 @@ public final class MovieLibraryActivity extends Activity {
             }
         });
 
-        setCategoryStatus("CHARGEMENT...");
+        setCategoryStatus(t("LOADING…", "CHARGEMENT…", "جارٍ التحميل…"));
         rebuildPosterGrid();
     }
 
     private void addFooter(FrameLayout root) {
-        TextView tagline = label("DES MILLIERS DE FILMS\nÀ PORTÉE DE MAIN", 0.015f, GOLD_BRIGHT, Gravity.CENTER, true);
+        TextView tagline = label(t("THOUSANDS OF MOVIES\nAT YOUR FINGERTIPS", "DES MILLIERS DE FILMS\nÀ PORTÉE DE MAIN", "آلاف الأفلام\nبين يديك"), 0.015f, GOLD_BRIGHT, Gravity.CENTER, true);
         tagline.setLetterSpacing(0.09f);
         root.addView(tagline, place(0.087f, 0.907f, 0.180f, 0.064f));
 
-        LinearLayout live = footerButton("▣  LIVE TV", "Chaînes en direct", false);
+        LinearLayout live = footerButton("▣  " + t("LIVE TV", "TV EN DIRECT", "البث المباشر"), t("Live channels", "Chaînes en direct", "القنوات المباشرة"), false);
         live.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 startActivity(new Intent(MovieLibraryActivity.this, LiveTvActivity.class));
@@ -330,23 +339,23 @@ public final class MovieLibraryActivity extends Activity {
         });
         root.addView(live, place(0.292f, 0.872f, 0.205f, 0.082f));
 
-        LinearLayout vod = footerButton("◉  VOD", "FILMS", true);
+        LinearLayout vod = footerButton("◉  VOD", t("MOVIES", "FILMS", "الأفلام"), true);
         vod.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) { focusSelectedCategory(); }
         });
         root.addView(vod, place(0.501f, 0.872f, 0.216f, 0.082f));
 
-        LinearLayout fav = footerButton("★  FAVORIS", "Ma liste", false);
+        LinearLayout fav = footerButton("★  " + t("FAVOURITES", "FAVORIS", "المفضلة"), t("My list", "Ma liste", "قائمتي"), false);
         fav.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                Toast.makeText(MovieLibraryActivity.this, "FAVORIS", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MovieLibraryActivity.this, t("FAVOURITES", "FAVORIS", "المفضلة"), Toast.LENGTH_SHORT).show();
             }
         });
         root.addView(fav, place(0.722f, 0.872f, 0.185f, 0.082f));
     }
 
     private void loadCatalog() {
-        setCategoryStatus("CHARGEMENT...");
+        setCategoryStatus(t("LOADING…", "CHARGEMENT…", "جارٍ التحميل…"));
         io.execute(new Runnable() {
             @Override public void run() {
                 try {
@@ -362,7 +371,7 @@ public final class MovieLibraryActivity extends Activity {
                             categories.clear();
                             allMovies.clear();
                             allMovies.addAll(loadedMovies);
-                            categories.add(new Category(ALL, "TOUS LES FILMS", allMovies.size()));
+                            categories.add(new Category(ALL, t("ALL MOVIES", "TOUS LES FILMS", "كل الأفلام"), allMovies.size()));
                             for (Category c : loadedCategories) {
                                 Integer count = counts.get(c.id);
                                 c.count = count == null ? 0 : count;
@@ -373,7 +382,11 @@ public final class MovieLibraryActivity extends Activity {
                             buildCategoryRows();
                             filterMovies();
                             if (!categoryRows.isEmpty()) categoryRows.get(0).requestFocus();
-                            Toast.makeText(MovieLibraryActivity.this, allMovies.size() + " films chargés", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MovieLibraryActivity.this,
+                                    t(allMovies.size() + " movies loaded",
+                                      allMovies.size() + " films chargés",
+                                      "تم تحميل " + allMovies.size() + " فيلمًا"),
+                                    Toast.LENGTH_SHORT).show();
                         }
                     });
                 } catch (final Exception e) {
@@ -392,7 +405,7 @@ public final class MovieLibraryActivity extends Activity {
             JSONObject o = arr.optJSONObject(i);
             if (o == null) continue;
             String id = o.optString("category_id", "");
-            String name = o.optString("category_name", "Catégorie");
+            String name = o.optString("category_name", t("Category", "Catégorie", "تصنيف"));
             if (id.length() > 0) out.add(new Category(id, name, 0));
         }
         return out;
@@ -410,7 +423,7 @@ public final class MovieLibraryActivity extends Activity {
             if (TextUtils.isEmpty(ext)) ext = "mp4";
             out.add(new Movie(
                     String.valueOf(id),
-                    o.optString("name", "Film"),
+                    o.optString("name", t("Movie", "Film", "فيلم")),
                     o.optString("category_id", ""),
                     o.optString("stream_icon", ""),
                     ext
@@ -523,7 +536,7 @@ public final class MovieLibraryActivity extends Activity {
         posterScroll.scrollTo(0, 0);
 
         if (visibleMovies.isEmpty()) {
-            TextView empty = label("AUCUN FILM", 0.025f, GOLD_BRIGHT, Gravity.CENTER, true);
+            TextView empty = label(t("NO MOVIES", "AUCUN FILM", "لا توجد أفلام"), 0.025f, GOLD_BRIGHT, Gravity.CENTER, true);
             empty.setBackground(round(Color.rgb(16, 11, 4), GOLD_DARK, dp(14), dp(1)));
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(pW(0.240f), posterCardH);
             lp.topMargin = dp(20);
@@ -829,13 +842,13 @@ public final class MovieLibraryActivity extends Activity {
     }
 
     private void showConnectionMissing() {
-        setCategoryStatus("CONNEXION IPTV INTROUVABLE");
-        Toast.makeText(this, "Données Xtream introuvables", Toast.LENGTH_LONG).show();
+        setCategoryStatus(t("IPTV CONNECTION NOT FOUND", "CONNEXION IPTV INTROUVABLE", "اتصال IPTV غير موجود"));
+        Toast.makeText(this, t("Xtream data not found", "Données Xtream introuvables", "بيانات Xtream غير موجودة"), Toast.LENGTH_LONG).show();
     }
 
     private void showLoadError() {
-        setCategoryStatus("ERREUR DE CHARGEMENT");
-        Toast.makeText(this, "Impossible de charger la bibliothèque VOD", Toast.LENGTH_LONG).show();
+        setCategoryStatus(t("LOADING ERROR", "ERREUR DE CHARGEMENT", "خطأ في التحميل"));
+        Toast.makeText(this, t("Unable to load the VOD library", "Impossible de charger la bibliothèque VOD", "تعذر تحميل مكتبة الأفلام"), Toast.LENGTH_LONG).show();
     }
 
     private void focusSelectedCategory() {
@@ -875,10 +888,11 @@ public final class MovieLibraryActivity extends Activity {
         clockHandler.post(new Runnable() {
             @Override public void run() {
                 Date now = new Date();
-                if (clockText != null) clockText.setText(new SimpleDateFormat("HH:mm", Locale.FRANCE).format(now));
+                Locale locale = AppLocale.locale(MovieLibraryActivity.this);
+                if (clockText != null) clockText.setText(new SimpleDateFormat("HH:mm", locale).format(now));
                 if (dateText != null) {
-                    String day = new SimpleDateFormat("EEEE", Locale.FRANCE).format(now);
-                    String date = new SimpleDateFormat("dd MMM yyyy", Locale.FRANCE).format(now);
+                    String day = new SimpleDateFormat("EEEE", locale).format(now);
+                    String date = new SimpleDateFormat("dd MMM yyyy", locale).format(now);
                     if (day.length() > 0) day = Character.toUpperCase(day.charAt(0)) + day.substring(1);
                     dateText.setText(day + "\n" + date);
                 }

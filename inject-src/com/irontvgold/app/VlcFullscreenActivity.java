@@ -1,6 +1,7 @@
 package com.irontvgold.app;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -76,6 +77,11 @@ public class VlcFullscreenActivity extends Activity implements IVLCVout.Callback
             ui.postDelayed(this, 500L);
         }
     };
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(AppLocale.wrap(base));
+    }
 
     @Override
     protected void onCreate(Bundle state) {

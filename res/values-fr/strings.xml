@@ -212,4 +212,7 @@
     <string name="categories_hidden">Catégories masquées</string>
     <string name="categories_shown">Catégories visibles</string>
     <string name="history_cleared">Historique effacé</string>
+    <string name="last_update_now">Dernière mise à jour : maintenant</string>
+    <string name="direct_with_epg">Direct avec EPG</string>
+    <string name="multi_screen">Multi-écran</string>
 </resources>

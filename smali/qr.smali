@@ -347,6 +347,18 @@
 
 
 # virtual methods
+.method protected attachBaseContext(Landroid/content/Context;)V
+    .locals 1
+
+    invoke-static {p1}, Lcom/irontvgold/app/AppLocale;->wrap(Landroid/content/Context;)Landroid/content/Context;
+
+    move-result-object v0
+
+    invoke-super {p0, v0}, Landroidx/activity/ComponentActivity;->attachBaseContext(Landroid/content/Context;)V
+
+    return-void
+.end method
+
 .method public final dump(Ljava/lang/String;Ljava/io/FileDescriptor;Ljava/io/PrintWriter;[Ljava/lang/String;)V
     .locals 3
 

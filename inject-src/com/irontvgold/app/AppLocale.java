@@ -13,16 +13,24 @@ public final class AppLocale {
 
     private AppLocale() {}
 
+    public static Context wrap(Context context) {
+        if (context == null) return null;
+        try {
+            Locale locale = locale(context);
+            Locale.setDefault(locale);
+            Configuration config = new Configuration(context.getResources().getConfiguration());
+            config.setLocale(locale);
+            config.setLayoutDirection(locale);
+            return context.createConfigurationContext(config);
+        } catch (Throwable ignored) {
+            return context;
+        }
+    }
+
     public static void apply(Context context) {
         if (context == null) return;
         try {
-            SharedPreferences prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
-            String tag = prefs.getString(KEY_LANGUAGE, DEFAULT_LANGUAGE);
-            if (!"fr".equals(tag) && !"en".equals(tag) && !"ar".equals(tag)) {
-                tag = DEFAULT_LANGUAGE;
-            }
-
-            Locale locale = new Locale(tag);
+            Locale locale = locale(context);
             Locale.setDefault(locale);
             applyToResources(context.getResources(), locale);
 
@@ -31,6 +39,27 @@ public final class AppLocale {
                 applyToResources(app.getResources(), locale);
             }
         } catch (Throwable ignored) {}
+    }
+
+    public static String language(Context context) {
+        if (context == null) return DEFAULT_LANGUAGE;
+        try {
+            SharedPreferences prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+            String tag = prefs.getString(KEY_LANGUAGE, DEFAULT_LANGUAGE);
+            if ("fr".equals(tag) || "en".equals(tag) || "ar".equals(tag)) return tag;
+        } catch (Throwable ignored) {}
+        return DEFAULT_LANGUAGE;
+    }
+
+    public static Locale locale(Context context) {
+        return new Locale(language(context));
+    }
+
+    public static String pick(Context context, String english, String french, String arabic) {
+        String tag = language(context);
+        if ("ar".equals(tag)) return arabic;
+        if ("en".equals(tag)) return english;
+        return french;
     }
 
     private static void applyToResources(Resources resources, Locale locale) {

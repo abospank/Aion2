@@ -235,4 +235,7 @@
     <string name="categories_hidden">Categories hidden</string>
     <string name="categories_shown">Categories visible</string>
     <string name="history_cleared">History cleared</string>
+    <string name="last_update_now">Last update: just now</string>
+    <string name="direct_with_epg">Live with EPG</string>
+    <string name="multi_screen">Multi-screen</string>
 </resources>

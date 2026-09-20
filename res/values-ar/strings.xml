@@ -212,4 +212,7 @@
     <string name="categories_hidden">تم إخفاء التصنيفات</string>
     <string name="categories_shown">تم إظهار التصنيفات</string>
     <string name="history_cleared">تم مسح السجل</string>
+    <string name="last_update_now">آخر تحديث: الآن</string>
+    <string name="direct_with_epg">بث مباشر مع دليل البرامج</string>
+    <string name="multi_screen">شاشات متعددة</string>
 </resources>

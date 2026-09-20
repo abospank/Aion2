@@ -4,99 +4,21 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewParent;
 import android.widget.Toast;
 import java.lang.reflect.Method;
 
 public final class SettingsExtraActions {
-    private static final String[] SETTINGS_ITEMS = new String[]{
-        "menu_user_info",
-        "menu_user_settings",
-        "menu_player",
-        "menu_language",
-        "menu_hide_categories",
-        "menu_clear_history"
-    };
-
     private SettingsExtraActions() {}
 
-    public static void attachItem(final View item) {
-        if (item == null) return;
-        final Context context = item.getContext();
-        final int itemId = item.getId();
-        if (!isSettingsItem(context, itemId)) return;
+    /* Called by the patched NavigationMenuItemView. Native focused/hovered
+       drawable states do all highlighting; changing checked state here caused
+       RecyclerView rebinds, text-size jumps and the last-row blink. */
+    public static void attachItem(View item) {}
 
-        item.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) markCheckedFromItem(item);
-            }
-        });
-        item.setOnHoverListener(null);
-    }
-
-    private static boolean isSettingsItem(Context context, int itemId) {
-        if (context == null || itemId == 0) return false;
-        for (String name : SETTINGS_ITEMS) {
-            if (itemId == id(context, name)) return true;
-        }
-        return false;
-    }
-
-    private static void markCheckedFromItem(View item) {
-        if (item == null) return;
-        try {
-            ViewParent parent = item.getParent();
-            while (parent != null) {
-                if ("com.google.android.material.navigation.NavigationView".equals(parent.getClass().getName())) {
-                    setCheckedIfChanged(parent, item.getId());
-                    return;
-                }
-                parent = parent.getParent();
-            }
-        } catch (Throwable ignored) {}
-    }
-
-    public static void install(final Activity activity) {
-        if (activity == null) return;
-        final View nav = activity.findViewById(id(activity, "settings_navigation"));
-        if (nav == null) return;
-
-        nav.post(new Runnable() {
-            @Override public void run() {
-                for (String name : SETTINGS_ITEMS) {
-                    int itemId = id(activity, name);
-                    if (itemId == 0) continue;
-                    View item = nav.findViewById(itemId);
-                    if (item != null) attachItem(item);
-                }
-            }
-        });
-    }
-
-    private static void setCheckedIfChanged(Object navigationView, int itemId) {
-        if (navigationView == null || itemId == 0) return;
-        try {
-            Method getChecked = navigationView.getClass().getMethod("getCheckedItem");
-            Object checked = getChecked.invoke(navigationView);
-            if (checked instanceof MenuItem && ((MenuItem) checked).getItemId() == itemId) return;
-        } catch (Throwable ignored) {}
-
-        try {
-            Method setChecked = navigationView.getClass().getMethod("setCheckedItem", int.class);
-            setChecked.invoke(navigationView, Integer.valueOf(itemId));
-        } catch (Throwable ignored) {}
-    }
-
-    private static void markChecked(Activity activity, int itemId) {
-        if (activity == null || itemId == 0) return;
-        try {
-            View nav = activity.findViewById(id(activity, "settings_navigation"));
-            if (nav != null) setCheckedIfChanged(nav, itemId);
-        } catch (Throwable ignored) {}
-    }
+    public static void install(Activity activity) {}
 
     public static boolean handle(Activity activity, int itemId) {
         if (activity == null) return false;
@@ -105,17 +27,14 @@ public final class SettingsExtraActions {
         int clear = id(activity, "menu_clear_history");
 
         if (itemId == language && language != 0) {
-            markChecked(activity, itemId);
             showLanguage(activity);
             return true;
         }
         if (itemId == hide && hide != 0) {
-            markChecked(activity, itemId);
             toggleHideCategories(activity);
             return true;
         }
         if (itemId == clear && clear != 0) {
-            markChecked(activity, itemId);
             clearHistory(activity);
             return true;
         }
@@ -156,11 +75,25 @@ public final class SettingsExtraActions {
                         .edit().putString("language", tags[which]).commit();
                     AppLocale.apply(activity);
                     dialog.dismiss();
-                    activity.recreate();
+                    restartApplicationUi(activity);
                 }
             })
             .setNegativeButton(text(activity, "cancel", "Cancel"), null)
             .show();
+    }
+
+    private static void restartApplicationUi(Activity activity) {
+        try {
+            Intent launch = activity.getPackageManager()
+                .getLaunchIntentForPackage(activity.getPackageName());
+            if (launch != null) {
+                launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                activity.startActivity(launch);
+                activity.finish();
+                return;
+            }
+        } catch (Throwable ignored) {}
+        activity.recreate();
     }
 
     private static void toggleHideCategories(Activity activity) {
