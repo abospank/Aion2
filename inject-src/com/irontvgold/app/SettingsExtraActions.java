@@ -99,6 +99,22 @@ public final class SettingsExtraActions {
         }
     }
 
+    /* Called from NavigationMenuItemView.drawableStateChanged(), the same
+       state transition that paints the gold selector. Passing the real menu
+       item id from smali avoids reflection/context timing failures. */
+    public static void onItemVisualState(View item, int itemId, boolean active) {
+        if (item == null || !active) return;
+        Activity activity = activityFrom(item.getContext());
+        if (activity == null) return;
+
+        int language = id(activity, "menu_language");
+        if (language != 0 && itemId == language) {
+            showLanguagePane(activity, false);
+        } else {
+            hideLanguagePane(activity);
+        }
+    }
+
     public static void install(final Activity activity) {
         if (activity == null) return;
         bindLanguageRows(activity);
@@ -282,7 +298,12 @@ public final class SettingsExtraActions {
             bindLanguageRows(activity);
             View panel = activity.findViewById(id(activity, "language_panel"));
             if (panel == null) return;
+            View content = activity.findViewById(id(activity, "fragment_container"));
+            if (content != null) content.setVisibility(View.INVISIBLE);
+            panel.setAlpha(1.0f);
             panel.setVisibility(View.VISIBLE);
+            panel.bringToFront();
+            panel.requestLayout();
             refreshLanguagePane(activity);
             if (focusCurrent) {
                 String current = activity.getSharedPreferences("aion_settings", Context.MODE_PRIVATE)
@@ -297,6 +318,8 @@ public final class SettingsExtraActions {
         try {
             View panel = activity.findViewById(id(activity, "language_panel"));
             if (panel != null) panel.setVisibility(View.GONE);
+            View content = activity.findViewById(id(activity, "fragment_container"));
+            if (content != null) content.setVisibility(View.VISIBLE);
         } catch (Throwable ignored) {}
     }
 
