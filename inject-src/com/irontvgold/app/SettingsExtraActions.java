@@ -94,9 +94,13 @@ public final class SettingsExtraActions {
         Activity activity = activityFrom(item.getContext());
         if (activity == null) return;
 
-        int language = id(activity, "menu_language");
-        if (isLanguageMenuItem(activity, item)) {
-            showLanguagePane(activity, false);
+        // A checked callback is also emitted while NavigationView recycles and
+        // rebinds old rows. Never open the language overlay from that callback:
+        // the stale Language row was reopening it over the Player fragment.
+        // A real Language focus/hover/click still opens it through the handlers
+        // above. A checked non-language row is the final authority to close it.
+        if (!isLanguageMenuItem(activity, item)) {
+            hideLanguagePane(activity);
         }
     }
 
