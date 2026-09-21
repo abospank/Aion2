@@ -105,6 +105,7 @@ public final class SettingsExtraActions {
         bindLanguageRows(activity);
         hideLanguagePane(activity);
         installLanguageFocusWatcher(activity);
+        installNavigationHoverTracking(activity);
     }
 
     public static boolean handle(Activity activity, int itemId) {
@@ -137,6 +138,7 @@ public final class SettingsExtraActions {
         int resolved = context.getResources().getIdentifier(name, "id", context.getPackageName());
         if (resolved != 0) return resolved;
         if ("fragment_container".equals(name)) return 0x7f0a00fb;
+        if ("settings_navigation".equals(name)) return 0x7f0a01f6;
         if ("menu_language".equals(name)) return 0x7f0a0294;
         if ("menu_hide_categories".equals(name)) return 0x7f0a0295;
         if ("menu_clear_history".equals(name)) return 0x7f0a0296;
@@ -231,6 +233,40 @@ public final class SettingsExtraActions {
             }
         }
         return null;
+    }
+
+    private static void installNavigationHoverTracking(final Activity activity) {
+        try {
+            final View navigation = activity.findViewById(id(activity, "settings_navigation"));
+            if (navigation == null) return;
+            attachNavigationHoverTargets(activity, navigation);
+            navigation.post(new Runnable() {
+                @Override public void run() {
+                    attachNavigationHoverTargets(activity, navigation);
+                }
+            });
+        } catch (Throwable ignored) {}
+    }
+
+    private static void attachNavigationHoverTargets(final Activity activity, View view) {
+        if (activity == null || view == null) return;
+        view.setOnHoverListener(new View.OnHoverListener() {
+            @Override public boolean onHover(View hovered, MotionEvent event) {
+                if (event == null) return false;
+                int action = event.getActionMasked();
+                if (action == MotionEvent.ACTION_HOVER_ENTER
+                        || action == MotionEvent.ACTION_HOVER_MOVE) {
+                    updateLanguagePaneForFocus(activity, hovered);
+                }
+                return false;
+            }
+        });
+        if (view instanceof ViewGroup) {
+            ViewGroup group = (ViewGroup) view;
+            for (int i = 0; i < group.getChildCount(); i++) {
+                attachNavigationHoverTargets(activity, group.getChildAt(i));
+            }
+        }
     }
 
     private static void installLanguageFocusWatcher(final Activity activity) {
