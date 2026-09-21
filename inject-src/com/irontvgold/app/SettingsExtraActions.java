@@ -66,14 +66,23 @@ public final class SettingsExtraActions {
                     if (activity == null) return false;
 
                     int language = id(activity, "menu_language");
-                    if (menuItemId(v) != language || language == 0) return false;
+                    int hide = id(activity, "menu_hide_categories");
+                    int itemId = menuItemId(v);
 
                     if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER
                             || keyCode == KeyEvent.KEYCODE_ENTER
                             || keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER
                             || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
-                        showLanguagePane(activity, true);
-                        return true;
+                        if (itemId == language && language != 0) {
+                            hideHideCategoriesPane(activity);
+                            showLanguagePane(activity, true);
+                            return true;
+                        }
+                        if (itemId == hide && hide != 0) {
+                            hideLanguagePane(activity);
+                            showHideCategoriesPane(activity, true);
+                            return true;
+                        }
                     }
                     return false;
                 }
@@ -100,25 +109,8 @@ public final class SettingsExtraActions {
     }
 
     public static void onItemChecked(View item, boolean checked) {
-        if (item == null || !checked) return;
-        Activity activity = activityFrom(item.getContext());
-        if (activity == null) return;
-
-        // A checked callback is also emitted while NavigationView recycles and
-        // rebinds old rows. Never open the language overlay from that callback:
-        // the stale Language row was reopening it over the Player fragment.
-        // A real Language focus/hover/click still opens it through the handlers
-        // above. A checked non-language row is the final authority to close it.
-        if (isLanguageMenuItem(activity, item)) {
-            hideHideCategoriesPane(activity);
-            showLanguagePane(activity, false);
-        } else if (isHideCategoriesMenuItem(activity, item)) {
-            hideLanguagePane(activity);
-            showHideCategoriesPane(activity, false);
-        } else {
-            hideLanguagePane(activity);
-            hideHideCategoriesPane(activity);
-        }
+        // NavigationView can emit stale checked callbacks while rows are rebound.
+        // Custom panes are controlled only by focus, hover, key and click.
     }
 
     public static void install(final Activity activity) {
