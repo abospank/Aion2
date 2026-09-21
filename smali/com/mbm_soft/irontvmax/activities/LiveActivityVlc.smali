@@ -5387,8 +5387,6 @@
     .line 504
     .line 505
     .line 506
-    invoke-static {p0}, Lcom/irontvgold/app/SettingsExtraActions;->applyLiveCategoryVisibility(Landroid/app/Activity;)V
-
     return-void
 .end method
 
