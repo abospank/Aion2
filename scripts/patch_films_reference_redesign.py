@@ -33,8 +33,12 @@ s = replace_method(s, "    private void buildUi()", r'''    private void buildUi
         ImageView design = new ImageView(this);
         design.setScaleType(ImageView.ScaleType.FIT_XY);
         design.setAdjustViewBounds(false);
-        int designId = getResources().getIdentifier("movie_library_design", "drawable", getPackageName());
-        if (designId != 0) design.setImageResource(designId);
+        try {
+            InputStream designStream = getAssets().open("movie_library_design.png");
+            Bitmap designBitmap = BitmapFactory.decodeStream(designStream);
+            designStream.close();
+            if (designBitmap != null) design.setImageBitmap(designBitmap);
+        } catch (Exception ignored) {}
         root.addView(design, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
