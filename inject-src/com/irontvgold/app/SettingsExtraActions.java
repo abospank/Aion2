@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.View;
+import android.view.KeyEvent;
 import android.widget.Toast;
 import android.widget.TextView;
 import java.lang.reflect.Method;
@@ -23,15 +24,37 @@ public final class SettingsExtraActions {
         try {
             item.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override public void onFocusChange(View v, boolean hasFocus) {
-                    if (!hasFocus) return;
                     Activity activity = activityFrom(v.getContext());
                     if (activity == null) return;
+                    if (!hasFocus) return;
+
                     int language = id(activity, "menu_language");
-                    if (v.getId() == language && language != 0) {
+                    int currentItemId = menuItemId(v);
+                    if (currentItemId == language && language != 0) {
                         showLanguagePane(activity, false);
                     } else {
                         hideLanguagePane(activity);
                     }
+                }
+            });
+
+            item.setOnKeyListener(new View.OnKeyListener() {
+                @Override public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if (event == null || event.getAction() != KeyEvent.ACTION_DOWN) return false;
+                    Activity activity = activityFrom(v.getContext());
+                    if (activity == null) return false;
+
+                    int language = id(activity, "menu_language");
+                    if (menuItemId(v) != language || language == 0) return false;
+
+                    if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER
+                            || keyCode == KeyEvent.KEYCODE_ENTER
+                            || keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER
+                            || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+                        showLanguagePane(activity, true);
+                        return true;
+                    }
+                    return false;
                 }
             });
         } catch (Throwable ignored) {}
@@ -79,6 +102,33 @@ public final class SettingsExtraActions {
             if (stringId != 0) return context.getString(stringId);
         } catch (Throwable ignored) {}
         return fallback;
+    }
+
+    private static int menuItemId(View view) {
+        if (view == null) return 0;
+        try {
+            Method getItemData;
+            try {
+                getItemData = view.getClass().getMethod("getItemData");
+            } catch (Throwable first) {
+                getItemData = view.getClass().getDeclaredMethod("getItemData");
+                getItemData.setAccessible(true);
+            }
+
+            Object itemData = getItemData.invoke(view);
+            if (itemData != null) {
+                Method getItemId;
+                try {
+                    getItemId = itemData.getClass().getMethod("getItemId");
+                } catch (Throwable first) {
+                    getItemId = itemData.getClass().getDeclaredMethod("getItemId");
+                    getItemId.setAccessible(true);
+                }
+                Object result = getItemId.invoke(itemData);
+                if (result instanceof Integer) return ((Integer) result).intValue();
+            }
+        } catch (Throwable ignored) {}
+        return view.getId();
     }
 
     private static Activity activityFrom(Context context) {
