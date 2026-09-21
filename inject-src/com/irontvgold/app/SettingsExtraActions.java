@@ -67,7 +67,7 @@ public final class SettingsExtraActions {
 
                     int language = id(activity, "menu_language");
                     int hide = id(activity, "menu_hide_categories");
-                    int itemId = menuItemId(v);
+                    int itemId = v.getId();
 
                     if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER
                             || keyCode == KeyEvent.KEYCODE_ENTER
@@ -95,11 +95,14 @@ public final class SettingsExtraActions {
         Activity activity = activityFrom(item.getContext());
         if (activity == null) return;
 
+        int itemId = item.getId();
         int language = id(activity, "menu_language");
-        if (isLanguageMenuItem(activity, item)) {
+        int hide = id(activity, "menu_hide_categories");
+
+        if (itemId == language && language != 0) {
             hideHideCategoriesPane(activity);
             showLanguagePane(activity, false);
-        } else if (isHideCategoriesMenuItem(activity, item)) {
+        } else if (itemId == hide && hide != 0) {
             hideLanguagePane(activity);
             showHideCategoriesPane(activity, false);
         } else {
@@ -109,8 +112,8 @@ public final class SettingsExtraActions {
     }
 
     public static void onItemChecked(View item, boolean checked) {
-        // NavigationView can emit stale checked callbacks while rows are rebound.
-        // Custom panes are controlled only by focus, hover, key and click.
+        if (item == null || !checked || !item.hasFocus()) return;
+        onItemFocus(item, true);
     }
 
     public static void install(final Activity activity) {
@@ -301,10 +304,14 @@ public final class SettingsExtraActions {
             View menuItem = findNavigationMenuItem(focus);
             if (menuItem == null) return;
 
-            if (isLanguageMenuItem(activity, menuItem)) {
+            int itemId = menuItem.getId();
+            int language = id(activity, "menu_language");
+            int hide = id(activity, "menu_hide_categories");
+
+            if (itemId == language && language != 0) {
                 hideHideCategoriesPane(activity);
                 showLanguagePane(activity, false);
-            } else if (isHideCategoriesMenuItem(activity, menuItem)) {
+            } else if (itemId == hide && hide != 0) {
                 hideLanguagePane(activity);
                 showHideCategoriesPane(activity, false);
             } else {
