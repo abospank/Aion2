@@ -22,4 +22,16 @@
     <dimen name="settings_control_text_size">12sp</dimen>
     <dimen name="settings_control_gap">5dp</dimen>
     <dimen name="settings_button_width">145dp</dimen>
+
+    <dimen name="settings_language_row_height">38dp</dimen>
+    <dimen name="settings_language_indent">42dp</dimen>
+    <dimen name="settings_language_row_end">8dp</dimen>
+    <dimen name="settings_language_top_gap">10dp</dimen>
+    <dimen name="settings_language_row_gap">4dp</dimen>
+    <dimen name="settings_language_row_pad">5dp</dimen>
+    <dimen name="settings_language_flag_width">38dp</dimen>
+    <dimen name="settings_language_radio_width">34dp</dimen>
+    <dimen name="settings_flag_size">16sp</dimen>
+    <dimen name="settings_language_text_size">12sp</dimen>
+    <dimen name="settings_language_radio_size">20sp</dimen>
 </resources>

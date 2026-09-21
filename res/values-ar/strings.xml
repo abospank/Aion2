@@ -217,4 +217,7 @@
     <string name="multi_screen">شاشات متعددة</string>
     <string name="all_categories">كل التصنيفات</string>
     <string name="tv_channels">القنوات التلفزيونية</string>
+
+    <string name="language_select_title">اختيار اللغة</string>
+    <string name="language_select_subtitle">اختر لغة واجهة التطبيق</string>
 </resources>

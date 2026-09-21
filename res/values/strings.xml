@@ -240,4 +240,7 @@
     <string name="multi_screen">Multi-screen</string>
     <string name="all_categories">All categories</string>
     <string name="tv_channels">TV channels</string>
+
+    <string name="language_select_title">Select language</string>
+    <string name="language_select_subtitle">Choose the interface language</string>
 </resources>

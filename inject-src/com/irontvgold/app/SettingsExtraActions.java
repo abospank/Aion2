@@ -3,11 +3,13 @@ package com.irontvgold.app;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.Toast;
+import android.widget.TextView;
 import java.lang.reflect.Method;
 
 public final class SettingsExtraActions {
@@ -16,9 +18,30 @@ public final class SettingsExtraActions {
     /* Called by the patched NavigationMenuItemView. Native focused/hovered
        drawable states do all highlighting; changing checked state here caused
        RecyclerView rebinds, text-size jumps and the last-row blink. */
-    public static void attachItem(View item) {}
+    public static void attachItem(final View item) {
+        if (item == null) return;
+        try {
+            item.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override public void onFocusChange(View v, boolean hasFocus) {
+                    if (!hasFocus) return;
+                    Activity activity = activityFrom(v.getContext());
+                    if (activity == null) return;
+                    int language = id(activity, "menu_language");
+                    if (v.getId() == language && language != 0) {
+                        showLanguagePane(activity, false);
+                    } else {
+                        hideLanguagePane(activity);
+                    }
+                }
+            });
+        } catch (Throwable ignored) {}
+    }
 
-    public static void install(Activity activity) {}
+    public static void install(Activity activity) {
+        if (activity == null) return;
+        bindLanguageRows(activity);
+        hideLanguagePane(activity);
+    }
 
     public static boolean handle(Activity activity, int itemId) {
         if (activity == null) return false;
@@ -27,7 +50,7 @@ public final class SettingsExtraActions {
         int clear = id(activity, "menu_clear_history");
 
         if (itemId == language && language != 0) {
-            showLanguage(activity);
+            showLanguagePane(activity, true);
             return true;
         }
         if (itemId == hide && hide != 0) {
@@ -56,6 +79,92 @@ public final class SettingsExtraActions {
             if (stringId != 0) return context.getString(stringId);
         } catch (Throwable ignored) {}
         return fallback;
+    }
+
+    private static Activity activityFrom(Context context) {
+        Context cur = context;
+        for (int i = 0; i < 8 && cur != null; i++) {
+            if (cur instanceof Activity) return (Activity) cur;
+            if (cur instanceof ContextWrapper) {
+                Context next = ((ContextWrapper) cur).getBaseContext();
+                if (next == cur) break;
+                cur = next;
+            } else {
+                break;
+            }
+        }
+        return null;
+    }
+
+    private static void bindLanguageRows(final Activity activity) {
+        bindLanguageRow(activity, "language_fr", "fr");
+        bindLanguageRow(activity, "language_en", "en");
+        bindLanguageRow(activity, "language_ar", "ar");
+        refreshLanguagePane(activity);
+    }
+
+    private static void bindLanguageRow(final Activity activity, String viewName, final String tag) {
+        try {
+            View row = activity.findViewById(id(activity, viewName));
+            if (row == null) return;
+            row.setTag(tag);
+            row.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    applyLanguage(activity, tag);
+                }
+            });
+        } catch (Throwable ignored) {}
+    }
+
+    private static void applyLanguage(Activity activity, String tag) {
+        try {
+            activity.getSharedPreferences("aion_settings", Context.MODE_PRIVATE)
+                    .edit().putString("language", tag).commit();
+            AppLocale.apply(activity);
+            restartApplicationUi(activity);
+        } catch (Throwable ignored) {}
+    }
+
+    private static void showLanguagePane(Activity activity, boolean focusCurrent) {
+        try {
+            bindLanguageRows(activity);
+            View panel = activity.findViewById(id(activity, "language_panel"));
+            if (panel == null) return;
+            panel.setVisibility(View.VISIBLE);
+            refreshLanguagePane(activity);
+            if (focusCurrent) {
+                String current = activity.getSharedPreferences("aion_settings", Context.MODE_PRIVATE)
+                        .getString("language", "fr");
+                String rowName = "ar".equals(current) ? "language_ar"
+                        : ("en".equals(current) ? "language_en" : "language_fr");
+                View row = activity.findViewById(id(activity, rowName));
+                if (row != null) row.requestFocus();
+            }
+        } catch (Throwable ignored) {}
+    }
+
+    private static void hideLanguagePane(Activity activity) {
+        try {
+            View panel = activity.findViewById(id(activity, "language_panel"));
+            if (panel != null) panel.setVisibility(View.GONE);
+        } catch (Throwable ignored) {}
+    }
+
+    private static void refreshLanguagePane(Activity activity) {
+        try {
+            String current = activity.getSharedPreferences("aion_settings", Context.MODE_PRIVATE)
+                    .getString("language", "fr");
+            updateLanguageRow(activity, "language_fr", "language_fr_radio", "fr".equals(current));
+            updateLanguageRow(activity, "language_en", "language_en_radio", "en".equals(current));
+            updateLanguageRow(activity, "language_ar", "language_ar_radio", "ar".equals(current));
+        } catch (Throwable ignored) {}
+    }
+
+    private static void updateLanguageRow(Activity activity, String rowName, String radioName, boolean selected) {
+        View row = activity.findViewById(id(activity, rowName));
+        View radio = activity.findViewById(id(activity, radioName));
+        if (row != null) row.setSelected(selected);
+        if (radio instanceof TextView) ((TextView) radio).setText(selected ? "●" : "○");
     }
 
     private static void showLanguage(final Activity activity) {

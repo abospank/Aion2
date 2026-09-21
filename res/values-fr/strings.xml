@@ -217,4 +217,7 @@
     <string name="multi_screen">Multi-écran</string>
     <string name="all_categories">Toutes les catégories</string>
     <string name="tv_channels">Chaînes TV</string>
+
+    <string name="language_select_title">Sélectionner la langue</string>
+    <string name="language_select_subtitle">Choisissez la langue de l’interface</string>
 </resources>
