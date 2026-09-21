@@ -9,6 +9,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.View;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.ViewParent;
+import android.view.ViewTreeObserver;
 import android.widget.Toast;
 import android.widget.TextView;
 import java.lang.reflect.Method;
@@ -35,6 +38,18 @@ public final class SettingsExtraActions {
                     } else {
                         hideLanguagePane(activity);
                     }
+                }
+            });
+
+            item.setOnHoverListener(new View.OnHoverListener() {
+                @Override public boolean onHover(View v, MotionEvent event) {
+                    if (event == null) return false;
+                    int action = event.getActionMasked();
+                    if (action != MotionEvent.ACTION_HOVER_ENTER
+                            && action != MotionEvent.ACTION_HOVER_MOVE) return false;
+                    Activity activity = activityFrom(v.getContext());
+                    if (activity != null) updateLanguagePaneForFocus(activity, v);
+                    return false;
                 }
             });
 
@@ -66,7 +81,7 @@ public final class SettingsExtraActions {
         if (activity == null) return;
 
         int language = id(activity, "menu_language");
-        if (item.getId() == language && language != 0) {
+        if (menuItemId(item) == language && language != 0) {
             showLanguagePane(activity, false);
         } else {
             hideLanguagePane(activity);
@@ -79,15 +94,16 @@ public final class SettingsExtraActions {
         if (activity == null) return;
 
         int language = id(activity, "menu_language");
-        if (item.getId() == language && language != 0) {
+        if (menuItemId(item) == language && language != 0) {
             showLanguagePane(activity, false);
         }
     }
 
-    public static void install(Activity activity) {
+    public static void install(final Activity activity) {
         if (activity == null) return;
         bindLanguageRows(activity);
         hideLanguagePane(activity);
+        installLanguageFocusWatcher(activity);
     }
 
     public static boolean handle(Activity activity, int itemId) {
@@ -170,10 +186,72 @@ public final class SettingsExtraActions {
         return null;
     }
 
+    private static void installLanguageFocusWatcher(final Activity activity) {
+        try {
+            final View root = activity.findViewById(android.R.id.content);
+            if (root == null) return;
+            root.getViewTreeObserver().addOnGlobalFocusChangeListener(
+                new ViewTreeObserver.OnGlobalFocusChangeListener() {
+                    @Override public void onGlobalFocusChanged(View oldFocus, View newFocus) {
+                        updateLanguagePaneForFocus(activity, newFocus);
+                    }
+                });
+            root.post(new Runnable() {
+                @Override public void run() {
+                    updateLanguagePaneForFocus(activity, activity.getCurrentFocus());
+                }
+            });
+        } catch (Throwable ignored) {}
+    }
+
+    private static void updateLanguagePaneForFocus(Activity activity, View focus) {
+        if (activity == null || focus == null) return;
+        try {
+            View panel = activity.findViewById(id(activity, "language_panel"));
+            if (panel != null && isDescendantOf(focus, panel)) return;
+
+            View menuItem = findNavigationMenuItem(focus);
+            if (menuItem == null) return;
+
+            int language = id(activity, "menu_language");
+            if (language != 0 && menuItemId(menuItem) == language) {
+                showLanguagePane(activity, false);
+            } else {
+                hideLanguagePane(activity);
+            }
+        } catch (Throwable ignored) {}
+    }
+
+    private static View findNavigationMenuItem(View start) {
+        View current = start;
+        for (int i = 0; i < 10 && current != null; i++) {
+            String name = current.getClass().getName();
+            if (name != null && name.endsWith("NavigationMenuItemView")) return current;
+            ViewParent parent = current.getParent();
+            current = parent instanceof View ? (View) parent : null;
+        }
+        return null;
+    }
+
+    private static boolean isDescendantOf(View child, View ancestor) {
+        View current = child;
+        for (int i = 0; i < 16 && current != null; i++) {
+            if (current == ancestor) return true;
+            ViewParent parent = current.getParent();
+            current = parent instanceof View ? (View) parent : null;
+        }
+        return false;
+    }
+
     private static void bindLanguageRows(final Activity activity) {
         bindLanguageRow(activity, "language_fr", "fr");
         bindLanguageRow(activity, "language_en", "en");
         bindLanguageRow(activity, "language_ar", "ar");
+        bindLanguageRow(activity, "language_es", "es");
+        bindLanguageRow(activity, "language_de", "de");
+        bindLanguageRow(activity, "language_it", "it");
+        bindLanguageRow(activity, "language_pt", "pt");
+        bindLanguageRow(activity, "language_tr", "tr");
         refreshLanguagePane(activity);
     }
 
@@ -209,9 +287,7 @@ public final class SettingsExtraActions {
             if (focusCurrent) {
                 String current = activity.getSharedPreferences("aion_settings", Context.MODE_PRIVATE)
                         .getString("language", "fr");
-                String rowName = "ar".equals(current) ? "language_ar"
-                        : ("en".equals(current) ? "language_en" : "language_fr");
-                View row = activity.findViewById(id(activity, rowName));
+                View row = activity.findViewById(id(activity, languageRowName(current)));
                 if (row != null) row.requestFocus();
             }
         } catch (Throwable ignored) {}
@@ -231,7 +307,23 @@ public final class SettingsExtraActions {
             updateLanguageRow(activity, "language_fr", "language_fr_radio", "fr".equals(current));
             updateLanguageRow(activity, "language_en", "language_en_radio", "en".equals(current));
             updateLanguageRow(activity, "language_ar", "language_ar_radio", "ar".equals(current));
+            updateLanguageRow(activity, "language_es", "language_es_radio", "es".equals(current));
+            updateLanguageRow(activity, "language_de", "language_de_radio", "de".equals(current));
+            updateLanguageRow(activity, "language_it", "language_it_radio", "it".equals(current));
+            updateLanguageRow(activity, "language_pt", "language_pt_radio", "pt".equals(current));
+            updateLanguageRow(activity, "language_tr", "language_tr_radio", "tr".equals(current));
         } catch (Throwable ignored) {}
+    }
+
+    private static String languageRowName(String tag) {
+        if ("en".equals(tag)) return "language_en";
+        if ("ar".equals(tag)) return "language_ar";
+        if ("es".equals(tag)) return "language_es";
+        if ("de".equals(tag)) return "language_de";
+        if ("it".equals(tag)) return "language_it";
+        if ("pt".equals(tag)) return "language_pt";
+        if ("tr".equals(tag)) return "language_tr";
+        return "language_fr";
     }
 
     private static void updateLanguageRow(Activity activity, String rowName, String radioName, boolean selected) {

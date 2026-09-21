@@ -50,7 +50,9 @@ public final class AppLocale {
         try {
             SharedPreferences prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
             String tag = prefs.getString(KEY_LANGUAGE, DEFAULT_LANGUAGE);
-            if ("fr".equals(tag) || "en".equals(tag) || "ar".equals(tag)) return tag;
+            if ("fr".equals(tag) || "en".equals(tag) || "ar".equals(tag)
+                    || "es".equals(tag) || "de".equals(tag) || "it".equals(tag)
+                    || "pt".equals(tag) || "tr".equals(tag)) return tag;
         } catch (Throwable ignored) {}
         return DEFAULT_LANGUAGE;
     }
@@ -62,8 +64,8 @@ public final class AppLocale {
     public static String pick(Context context, String english, String french, String arabic) {
         String tag = language(context);
         if ("ar".equals(tag)) return arabic;
-        if ("en".equals(tag)) return english;
-        return french;
+        if ("fr".equals(tag)) return french;
+        return english;
     }
 
     private static void applyToResources(Resources resources, Locale locale) {

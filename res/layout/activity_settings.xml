@@ -80,6 +80,7 @@
         android:layout_marginBottom="@dimen/settings_outer_margin_v"
         android:background="#D0000000"
         android:orientation="vertical"
+        android:layoutDirection="ltr"
         android:paddingStart="@dimen/settings_detail_pad_h"
         android:paddingEnd="@dimen/settings_detail_pad_h"
         android:paddingTop="@dimen/settings_detail_pad_top"
@@ -107,131 +108,364 @@
             android:textColor="#E6FFFFFF"
             android:textSize="@dimen/settings_body_size"/>
 
-        <LinearLayout
-            android:id="@+id/language_fr"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/settings_language_row_height"
-            android:layout_marginStart="@dimen/settings_language_indent"
-            android:layout_marginEnd="@dimen/settings_language_row_end"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="#33FFFFFF"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:layout_marginTop="@dimen/settings_language_top_gap"
-            android:background="@drawable/language_row_selector"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingStart="@dimen/settings_language_row_pad"
-            android:paddingEnd="@dimen/settings_language_row_pad">
+            android:clipToPadding="false"
+            android:fillViewport="false"
+            android:scrollbars="none">
 
-            <TextView
-                android:layout_width="@dimen/settings_language_flag_width"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="🇫🇷"
-                android:textSize="@dimen/settings_flag_size"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="2dp">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="start|center_vertical"
-                android:paddingStart="10dp"
-                android:text="Français"
-                android:textColor="@color/white_color"
-                android:textSize="@dimen/settings_language_text_size"/>
+            <LinearLayout
+                android:id="@+id/language_fr"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/settings_language_row_height"
+                android:layout_marginStart="@dimen/settings_language_indent"
+                android:layout_marginEnd="@dimen/settings_language_row_end"
+                android:layout_marginTop="0dp"
+                android:background="@drawable/language_row_selector"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/settings_language_row_pad"
+                android:paddingEnd="@dimen/settings_language_row_pad">
 
-            <TextView
-                android:id="@+id/language_fr_radio"
-                android:layout_width="@dimen/settings_language_radio_width"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="○"
-                android:textColor="#FFFFC83D"
-                android:textSize="@dimen/settings_language_radio_size"/>
-        </LinearLayout>
+                <ImageView
+                    android:layout_width="@dimen/settings_language_flag_width"
+                    android:layout_height="@dimen/settings_language_flag_height"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/flag_fr" />
 
-        <LinearLayout
-            android:id="@+id/language_en"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/settings_language_row_height"
-            android:layout_marginStart="@dimen/settings_language_indent"
-            android:layout_marginEnd="@dimen/settings_language_row_end"
-            android:layout_marginTop="@dimen/settings_language_row_gap"
-            android:background="@drawable/language_row_selector"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingStart="@dimen/settings_language_row_pad"
-            android:paddingEnd="@dimen/settings_language_row_pad">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="10dp"
+                    android:text="Français"
+                    android:textColor="@color/white_color"
+                    android:textSize="@dimen/settings_language_text_size"/>
 
-            <TextView
-                android:layout_width="@dimen/settings_language_flag_width"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="🇬🇧"
-                android:textSize="@dimen/settings_flag_size"/>
+                <TextView
+                    android:id="@+id/language_fr_radio"
+                    android:layout_width="@dimen/settings_language_radio_width"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="○"
+                    android:textColor="#FFFFC83D"
+                    android:textSize="@dimen/settings_language_radio_size"/>
+            </LinearLayout>
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="start|center_vertical"
-                android:paddingStart="10dp"
-                android:text="English"
-                android:textColor="@color/white_color"
-                android:textSize="@dimen/settings_language_text_size"/>
+            <LinearLayout
+                android:id="@+id/language_en"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/settings_language_row_height"
+                android:layout_marginStart="@dimen/settings_language_indent"
+                android:layout_marginEnd="@dimen/settings_language_row_end"
+                android:layout_marginTop="@dimen/settings_language_row_gap"
+                android:background="@drawable/language_row_selector"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/settings_language_row_pad"
+                android:paddingEnd="@dimen/settings_language_row_pad">
 
-            <TextView
-                android:id="@+id/language_en_radio"
-                android:layout_width="@dimen/settings_language_radio_width"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="○"
-                android:textColor="#FFFFC83D"
-                android:textSize="@dimen/settings_language_radio_size"/>
-        </LinearLayout>
+                <ImageView
+                    android:layout_width="@dimen/settings_language_flag_width"
+                    android:layout_height="@dimen/settings_language_flag_height"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/flag_en" />
 
-        <LinearLayout
-            android:id="@+id/language_ar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/settings_language_row_height"
-            android:layout_marginStart="@dimen/settings_language_indent"
-            android:layout_marginEnd="@dimen/settings_language_row_end"
-            android:layout_marginTop="@dimen/settings_language_row_gap"
-            android:background="@drawable/language_row_selector"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingStart="@dimen/settings_language_row_pad"
-            android:paddingEnd="@dimen/settings_language_row_pad">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="10dp"
+                    android:text="English"
+                    android:textColor="@color/white_color"
+                    android:textSize="@dimen/settings_language_text_size"/>
 
-            <TextView
-                android:layout_width="@dimen/settings_language_flag_width"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="🇸🇦"
-                android:textSize="@dimen/settings_flag_size"/>
+                <TextView
+                    android:id="@+id/language_en_radio"
+                    android:layout_width="@dimen/settings_language_radio_width"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="○"
+                    android:textColor="#FFFFC83D"
+                    android:textSize="@dimen/settings_language_radio_size"/>
+            </LinearLayout>
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="start|center_vertical"
-                android:paddingStart="10dp"
-                android:text="العربية"
-                android:textColor="@color/white_color"
-                android:textSize="@dimen/settings_language_text_size"/>
+            <LinearLayout
+                android:id="@+id/language_ar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/settings_language_row_height"
+                android:layout_marginStart="@dimen/settings_language_indent"
+                android:layout_marginEnd="@dimen/settings_language_row_end"
+                android:layout_marginTop="@dimen/settings_language_row_gap"
+                android:background="@drawable/language_row_selector"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/settings_language_row_pad"
+                android:paddingEnd="@dimen/settings_language_row_pad">
 
-            <TextView
-                android:id="@+id/language_ar_radio"
-                android:layout_width="@dimen/settings_language_radio_width"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="○"
-                android:textColor="#FFFFC83D"
-                android:textSize="@dimen/settings_language_radio_size"/>
-        </LinearLayout>
+                <ImageView
+                    android:layout_width="@dimen/settings_language_flag_width"
+                    android:layout_height="@dimen/settings_language_flag_height"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/flag_ar" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="10dp"
+                    android:text="العربية"
+                    android:textColor="@color/white_color"
+                    android:textSize="@dimen/settings_language_text_size"/>
+
+                <TextView
+                    android:id="@+id/language_ar_radio"
+                    android:layout_width="@dimen/settings_language_radio_width"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="○"
+                    android:textColor="#FFFFC83D"
+                    android:textSize="@dimen/settings_language_radio_size"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/language_es"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/settings_language_row_height"
+                android:layout_marginStart="@dimen/settings_language_indent"
+                android:layout_marginEnd="@dimen/settings_language_row_end"
+                android:layout_marginTop="@dimen/settings_language_row_gap"
+                android:background="@drawable/language_row_selector"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/settings_language_row_pad"
+                android:paddingEnd="@dimen/settings_language_row_pad">
+
+                <ImageView
+                    android:layout_width="@dimen/settings_language_flag_width"
+                    android:layout_height="@dimen/settings_language_flag_height"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/flag_es" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="10dp"
+                    android:text="Español"
+                    android:textColor="@color/white_color"
+                    android:textSize="@dimen/settings_language_text_size"/>
+
+                <TextView
+                    android:id="@+id/language_es_radio"
+                    android:layout_width="@dimen/settings_language_radio_width"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="○"
+                    android:textColor="#FFFFC83D"
+                    android:textSize="@dimen/settings_language_radio_size"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/language_de"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/settings_language_row_height"
+                android:layout_marginStart="@dimen/settings_language_indent"
+                android:layout_marginEnd="@dimen/settings_language_row_end"
+                android:layout_marginTop="@dimen/settings_language_row_gap"
+                android:background="@drawable/language_row_selector"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/settings_language_row_pad"
+                android:paddingEnd="@dimen/settings_language_row_pad">
+
+                <ImageView
+                    android:layout_width="@dimen/settings_language_flag_width"
+                    android:layout_height="@dimen/settings_language_flag_height"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/flag_de" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="10dp"
+                    android:text="Deutsch"
+                    android:textColor="@color/white_color"
+                    android:textSize="@dimen/settings_language_text_size"/>
+
+                <TextView
+                    android:id="@+id/language_de_radio"
+                    android:layout_width="@dimen/settings_language_radio_width"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="○"
+                    android:textColor="#FFFFC83D"
+                    android:textSize="@dimen/settings_language_radio_size"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/language_it"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/settings_language_row_height"
+                android:layout_marginStart="@dimen/settings_language_indent"
+                android:layout_marginEnd="@dimen/settings_language_row_end"
+                android:layout_marginTop="@dimen/settings_language_row_gap"
+                android:background="@drawable/language_row_selector"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/settings_language_row_pad"
+                android:paddingEnd="@dimen/settings_language_row_pad">
+
+                <ImageView
+                    android:layout_width="@dimen/settings_language_flag_width"
+                    android:layout_height="@dimen/settings_language_flag_height"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/flag_it" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="10dp"
+                    android:text="Italiano"
+                    android:textColor="@color/white_color"
+                    android:textSize="@dimen/settings_language_text_size"/>
+
+                <TextView
+                    android:id="@+id/language_it_radio"
+                    android:layout_width="@dimen/settings_language_radio_width"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="○"
+                    android:textColor="#FFFFC83D"
+                    android:textSize="@dimen/settings_language_radio_size"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/language_pt"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/settings_language_row_height"
+                android:layout_marginStart="@dimen/settings_language_indent"
+                android:layout_marginEnd="@dimen/settings_language_row_end"
+                android:layout_marginTop="@dimen/settings_language_row_gap"
+                android:background="@drawable/language_row_selector"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/settings_language_row_pad"
+                android:paddingEnd="@dimen/settings_language_row_pad">
+
+                <ImageView
+                    android:layout_width="@dimen/settings_language_flag_width"
+                    android:layout_height="@dimen/settings_language_flag_height"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/flag_pt" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="10dp"
+                    android:text="Português"
+                    android:textColor="@color/white_color"
+                    android:textSize="@dimen/settings_language_text_size"/>
+
+                <TextView
+                    android:id="@+id/language_pt_radio"
+                    android:layout_width="@dimen/settings_language_radio_width"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="○"
+                    android:textColor="#FFFFC83D"
+                    android:textSize="@dimen/settings_language_radio_size"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/language_tr"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/settings_language_row_height"
+                android:layout_marginStart="@dimen/settings_language_indent"
+                android:layout_marginEnd="@dimen/settings_language_row_end"
+                android:layout_marginTop="@dimen/settings_language_row_gap"
+                android:background="@drawable/language_row_selector"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/settings_language_row_pad"
+                android:paddingEnd="@dimen/settings_language_row_pad">
+
+                <ImageView
+                    android:layout_width="@dimen/settings_language_flag_width"
+                    android:layout_height="@dimen/settings_language_flag_height"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/flag_tr" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="10dp"
+                    android:text="Türkçe"
+                    android:textColor="@color/white_color"
+                    android:textSize="@dimen/settings_language_text_size"/>
+
+                <TextView
+                    android:id="@+id/language_tr_radio"
+                    android:layout_width="@dimen/settings_language_radio_width"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="○"
+                    android:textColor="#FFFFC83D"
+                    android:textSize="@dimen/settings_language_radio_size"/>
+            </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
