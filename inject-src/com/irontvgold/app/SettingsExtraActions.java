@@ -112,8 +112,24 @@ public final class SettingsExtraActions {
     }
 
     public static void onItemChecked(View item, boolean checked) {
-        if (item == null || !checked || !item.hasFocus()) return;
-        onItemFocus(item, true);
+        if (item == null || !checked) return;
+        Activity activity = activityFrom(item.getContext());
+        if (activity == null) return;
+
+        int itemId = item.getId();
+        int language = id(activity, "menu_language");
+        int hide = id(activity, "menu_hide_categories");
+
+        if (itemId == hide && hide != 0) {
+            hideLanguagePane(activity);
+            showHideCategoriesPane(activity, true);
+            return;
+        }
+
+        if (itemId == language && language != 0) {
+            hideHideCategoriesPane(activity);
+            showLanguagePane(activity, false);
+        }
     }
 
     public static void install(final Activity activity) {
