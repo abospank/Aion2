@@ -23,14 +23,23 @@ if "private boolean categoriesAreHidden()" not in s:
         leftPanel.setVisibility(hidden ? View.GONE : View.VISIBLE);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        applyCategoryVisibility();
-    }
-
 '''
     s = s.replace(anchor, helper + anchor, 1)
+
+# Reuse the existing onResume lifecycle method instead of defining a second one.
+resume_old = '''    @Override protected void onResume() {
+        super.onResume();
+        if (!allMovies.isEmpty()) refreshSpecialCategoryCounts();
+    }'''
+resume_new = '''    @Override protected void onResume() {
+        super.onResume();
+        applyCategoryVisibility();
+        if (!allMovies.isEmpty()) refreshSpecialCategoryCounts();
+    }'''
+if resume_old in s:
+    s = s.replace(resume_old, resume_new, 1)
+elif "applyCategoryVisibility();" not in s[s.find("@Override protected void onResume()"):s.find("@Override protected void onResume()")+300]:
+    raise SystemExit("existing onResume anchor not found")
 
 # Apply the setting as soon as the movie library UI is created.
 oncreate_anchor = "        buildUi();\n        startClock();"
