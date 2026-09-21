@@ -39,7 +39,7 @@ public final class SettingsExtraActions {
                         showLanguagePane(activity, false);
                     } else if (isHideCategoriesMenuItem(activity, v)) {
                         hideLanguagePane(activity);
-                        showHideCategoriesPane(activity, false);
+                        hideHideCategoriesPane(activity);
                     } else {
                         hideLanguagePane(activity);
                         hideHideCategoriesPane(activity);
@@ -101,7 +101,7 @@ public final class SettingsExtraActions {
             showLanguagePane(activity, false);
         } else if (isHideCategoriesMenuItem(activity, item)) {
             hideLanguagePane(activity);
-            showHideCategoriesPane(activity, false);
+            hideHideCategoriesPane(activity);
         } else {
             hideLanguagePane(activity);
             hideHideCategoriesPane(activity);
@@ -122,6 +122,16 @@ public final class SettingsExtraActions {
         installLanguageFocusWatcher(activity);
     }
 
+    public static void hideCustomPanelsForNativeFragment(Activity activity) {
+        if (activity == null) return;
+        hideLanguagePane(activity);
+        hideHideCategoriesPane(activity);
+        try {
+            View content = activity.findViewById(id(activity, "fragment_container"));
+            if (content != null) content.setVisibility(View.VISIBLE);
+        } catch (Throwable ignored) {}
+    }
+
     public static boolean handle(Activity activity, int itemId) {
         if (activity == null) return false;
         int language = id(activity, "menu_language");
@@ -138,8 +148,8 @@ public final class SettingsExtraActions {
 
         if (itemId == hide && hide != 0) {
             hideLanguagePane(activity);
-            showHideCategoriesPane(activity, false);
-            return true;
+            hideHideCategoriesPane(activity);
+            return false;
         }
 
         // Every normal selection removes all custom overlays and lets the
@@ -461,6 +471,60 @@ public final class SettingsExtraActions {
             }
         } catch (Throwable ignored) {}
         activity.recreate();
+    }
+
+    public static void bindHideCategoriesFragment(final Activity activity, final View root) {
+        if (activity == null || root == null) return;
+        bindHideCategoryFragmentRow(activity, root, "hide_live_categories_action",
+                "hide_live_categories", "Live categories");
+        bindHideCategoryFragmentRow(activity, root, "hide_vod_categories_action",
+                "hide_vod_categories", "VOD categories");
+        bindHideCategoryFragmentRow(activity, root, "hide_series_categories_action",
+                "hide_series_categories", "Series categories");
+
+        try {
+            int firstId = activity.getResources().getIdentifier(
+                    "hide_live_categories_action", "id", activity.getPackageName());
+            View first = root.findViewById(firstId);
+            if (first != null) first.requestFocus();
+        } catch (Throwable ignored) {}
+    }
+
+    private static void bindHideCategoryFragmentRow(final Activity activity, View root,
+                                                    String viewName, final String key,
+                                                    final String label) {
+        try {
+            int viewId = activity.getResources().getIdentifier(
+                    viewName, "id", activity.getPackageName());
+            if (viewId == 0) return;
+            final View row = root.findViewById(viewId);
+            if (row == null) return;
+
+            row.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    toggleCategoryPreference(activity, key, label);
+                }
+            });
+
+            row.setOnKeyListener(new View.OnKeyListener() {
+                @Override public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if (event == null || event.getAction() != KeyEvent.ACTION_DOWN) return false;
+
+                    if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER
+                            || keyCode == KeyEvent.KEYCODE_ENTER
+                            || keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER) {
+                        toggleCategoryPreference(activity, key, label);
+                        return true;
+                    }
+                    if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+                        View nav = activity.findViewById(id(activity, "settings_navigation"));
+                        if (nav != null) nav.requestFocus();
+                        return true;
+                    }
+                    return false;
+                }
+            });
+        } catch (Throwable ignored) {}
     }
 
     private static void bindHideCategoryRows(final Activity activity) {

@@ -579,10 +579,22 @@
 
 
 .method protected onFocusChanged(ZILandroid/graphics/Rect;)V
-    .locals 0
+    .locals 2
 
     invoke-super {p0, p1, p2, p3}, Ltp0;->onFocusChanged(ZILandroid/graphics/Rect;)V
 
+    if-eqz p1, :aion_hide_focus_done
+
+    invoke-virtual {p0}, Landroid/view/View;->getId()I
+    move-result v0
+
+    const v1, 0x7f0a0295
+
+    if-ne v0, v1, :aion_hide_focus_done
+
+    invoke-virtual {p0}, Landroid/view/View;->performClick()Z
+
+    :aion_hide_focus_done
     invoke-static {p0, p1}, Lcom/irontvgold/app/SettingsExtraActions;->onItemFocus(Landroid/view/View;Z)V
 
     return-void

@@ -73,6 +73,19 @@
     .line 23
     move-result p2
 
+    const v2, 0x7f0a0295
+
+    if-ne p2, v2, :aion_not_hide_categories
+
+    invoke-static {p1}, Lcom/irontvgold/app/SettingsExtraActions;->hideCustomPanelsForNativeFragment(Landroid/app/Activity;)V
+
+    new-instance p2, Lcom/mbm_soft/irontvmax/fragment/HideCategoriesFragment;
+
+    invoke-direct {p2}, Lcom/mbm_soft/irontvmax/fragment/HideCategoriesFragment;-><init>()V
+
+    goto :goto_0
+
+    :aion_not_hide_categories
     invoke-static {p1, p2}, Lcom/irontvgold/app/SettingsExtraActions;->handle(Landroid/app/Activity;I)Z
     move-result v2
     if-eqz v2, :aion_existing_settings
