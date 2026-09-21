@@ -357,15 +357,50 @@ public final class MovieLibraryActivity extends Activity {
     }
 
     private void openLiveLibrary() {
+        final Context app = getApplicationContext();
+        final int livePlayer = getSharedPreferences("user_info", MODE_PRIVATE)
+                .getInt("live_player", 1);
+
+        Toast.makeText(this,
+                "1/3 TV EN DIRECT OK - player=" + livePlayer,
+                Toast.LENGTH_LONG).show();
+
         try {
-            Intent result = new Intent();
-            result.putExtra("aion_open_live", true);
-            setResult(Activity.RESULT_OK, result);
+            Intent home = new Intent();
+            home.setClassName(this, "com.mbm_soft.irontvmax.activities.MainActivity");
+            home.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(home);
+
+            Toast.makeText(this,
+                    "2/3 Retour interface principale",
+                    Toast.LENGTH_LONG).show();
+
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override public void run() {
+                    Toast.makeText(app,
+                            "3/3 Ouverture bibliothèque TV",
+                            Toast.LENGTH_LONG).show();
+                    try {
+                        Intent live = new Intent();
+                        live.setClassName(app,
+                                livePlayer == 0
+                                        ? "com.mbm_soft.irontvmax.activities.LiveActivityVlc"
+                                        : "com.mbm_soft.irontvmax.activities.LiveActivity");
+                        live.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        app.startActivity(live);
+                    } catch (Throwable first) {
+                        Toast.makeText(app,
+                                "ERREUR LIVE: " + first.getClass().getSimpleName(),
+                                Toast.LENGTH_LONG).show();
+                    }
+                }
+            }, 1000L);
+
             finish();
         } catch (Throwable error) {
             Toast.makeText(this,
-                    t("Unable to open Live TV", "Impossible d’ouvrir TV EN DIRECT", "تعذر فتح القنوات المباشرة"),
-                    Toast.LENGTH_SHORT).show();
+                    "ERREUR HOME: " + error.getClass().getSimpleName(),
+                    Toast.LENGTH_LONG).show();
         }
     }
 
