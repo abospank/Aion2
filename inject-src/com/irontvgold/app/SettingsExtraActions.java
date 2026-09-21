@@ -60,6 +60,30 @@ public final class SettingsExtraActions {
         } catch (Throwable ignored) {}
     }
 
+    public static void onItemFocus(View item, boolean hasFocus) {
+        if (item == null || !hasFocus) return;
+        Activity activity = activityFrom(item.getContext());
+        if (activity == null) return;
+
+        int language = id(activity, "menu_language");
+        if (item.getId() == language && language != 0) {
+            showLanguagePane(activity, false);
+        } else {
+            hideLanguagePane(activity);
+        }
+    }
+
+    public static void onItemChecked(View item, boolean checked) {
+        if (item == null || !checked) return;
+        Activity activity = activityFrom(item.getContext());
+        if (activity == null) return;
+
+        int language = id(activity, "menu_language");
+        if (item.getId() == language && language != 0) {
+            showLanguagePane(activity, false);
+        }
+    }
+
     public static void install(Activity activity) {
         if (activity == null) return;
         bindLanguageRows(activity);

@@ -577,6 +577,17 @@
     return-object v0
 .end method
 
+
+.method protected onFocusChanged(ZILandroid/graphics/Rect;)V
+    .locals 0
+
+    invoke-super {p0, p1, p2, p3}, Ltp0;->onFocusChanged(ZILandroid/graphics/Rect;)V
+
+    invoke-static {p0, p1}, Lcom/irontvgold/app/SettingsExtraActions;->onItemFocus(Landroid/view/View;Z)V
+
+    return-void
+.end method
+
 .method public final onCreateDrawableState(I)[I
     .locals 1
 
@@ -643,6 +654,8 @@
     iget-object v0, p0, Lcom/google/android/material/internal/NavigationMenuItemView;->A:Landroid/widget/CheckedTextView;
 
     invoke-virtual {v0, p1}, Landroid/widget/CheckedTextView;->setChecked(Z)V
+
+    invoke-static {p0, p1}, Lcom/irontvgold/app/SettingsExtraActions;->onItemChecked(Landroid/view/View;Z)V
 
     return-void
 .end method
