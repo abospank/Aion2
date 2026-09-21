@@ -117,6 +117,11 @@ public final class SettingsExtraActions {
             showLanguagePane(activity, true);
             return true;
         }
+
+        // Every other selection must remove the language overlay and reveal
+        // the fragment selected by the original Settings navigation logic.
+        hideLanguagePane(activity);
+
         if (itemId == hide && hide != 0) {
             toggleHideCategories(activity);
             return true;
