@@ -96,7 +96,7 @@
 
     iget-object p2, p0, Lcom/mbm_soft/irontvmax/fragment/UserInfoFragment;->mVersion:Landroid/widget/TextView;
 
-    const-string p3, "6.2"
+    const-string p3, "1.0"
 
     invoke-virtual {p2, p3}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
 
