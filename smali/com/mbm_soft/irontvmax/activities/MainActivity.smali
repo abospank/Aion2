@@ -376,7 +376,7 @@
 .end method
 
 .method public lilMoviesHasClicked()V
-    .locals 2
+    .locals 3
     .annotation runtime Lbutterknife/OnClick;
     .end annotation
 
@@ -386,7 +386,9 @@
 
     invoke-direct {v0, p0, v1}, Landroid/content/Intent;-><init>(Landroid/content/Context;Ljava/lang/Class;)V
 
-    invoke-virtual {p0, v0}, Landroid/content/Context;->startActivity(Landroid/content/Intent;)V
+    const/16 v2, 0x2a71
+
+    invoke-virtual {p0, v0, v2}, Landroid/app/Activity;->startActivityForResult(Landroid/content/Intent;I)V
 
     return-void
 .end method
@@ -731,6 +733,37 @@
 
     invoke-virtual {v3, v1}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
 
+    return-void
+.end method
+
+.method protected onActivityResult(IILandroid/content/Intent;)V
+    .locals 2
+
+    invoke-super {p0, p1, p2, p3}, Ls2;->onActivityResult(IILandroid/content/Intent;)V
+
+    const/16 v0, 0x2a71
+
+    if-ne p1, v0, :aion_result_done
+
+    const/4 v0, -0x1
+
+    if-ne p2, v0, :aion_result_done
+
+    if-eqz p3, :aion_result_done
+
+    const-string v0, "aion_open_live"
+
+    const/4 v1, 0x0
+
+    invoke-virtual {p3, v0, v1}, Landroid/content/Intent;->getBooleanExtra(Ljava/lang/String;Z)Z
+
+    move-result v0
+
+    if-eqz v0, :aion_result_done
+
+    invoke-virtual {p0}, Lcom/mbm_soft/irontvmax/activities/MainActivity;->lilLiveHasClicked()V
+
+    :aion_result_done
     return-void
 .end method
 
