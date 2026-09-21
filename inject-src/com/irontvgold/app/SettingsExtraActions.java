@@ -18,6 +18,9 @@ import android.widget.TextView;
 import java.lang.reflect.Method;
 
 public final class SettingsExtraActions {
+    private static Activity watchedSettingsActivity;
+    private static int lastAutoMenuId = Integer.MIN_VALUE;
+
     private SettingsExtraActions() {}
 
     /* Called by the patched NavigationMenuItemView. Native focused/hovered
@@ -139,6 +142,7 @@ public final class SettingsExtraActions {
         hideLanguagePane(activity);
         hideHideCategoriesPane(activity);
         installLanguageFocusWatcher(activity);
+        installSettingsMenuStateWatcher(activity);
     }
 
     public static void hideCustomPanelsForNativeFragment(Activity activity) {
@@ -187,6 +191,9 @@ public final class SettingsExtraActions {
         int resolved = context.getResources().getIdentifier(name, "id", context.getPackageName());
         if (resolved != 0) return resolved;
         if ("fragment_container".equals(name)) return 0x7f0a00fb;
+        if ("menu_player".equals(name)) return 0x7f0a016b;
+        if ("menu_user_info".equals(name)) return 0x7f0a016c;
+        if ("menu_user_settings".equals(name)) return 0x7f0a016d;
         if ("menu_language".equals(name)) return 0x7f0a0294;
         if ("menu_hide_categories".equals(name)) return 0x7f0a0295;
         if ("menu_clear_history".equals(name)) return 0x7f0a0296;
@@ -289,6 +296,114 @@ public final class SettingsExtraActions {
             }
         }
         return null;
+    }
+
+    private static void installSettingsMenuStateWatcher(final Activity activity) {
+        try {
+            watchedSettingsActivity = activity;
+            lastAutoMenuId = Integer.MIN_VALUE;
+
+            final View root = activity.findViewById(android.R.id.content);
+            if (root == null) return;
+
+            root.post(new Runnable() {
+                @Override public void run() {
+                    if (watchedSettingsActivity != activity) return;
+                    if (activity.isFinishing() || activity.isDestroyed()) return;
+
+                    try {
+                        int activeId = resolveActiveSettingsMenuId(activity);
+
+                        int hide = id(activity, "menu_hide_categories");
+                        int language = id(activity, "menu_language");
+
+                        if (activeId == hide && hide != 0) {
+                            View panel = activity.findViewById(id(activity, "hide_categories_panel"));
+                            boolean needsShow = panel == null || panel.getVisibility() != View.VISIBLE;
+                            if (lastAutoMenuId != hide || needsShow) {
+                                hideLanguagePane(activity);
+                                showHideCategoriesPane(activity, true);
+                            }
+                        } else if (activeId == language && language != 0) {
+                            View panel = activity.findViewById(id(activity, "language_panel"));
+                            boolean needsShow = panel == null || panel.getVisibility() != View.VISIBLE;
+                            if (lastAutoMenuId != language || needsShow) {
+                                hideHideCategoriesPane(activity);
+                                showLanguagePane(activity, false);
+                            }
+                        } else if (activeId != 0) {
+                            if (lastAutoMenuId != activeId) {
+                                hideLanguagePane(activity);
+                                hideHideCategoriesPane(activity);
+                            }
+                        }
+
+                        if (activeId != 0) lastAutoMenuId = activeId;
+                    } catch (Throwable ignored) {}
+
+                    root.postDelayed(this, 80L);
+                }
+            });
+        } catch (Throwable ignored) {}
+    }
+
+    private static int resolveActiveSettingsMenuId(Activity activity) {
+        int[] ids = new int[] {
+                id(activity, "menu_user_info"),
+                id(activity, "menu_user_settings"),
+                id(activity, "menu_player"),
+                id(activity, "menu_language"),
+                id(activity, "menu_hide_categories"),
+                id(activity, "menu_clear_history")
+        };
+
+        // Mouse / remote focus wins over stale checked state.
+        for (int menuId : ids) {
+            if (menuId == 0) continue;
+            View row = activity.findViewById(menuId);
+            if (row != null && (row.isHovered() || row.isFocused() || row.hasFocus() || row.isPressed())) {
+                return menuId;
+            }
+        }
+
+        // When the real focus remains in the right panel, NavigationView still
+        // marks the selected left-row item as checked. Use that as fallback.
+        for (int menuId : ids) {
+            if (menuId == 0) continue;
+            View row = activity.findViewById(menuId);
+            if (row != null && isNavigationRowChecked(row)) {
+                return menuId;
+            }
+        }
+
+        return 0;
+    }
+
+    private static boolean isNavigationRowChecked(View row) {
+        if (row == null) return false;
+        try {
+            Method getItemData;
+            try {
+                getItemData = row.getClass().getMethod("getItemData");
+            } catch (Throwable first) {
+                getItemData = row.getClass().getDeclaredMethod("getItemData");
+                getItemData.setAccessible(true);
+            }
+            Object itemData = getItemData.invoke(row);
+            if (itemData == null) return false;
+
+            Method isChecked;
+            try {
+                isChecked = itemData.getClass().getMethod("isChecked");
+            } catch (Throwable first) {
+                isChecked = itemData.getClass().getDeclaredMethod("isChecked");
+                isChecked.setAccessible(true);
+            }
+            Object result = isChecked.invoke(itemData);
+            return result instanceof Boolean && ((Boolean) result).booleanValue();
+        } catch (Throwable ignored) {
+            return false;
+        }
     }
 
     private static void installLanguageFocusWatcher(final Activity activity) {
@@ -602,8 +717,16 @@ public final class SettingsExtraActions {
             panel.setVisibility(View.VISIBLE);
             panel.bringToFront();
             if (focusFirst) {
+                try {
+                    View current = activity.getCurrentFocus();
+                    if (current != null) current.clearFocus();
+                } catch (Throwable ignored) {}
                 View first = activity.findViewById(id(activity, "hide_live_categories_action"));
-                if (first != null) first.requestFocus();
+                if (first != null) {
+                    first.setFocusable(true);
+                    first.setFocusableInTouchMode(true);
+                    first.requestFocus();
+                }
             }
         } catch (Throwable ignored) {}
     }
