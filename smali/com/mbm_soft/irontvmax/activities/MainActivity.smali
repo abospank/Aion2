@@ -734,27 +734,6 @@
     return-void
 .end method
 
-.method protected onNewIntent(Landroid/content/Intent;)V
-    .locals 2
-
-    invoke-super {p0, p1}, Lqr;->onNewIntent(Landroid/content/Intent;)V
-
-    invoke-virtual {p0, p1}, Landroid/app/Activity;->setIntent(Landroid/content/Intent;)V
-
-    const-string v0, "aion_open_live"
-    const/4 v1, 0x0
-
-    invoke-virtual {p1, v0, v1}, Landroid/content/Intent;->getBooleanExtra(Ljava/lang/String;Z)Z
-    move-result v0
-
-    if-eqz v0, :aion_new_intent_done
-
-    invoke-virtual {p0}, Lcom/mbm_soft/irontvmax/activities/MainActivity;->lilLiveHasClicked()V
-
-    :aion_new_intent_done
-    return-void
-.end method
-
 .method public final onCreate(Landroid/os/Bundle;)V
     .locals 11
 
@@ -1697,20 +1676,6 @@
     .line 475
     :catch_1
     :cond_4
-    invoke-virtual {p0}, Landroid/app/Activity;->getIntent()Landroid/content/Intent;
-    move-result-object v0
-
-    const-string v1, "aion_open_live"
-    const/4 v2, 0x0
-
-    invoke-virtual {v0, v1, v2}, Landroid/content/Intent;->getBooleanExtra(Ljava/lang/String;Z)Z
-    move-result v0
-
-    if-eqz v0, :aion_open_live_done
-
-    invoke-virtual {p0}, Lcom/mbm_soft/irontvmax/activities/MainActivity;->lilLiveHasClicked()V
-
-    :aion_open_live_done
     return-void
 .end method
 

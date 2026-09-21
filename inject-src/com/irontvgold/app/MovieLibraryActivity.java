@@ -357,12 +357,38 @@ public final class MovieLibraryActivity extends Activity {
     }
 
     private void openLiveLibrary() {
+        final Context app = getApplicationContext();
+        final int livePlayer = getSharedPreferences("user_info", MODE_PRIVATE)
+                .getInt("live_player", 1);
+
         try {
-            Intent intent = new Intent();
-            intent.setClassName(this, "com.mbm_soft.irontvmax.activities.MainActivity");
-            intent.putExtra("aion_open_live", true);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+            Intent home = new Intent();
+            home.setClassName(this, "com.mbm_soft.irontvmax.activities.MainActivity");
+            home.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(home);
+
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override public void run() {
+                    try {
+                        Intent live = new Intent();
+                        live.setClassName(app,
+                                livePlayer == 0
+                                        ? "com.mbm_soft.irontvmax.activities.LiveActivityVlc"
+                                        : "com.mbm_soft.irontvmax.activities.LiveActivity");
+                        live.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        app.startActivity(live);
+                    } catch (Throwable first) {
+                        try {
+                            Intent fallback = new Intent();
+                            fallback.setClassName(app,
+                                    "com.mbm_soft.irontvmax.activities.LiveActivity");
+                            fallback.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            app.startActivity(fallback);
+                        } catch (Throwable ignored) {}
+                    }
+                }
+            }, 650L);
+
             finish();
         } catch (Throwable error) {
             Toast.makeText(this,
