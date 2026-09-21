@@ -495,6 +495,8 @@
     .line 236
     .line 237
     .line 238
+    invoke-static {p0}, Lcom/irontvgold/app/SettingsExtraActions;->applySeriesCategoryVisibility(Ljava/lang/Object;)V
+
     return-void
 .end method
 
