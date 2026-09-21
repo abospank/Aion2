@@ -240,12 +240,45 @@ public final class SettingsExtraActions {
             final View navigation = activity.findViewById(id(activity, "settings_navigation"));
             if (navigation == null) return;
             attachNavigationHoverTargets(activity, navigation);
-            navigation.post(new Runnable() {
-                @Override public void run() {
-                    attachNavigationHoverTargets(activity, navigation);
-                }
-            });
+            navigation.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override public void onGlobalLayout() {
+                        attachNavigationHoverTargets(activity, navigation);
+                    }
+                });
+            startNavigationStateMonitor(activity, navigation);
         } catch (Throwable ignored) {}
+    }
+
+    private static void startNavigationStateMonitor(final Activity activity, final View navigation) {
+        navigation.post(new Runnable() {
+            @Override public void run() {
+                try {
+                    if (activity.isFinishing()) return;
+                    if (android.os.Build.VERSION.SDK_INT >= 17 && activity.isDestroyed()) return;
+                    View active = findActiveNavigationItem(navigation);
+                    if (active != null) updateLanguagePaneForFocus(activity, active);
+                    navigation.postDelayed(this, 80L);
+                } catch (Throwable ignored) {}
+            }
+        });
+    }
+
+    private static View findActiveNavigationItem(View view) {
+        if (view == null) return null;
+        String className = view.getClass().getName();
+        if (className != null && className.endsWith("NavigationMenuItemView")
+                && (view.isHovered() || view.isFocused() || view.hasFocus())) {
+            return view;
+        }
+        if (view instanceof ViewGroup) {
+            ViewGroup group = (ViewGroup) view;
+            for (int i = 0; i < group.getChildCount(); i++) {
+                View found = findActiveNavigationItem(group.getChildAt(i));
+                if (found != null) return found;
+            }
+        }
+        return null;
     }
 
     private static void attachNavigationHoverTargets(final Activity activity, View view) {
