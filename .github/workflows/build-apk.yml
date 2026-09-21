@@ -213,3 +213,17 @@ jobs:
           name: Aion2-${{ github.run_number }}
           path: Aion2-${{ github.run_number }}.apk
           compression-level: 0
+
+      - name: Export apksigner tool
+        shell: bash
+        run: |
+          set -euxo pipefail
+          BUILD_TOOLS="$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)"
+          cp "$BUILD_TOOLS/lib/apksigner.jar" apksigner.jar
+
+      - name: Upload apksigner tool
+        uses: actions/upload-artifact@v4
+        with:
+          name: apksigner-tool-${{ github.run_number }}
+          path: apksigner.jar
+          compression-level: 0
