@@ -10,12 +10,8 @@ if old_panel not in s:
     raise SystemExit("leftPanel placement anchor not found")
 s = s.replace(old_panel, new_panel, 1)
 
-# Keep the existing rail-tail mask aligned with the slightly taller category rail.
-old_mask = 'root.addView(railTailMask, place(0.255f, 0.151f, 0.013f, 0.742f));'
-new_mask = 'root.addView(railTailMask, place(0.255f, 0.143f, 0.013f, 0.758f));'
-if old_mask not in s:
-    raise SystemExit("railTailMask placement anchor not found")
-s = s.replace(old_mask, new_mask, 1)
+# The old rail-tail mask is removed by the existing category-pointer pass.
+# Do not recreate or alter it here.
 
 # Add only the supplied AION TV GOLD logo at the top-left.
 anchor = '        addHeader(root);'
