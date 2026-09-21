@@ -336,7 +336,7 @@ public final class MovieLibraryActivity extends Activity {
         LinearLayout live = footerButton("▣  " + t("LIVE TV", "TV EN DIRECT", "البث المباشر"), t("Live channels", "Chaînes en direct", "القنوات المباشرة"), false);
         live.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                openLiveLibrary();
+                startActivity(new Intent(MovieLibraryActivity.this, LiveTvActivity.class));
             }
         });
         root.addView(live, place(0.292f, 0.872f, 0.205f, 0.082f));
@@ -354,54 +354,6 @@ public final class MovieLibraryActivity extends Activity {
             }
         });
         root.addView(fav, place(0.722f, 0.872f, 0.185f, 0.082f));
-    }
-
-    private void openLiveLibrary() {
-        final Context app = getApplicationContext();
-        final int livePlayer = getSharedPreferences("user_info", MODE_PRIVATE)
-                .getInt("live_player", 1);
-
-        Toast.makeText(this,
-                "1/3 TV EN DIRECT OK - player=" + livePlayer,
-                Toast.LENGTH_LONG).show();
-
-        try {
-            Intent home = new Intent();
-            home.setClassName(this, "com.mbm_soft.irontvmax.activities.MainActivity");
-            home.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(home);
-
-            Toast.makeText(this,
-                    "2/3 Retour interface principale",
-                    Toast.LENGTH_LONG).show();
-
-            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                @Override public void run() {
-                    Toast.makeText(app,
-                            "3/3 Ouverture bibliothèque TV",
-                            Toast.LENGTH_LONG).show();
-                    try {
-                        Intent live = new Intent();
-                        live.setClassName(app,
-                                livePlayer == 0
-                                        ? "com.mbm_soft.irontvmax.activities.LiveActivityVlc"
-                                        : "com.mbm_soft.irontvmax.activities.LiveActivity");
-                        live.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        app.startActivity(live);
-                    } catch (Throwable first) {
-                        Toast.makeText(app,
-                                "ERREUR LIVE: " + first.getClass().getSimpleName(),
-                                Toast.LENGTH_LONG).show();
-                    }
-                }
-            }, 1000L);
-
-            finish();
-        } catch (Throwable error) {
-            Toast.makeText(this,
-                    "ERREUR HOME: " + error.getClass().getSimpleName(),
-                    Toast.LENGTH_LONG).show();
-        }
     }
 
     private void loadCatalog() {
