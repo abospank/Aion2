@@ -39,7 +39,7 @@ public final class SettingsExtraActions {
                         showLanguagePane(activity, false);
                     } else if (isHideCategoriesMenuItem(activity, v)) {
                         hideLanguagePane(activity);
-                        hideHideCategoriesPane(activity);
+                        showHideCategoriesPane(activity, false);
                     } else {
                         hideLanguagePane(activity);
                         hideHideCategoriesPane(activity);
@@ -101,7 +101,7 @@ public final class SettingsExtraActions {
             showLanguagePane(activity, false);
         } else if (isHideCategoriesMenuItem(activity, item)) {
             hideLanguagePane(activity);
-            hideHideCategoriesPane(activity);
+            showHideCategoriesPane(activity, false);
         } else {
             hideLanguagePane(activity);
             hideHideCategoriesPane(activity);
@@ -148,8 +148,8 @@ public final class SettingsExtraActions {
 
         if (itemId == hide && hide != 0) {
             hideLanguagePane(activity);
-            hideHideCategoriesPane(activity);
-            return false;
+            showHideCategoriesPane(activity, false);
+            return true;
         }
 
         // Every normal selection removes all custom overlays and lets the
