@@ -61,14 +61,22 @@ public final class SettingsExtraActions {
                     if (activity == null) return false;
 
                     int language = id(activity, "menu_language");
-                    if (menuItemId(v) != language || language == 0) return false;
+                    int hide = id(activity, "menu_hide_categories");
+                    int currentItemId = menuItemId(v);
 
                     if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER
                             || keyCode == KeyEvent.KEYCODE_ENTER
                             || keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER
                             || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
-                        showLanguagePane(activity, true);
-                        return true;
+                        if (currentItemId == language && language != 0) {
+                            showLanguagePane(activity, true);
+                            return true;
+                        }
+                        if (currentItemId == hide && hide != 0) {
+                            hideLanguagePane(activity);
+                            toggleHideCategories(activity);
+                            return true;
+                        }
                     }
                     return false;
                 }
