@@ -105,7 +105,6 @@ public final class SettingsExtraActions {
         bindLanguageRows(activity);
         hideLanguagePane(activity);
         installLanguageFocusWatcher(activity);
-        installNavigationHoverTracking(activity);
     }
 
     public static boolean handle(Activity activity, int itemId) {
@@ -115,7 +114,10 @@ public final class SettingsExtraActions {
         int clear = id(activity, "menu_clear_history");
 
         if (itemId == language && language != 0) {
-            showLanguagePane(activity, true);
+            // Keep focus on the navigation item. Moving focus into a language
+            // row made Android restore focus to Language after another menu
+            // item was selected, reopening this overlay over Player.
+            showLanguagePane(activity, false);
             return true;
         }
 
@@ -138,7 +140,6 @@ public final class SettingsExtraActions {
         int resolved = context.getResources().getIdentifier(name, "id", context.getPackageName());
         if (resolved != 0) return resolved;
         if ("fragment_container".equals(name)) return 0x7f0a00fb;
-        if ("settings_navigation".equals(name)) return 0x7f0a01f6;
         if ("menu_language".equals(name)) return 0x7f0a0294;
         if ("menu_hide_categories".equals(name)) return 0x7f0a0295;
         if ("menu_clear_history".equals(name)) return 0x7f0a0296;
@@ -233,73 +234,6 @@ public final class SettingsExtraActions {
             }
         }
         return null;
-    }
-
-    private static void installNavigationHoverTracking(final Activity activity) {
-        try {
-            final View navigation = activity.findViewById(id(activity, "settings_navigation"));
-            if (navigation == null) return;
-            attachNavigationHoverTargets(activity, navigation);
-            navigation.getViewTreeObserver().addOnGlobalLayoutListener(
-                new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override public void onGlobalLayout() {
-                        attachNavigationHoverTargets(activity, navigation);
-                    }
-                });
-            startNavigationStateMonitor(activity, navigation);
-        } catch (Throwable ignored) {}
-    }
-
-    private static void startNavigationStateMonitor(final Activity activity, final View navigation) {
-        navigation.post(new Runnable() {
-            @Override public void run() {
-                try {
-                    if (activity.isFinishing()) return;
-                    if (android.os.Build.VERSION.SDK_INT >= 17 && activity.isDestroyed()) return;
-                    View active = findActiveNavigationItem(navigation);
-                    if (active != null) updateLanguagePaneForFocus(activity, active);
-                    navigation.postDelayed(this, 80L);
-                } catch (Throwable ignored) {}
-            }
-        });
-    }
-
-    private static View findActiveNavigationItem(View view) {
-        if (view == null) return null;
-        String className = view.getClass().getName();
-        if (className != null && className.endsWith("NavigationMenuItemView")
-                && (view.isHovered() || view.isFocused() || view.hasFocus())) {
-            return view;
-        }
-        if (view instanceof ViewGroup) {
-            ViewGroup group = (ViewGroup) view;
-            for (int i = 0; i < group.getChildCount(); i++) {
-                View found = findActiveNavigationItem(group.getChildAt(i));
-                if (found != null) return found;
-            }
-        }
-        return null;
-    }
-
-    private static void attachNavigationHoverTargets(final Activity activity, View view) {
-        if (activity == null || view == null) return;
-        view.setOnHoverListener(new View.OnHoverListener() {
-            @Override public boolean onHover(View hovered, MotionEvent event) {
-                if (event == null) return false;
-                int action = event.getActionMasked();
-                if (action == MotionEvent.ACTION_HOVER_ENTER
-                        || action == MotionEvent.ACTION_HOVER_MOVE) {
-                    updateLanguagePaneForFocus(activity, hovered);
-                }
-                return false;
-            }
-        });
-        if (view instanceof ViewGroup) {
-            ViewGroup group = (ViewGroup) view;
-            for (int i = 0; i < group.getChildCount(); i++) {
-                attachNavigationHoverTargets(activity, group.getChildAt(i));
-            }
-        }
     }
 
     private static void installLanguageFocusWatcher(final Activity activity) {
