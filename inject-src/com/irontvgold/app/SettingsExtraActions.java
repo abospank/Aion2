@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.ViewParent;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Toast;
 import android.widget.TextView;
@@ -33,7 +34,7 @@ public final class SettingsExtraActions {
 
                     int language = id(activity, "menu_language");
                     int currentItemId = menuItemId(v);
-                    if (currentItemId == language && language != 0) {
+                    if (isLanguageMenuItem(activity, v)) {
                         showLanguagePane(activity, false);
                     } else {
                         hideLanguagePane(activity);
@@ -81,7 +82,7 @@ public final class SettingsExtraActions {
         if (activity == null) return;
 
         int language = id(activity, "menu_language");
-        if (menuItemId(item) == language && language != 0) {
+        if (isLanguageMenuItem(activity, item)) {
             showLanguagePane(activity, false);
         } else {
             hideLanguagePane(activity);
@@ -94,24 +95,8 @@ public final class SettingsExtraActions {
         if (activity == null) return;
 
         int language = id(activity, "menu_language");
-        if (menuItemId(item) == language && language != 0) {
+        if (isLanguageMenuItem(activity, item)) {
             showLanguagePane(activity, false);
-        }
-    }
-
-    /* Called from NavigationMenuItemView.drawableStateChanged(), the same
-       state transition that paints the gold selector. Passing the real menu
-       item id from smali avoids reflection/context timing failures. */
-    public static void onItemVisualState(View item, int itemId, boolean active) {
-        if (item == null || !active) return;
-        Activity activity = activityFrom(item.getContext());
-        if (activity == null) return;
-
-        int language = id(activity, "menu_language");
-        if (language != 0 && itemId == language) {
-            showLanguagePane(activity, false);
-        } else {
-            hideLanguagePane(activity);
         }
     }
 
@@ -146,9 +131,27 @@ public final class SettingsExtraActions {
     private static int id(Context context, String name) {
         int resolved = context.getResources().getIdentifier(name, "id", context.getPackageName());
         if (resolved != 0) return resolved;
+        if ("fragment_container".equals(name)) return 0x7f0a00fb;
         if ("menu_language".equals(name)) return 0x7f0a0294;
         if ("menu_hide_categories".equals(name)) return 0x7f0a0295;
         if ("menu_clear_history".equals(name)) return 0x7f0a0296;
+        if ("language_panel".equals(name)) return 0x7f0a0297;
+        if ("language_fr".equals(name)) return 0x7f0a0298;
+        if ("language_fr_radio".equals(name)) return 0x7f0a0299;
+        if ("language_en".equals(name)) return 0x7f0a029a;
+        if ("language_en_radio".equals(name)) return 0x7f0a029b;
+        if ("language_ar".equals(name)) return 0x7f0a029c;
+        if ("language_ar_radio".equals(name)) return 0x7f0a029d;
+        if ("language_es".equals(name)) return 0x7f0a029e;
+        if ("language_es_radio".equals(name)) return 0x7f0a029f;
+        if ("language_de".equals(name)) return 0x7f0a02a0;
+        if ("language_de_radio".equals(name)) return 0x7f0a02a1;
+        if ("language_it".equals(name)) return 0x7f0a02a2;
+        if ("language_it_radio".equals(name)) return 0x7f0a02a3;
+        if ("language_pt".equals(name)) return 0x7f0a02a4;
+        if ("language_pt_radio".equals(name)) return 0x7f0a02a5;
+        if ("language_tr".equals(name)) return 0x7f0a02a6;
+        if ("language_tr_radio".equals(name)) return 0x7f0a02a7;
         return 0;
     }
 
@@ -185,6 +188,29 @@ public final class SettingsExtraActions {
             }
         } catch (Throwable ignored) {}
         return view.getId();
+    }
+
+    private static boolean isLanguageMenuItem(Activity activity, View item) {
+        if (activity == null || item == null) return false;
+        int language = id(activity, "menu_language");
+        if (language != 0 && menuItemId(item) == language) return true;
+        String label = text(activity, "language", "Langue");
+        return containsLabel(item, label);
+    }
+
+    private static boolean containsLabel(View view, String label) {
+        if (view == null || label == null) return false;
+        if (view instanceof TextView) {
+            CharSequence value = ((TextView) view).getText();
+            if (value != null && label.trim().equalsIgnoreCase(value.toString().trim())) return true;
+        }
+        if (view instanceof ViewGroup) {
+            ViewGroup group = (ViewGroup) view;
+            for (int i = 0; i < group.getChildCount(); i++) {
+                if (containsLabel(group.getChildAt(i), label)) return true;
+            }
+        }
+        return false;
     }
 
     private static Activity activityFrom(Context context) {
@@ -230,7 +256,7 @@ public final class SettingsExtraActions {
             if (menuItem == null) return;
 
             int language = id(activity, "menu_language");
-            if (language != 0 && menuItemId(menuItem) == language) {
+            if (isLanguageMenuItem(activity, menuItem)) {
                 showLanguagePane(activity, false);
             } else {
                 hideLanguagePane(activity);
@@ -303,7 +329,6 @@ public final class SettingsExtraActions {
             panel.setAlpha(1.0f);
             panel.setVisibility(View.VISIBLE);
             panel.bringToFront();
-            panel.requestLayout();
             refreshLanguagePane(activity);
             if (focusCurrent) {
                 String current = activity.getSharedPreferences("aion_settings", Context.MODE_PRIVATE)

@@ -3432,6 +3432,23 @@
     <public type="id" name="menu_language" id="0x7f0a0294" />
     <public type="id" name="menu_hide_categories" id="0x7f0a0295" />
     <public type="id" name="menu_clear_history" id="0x7f0a0296" />
+    <public type="id" name="language_panel" id="0x7f0a0297" />
+    <public type="id" name="language_fr" id="0x7f0a0298" />
+    <public type="id" name="language_fr_radio" id="0x7f0a0299" />
+    <public type="id" name="language_en" id="0x7f0a029a" />
+    <public type="id" name="language_en_radio" id="0x7f0a029b" />
+    <public type="id" name="language_ar" id="0x7f0a029c" />
+    <public type="id" name="language_ar_radio" id="0x7f0a029d" />
+    <public type="id" name="language_es" id="0x7f0a029e" />
+    <public type="id" name="language_es_radio" id="0x7f0a029f" />
+    <public type="id" name="language_de" id="0x7f0a02a0" />
+    <public type="id" name="language_de_radio" id="0x7f0a02a1" />
+    <public type="id" name="language_it" id="0x7f0a02a2" />
+    <public type="id" name="language_it_radio" id="0x7f0a02a3" />
+    <public type="id" name="language_pt" id="0x7f0a02a4" />
+    <public type="id" name="language_pt_radio" id="0x7f0a02a5" />
+    <public type="id" name="language_tr" id="0x7f0a02a6" />
+    <public type="id" name="language_tr_radio" id="0x7f0a02a7" />
     <public type="integer" name="abc_config_activityDefaultDur" id="0x7f0b0000" />
     <public type="integer" name="abc_config_activityShortDur" id="0x7f0b0001" />
     <public type="integer" name="app_bar_elevation_anim_duration" id="0x7f0b0002" />

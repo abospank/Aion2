@@ -579,56 +579,12 @@
 
 
 .method protected onFocusChanged(ZILandroid/graphics/Rect;)V
-    .locals 1
+    .locals 0
 
-    invoke-super {p0, p1, p2, p3}, Landroid/view/View;->onFocusChanged(ZILandroid/graphics/Rect;)V
+    invoke-super {p0, p1, p2, p3}, Ltp0;->onFocusChanged(ZILandroid/graphics/Rect;)V
 
-    iget-object v0, p0, Lcom/google/android/material/internal/NavigationMenuItemView;->C:Landroidx/appcompat/view/menu/h;
+    invoke-static {p0, p1}, Lcom/irontvgold/app/SettingsExtraActions;->onItemFocus(Landroid/view/View;Z)V
 
-    if-eqz v0, :cond_focus_done
-
-    invoke-virtual {v0}, Landroidx/appcompat/view/menu/h;->getItemId()I
-
-    move-result v0
-
-    invoke-static {p0, v0, p1}, Lcom/irontvgold/app/SettingsExtraActions;->onItemVisualState(Landroid/view/View;IZ)V
-
-    :cond_focus_done
-    return-void
-.end method
-
-
-.method protected drawableStateChanged()V
-    .locals 2
-
-    invoke-super {p0}, Landroid/view/View;->drawableStateChanged()V
-
-    invoke-virtual {p0}, Landroid/view/View;->isFocused()Z
-
-    move-result v0
-
-    if-nez v0, :cond_visual_active
-
-    invoke-virtual {p0}, Landroid/view/View;->isHovered()Z
-
-    move-result v0
-
-    if-eqz v0, :cond_visual_done
-
-    :cond_visual_active
-    iget-object v0, p0, Lcom/google/android/material/internal/NavigationMenuItemView;->C:Landroidx/appcompat/view/menu/h;
-
-    if-eqz v0, :cond_visual_done
-
-    invoke-virtual {v0}, Landroidx/appcompat/view/menu/h;->getItemId()I
-
-    move-result v0
-
-    const/4 v1, 0x1
-
-    invoke-static {p0, v0, v1}, Lcom/irontvgold/app/SettingsExtraActions;->onItemVisualState(Landroid/view/View;IZ)V
-
-    :cond_visual_done
     return-void
 .end method
 
