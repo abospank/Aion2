@@ -357,36 +357,17 @@ public final class MovieLibraryActivity extends Activity {
     }
 
     private void openLiveLibrary() {
-        int livePlayer = 1;
-        try {
-            Class<?> prefsClass = Class.forName("gu");
-            java.lang.reflect.Field prefsField = prefsClass.getField("a");
-            Object prefsObject = prefsField.get(null);
-            if (prefsObject instanceof android.content.SharedPreferences) {
-                livePlayer = ((android.content.SharedPreferences) prefsObject)
-                        .getInt("live_player", 1);
-            }
-        } catch (Throwable ignored) {}
-
-        String target = livePlayer == 0
-                ? "com.mbm_soft.irontvmax.activities.LiveActivityVlc"
-                : "com.mbm_soft.irontvmax.activities.LiveActivity";
-
         try {
             Intent intent = new Intent();
-            intent.setClassName(this, target);
+            intent.setClassName(this, "com.mbm_soft.irontvmax.activities.MainActivity");
+            intent.putExtra("aion_open_live", true);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-        } catch (Throwable first) {
-            // Safe fallback to the standard channel library.
-            try {
-                Intent fallback = new Intent();
-                fallback.setClassName(this, "com.mbm_soft.irontvmax.activities.LiveActivity");
-                startActivity(fallback);
-            } catch (Throwable ignored) {
-                Toast.makeText(this,
-                        t("Unable to open Live TV", "Impossible d’ouvrir TV EN DIRECT", "تعذر فتح القنوات المباشرة"),
-                        Toast.LENGTH_SHORT).show();
-            }
+            finish();
+        } catch (Throwable error) {
+            Toast.makeText(this,
+                    t("Unable to open Live TV", "Impossible d’ouvrir TV EN DIRECT", "تعذر فتح القنوات المباشرة"),
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
