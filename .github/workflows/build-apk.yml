@@ -86,7 +86,6 @@ jobs:
           python3 scripts/patch_movie_library_header_positions.py
           python3 scripts/patch_movie_library_rail_logo.py
           python3 scripts/patch_hide_categories_runtime.py
-          python3 scripts/patch_aion_identity.py
 
           python3 - <<'PY'
           from pathlib import Path
@@ -111,6 +110,9 @@ jobs:
           p.write_text(s, encoding="utf-8")
           print("FILMS footer LIVE TV routed to Aion2 LiveActivityVlc")
           PY
+
+          # Run identity migration last so no later patch can reintroduce legacy package names.
+          python3 scripts/patch_aion_identity.py
 
       - name: Download apktool
         run: |
