@@ -69,4 +69,7 @@
     <string name="exo_track_unknown">Desconhecido</string>
     <string name="search_menu_title">Pesquisar</string>
     <string name="status_bar_notification_info_overflow">999+</string>
+    <string name="hide_live_categories_label">Ocultar categorias de TV ao vivo</string>
+    <string name="hide_vod_categories_label">Ocultar categorias VOD</string>
+    <string name="hide_series_categories_label">Ocultar categorias de séries</string>
 </resources>

@@ -244,9 +244,12 @@ public final class MovieLibraryActivity extends Activity {
     }
 
     private void addContent(FrameLayout root) {
+        final boolean hideVodCategories = getSharedPreferences("aion_settings", MODE_PRIVATE)
+                .getBoolean("hide_vod_categories", false);
         leftPanel = new FrameLayout(this);
         leftPanel.setBackground(round(Color.argb(80, 4, 4, 4), GOLD, 15f, Math.max(1, pH(0.002f))));
         root.addView(leftPanel, place(0.018f, 0.160f, 0.236f, 0.740f));
+        if (hideVodCategories) leftPanel.setVisibility(View.GONE);
 
         categoryScroll = new ScrollView(this);
         categoryScroll.setFillViewport(true);
@@ -275,8 +278,9 @@ public final class MovieLibraryActivity extends Activity {
 
         TextView arrow = label("◆", 0.021f, Color.WHITE, Gravity.CENTER, false);
         root.addView(arrow, place(0.246f, 0.183f, 0.020f, 0.032f));
+        if (hideVodCategories) arrow.setVisibility(View.GONE);
 
-        final int viewportW = pW(0.711f);
+        final int viewportW = pW(hideVodCategories ? 0.936f : 0.711f);
         final int viewportH = pH(0.690f);
         posterGapX = pW(0.010f);
         posterGapY = pH(0.018f);
@@ -300,7 +304,8 @@ public final class MovieLibraryActivity extends Activity {
         posterStrip.setMinimumWidth(viewportW);
         posterScroll.addView(posterStrip, new HorizontalScrollView.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        root.addView(posterScroll, place(0.271f, 0.151f, 0.711f, 0.690f));
+        root.addView(posterScroll, place(hideVodCategories ? 0.045f : 0.271f,
+                0.151f, hideVodCategories ? 0.936f : 0.711f, 0.690f));
 
         posterScroll.setOnGenericMotionListener(new View.OnGenericMotionListener() {
             @Override public boolean onGenericMotion(View v, MotionEvent event) {

@@ -220,4 +220,7 @@
 
     <string name="language_select_title">Sélectionner la langue</string>
     <string name="language_select_subtitle">Choisissez la langue de l’interface</string>
+    <string name="hide_live_categories_label">Masquer les catégories TV en direct</string>
+    <string name="hide_vod_categories_label">Masquer les catégories VOD</string>
+    <string name="hide_series_categories_label">Masquer les catégories Séries</string>
 </resources>

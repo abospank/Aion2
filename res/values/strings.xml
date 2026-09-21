@@ -243,4 +243,7 @@
 
     <string name="language_select_title">Select language</string>
     <string name="language_select_subtitle">Choose the interface language</string>
+    <string name="hide_live_categories_label">Hide Live Categories</string>
+    <string name="hide_vod_categories_label">Hide VOD Categories</string>
+    <string name="hide_series_categories_label">Hide Series Categories</string>
 </resources>

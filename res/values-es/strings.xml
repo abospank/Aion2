@@ -123,4 +123,7 @@
     <string name="password_toggle_content_description">Mostrar contraseña</string>
     <string name="search_menu_title">Buscar</string>
     <string name="status_bar_notification_info_overflow">999+</string>
+    <string name="hide_live_categories_label">Ocultar categorías de TV en vivo</string>
+    <string name="hide_vod_categories_label">Ocultar categorías VOD</string>
+    <string name="hide_series_categories_label">Ocultar categorías de series</string>
 </resources>

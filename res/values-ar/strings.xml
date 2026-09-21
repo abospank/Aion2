@@ -220,4 +220,7 @@
 
     <string name="language_select_title">اختيار اللغة</string>
     <string name="language_select_subtitle">اختر لغة واجهة التطبيق</string>
+    <string name="hide_live_categories_label">إخفاء تصنيفات البث المباشر</string>
+    <string name="hide_vod_categories_label">إخفاء تصنيفات الأفلام</string>
+    <string name="hide_series_categories_label">إخفاء تصنيفات المسلسلات</string>
 </resources>

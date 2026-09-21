@@ -3,7 +3,7 @@ from pathlib import Path
 p = Path("inject-src/com/irontvgold/app/MovieLibraryActivity.java")
 s = p.read_text(encoding="utf-8")
 
-# Make the existing Settings boolean actually control the movie-category rail.
+# Make the VOD-specific Settings boolean actually control the movie-category rail.
 if "private boolean categoriesAreHidden()" not in s:
     anchor = "    private void focusSelectedCategory() {"
     if anchor not in s:
@@ -11,7 +11,7 @@ if "private boolean categoriesAreHidden()" not in s:
     helper = r'''    private boolean categoriesAreHidden() {
         try {
             return getSharedPreferences("aion_settings", MODE_PRIVATE)
-                    .getBoolean("hide_categories", false);
+                    .getBoolean("hide_vod_categories", false);
         } catch (Throwable ignored) {
             return false;
         }
@@ -96,4 +96,4 @@ else:
         )
 
 p.write_text(s, encoding="utf-8")
-print("Hide Categories now controls the movie category rail and remote focus safely")
+print("Hide VOD Categories now controls the movie category rail and remote focus safely")
