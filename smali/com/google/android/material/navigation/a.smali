@@ -73,9 +73,9 @@
     .line 23
     move-result p2
 
-    const v2, 0x7f0a0295
+    const v4, 0x7f0a0295
 
-    if-ne p2, v2, :aion_not_hide_categories
+    if-ne p2, v4, :aion_not_hide_categories
 
     invoke-static {p1}, Lcom/irontvgold/app/SettingsExtraActions;->hideCustomPanelsForNativeFragment(Landroid/app/Activity;)V
 
