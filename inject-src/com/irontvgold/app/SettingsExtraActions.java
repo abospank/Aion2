@@ -60,6 +60,19 @@ public final class SettingsExtraActions {
         } catch (Throwable ignored) {}
     }
 
+    public static void onItemActivated(View item) {
+        if (item == null) return;
+        Activity activity = activityFrom(item.getContext());
+        if (activity == null) return;
+
+        int language = id(activity, "menu_language");
+        if (item.getId() == language && language != 0) {
+            showLanguagePane(activity, false);
+        } else {
+            hideLanguagePane(activity);
+        }
+    }
+
     public static void onItemFocus(View item, boolean hasFocus) {
         if (item == null || !hasFocus) return;
         Activity activity = activityFrom(item.getContext());

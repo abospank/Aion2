@@ -588,6 +588,26 @@
     return-void
 .end method
 
+
+.method public onHoverEvent(Landroid/view/MotionEvent;)Z
+    .locals 2
+
+    invoke-super {p0, p1}, Ltp0;->onHoverEvent(Landroid/view/MotionEvent;)Z
+
+    move-result v0
+
+    invoke-virtual {p0}, Landroid/view/View;->isHovered()Z
+
+    move-result v1
+
+    if-eqz v1, :aion_hover_done
+
+    invoke-static {p0}, Lcom/irontvgold/app/SettingsExtraActions;->onItemActivated(Landroid/view/View;)V
+
+    :aion_hover_done
+    return v0
+.end method
+
 .method public final onCreateDrawableState(I)[I
     .locals 1
 
@@ -621,6 +641,19 @@
 
     :cond_0
     return-object p1
+.end method
+
+
+.method public performClick()Z
+    .locals 1
+
+    invoke-static {p0}, Lcom/irontvgold/app/SettingsExtraActions;->onItemActivated(Landroid/view/View;)V
+
+    invoke-super {p0}, Ltp0;->performClick()Z
+
+    move-result v0
+
+    return v0
 .end method
 
 .method public setCheckable(Z)V
