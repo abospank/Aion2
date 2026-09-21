@@ -83,6 +83,8 @@
 
     invoke-direct {p2}, Lcom/mbm_soft/irontvmax/fragment/HideCategoriesFragment;-><init>()V
 
+    const/4 v2, 0x0
+
     goto :goto_0
 
     :aion_not_hide_categories
