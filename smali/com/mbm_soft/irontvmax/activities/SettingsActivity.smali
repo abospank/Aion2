@@ -44,16 +44,13 @@
     .line 8
     .line 9
     .line 10
-    invoke-static {p0}, Lj0;->Y(Landroid/app/Activity;)V
+    # Phone-safe direct binding: avoid Activity injection/ButterKnife crash path.
+    const p1, 0x7f0a01f6
+    invoke-virtual {p0, p1}, Landroid/app/Activity;->findViewById(I)Landroid/view/View;
+    move-result-object p1
+    check-cast p1, Lcom/google/android/material/navigation/NavigationView;
+    iput-object p1, p0, Lcom/mbm_soft/irontvmax/activities/SettingsActivity;->settingsNavigation:Lcom/google/android/material/navigation/NavigationView;
 
-    .line 11
-    .line 12
-    .line 13
-    invoke-static {p0}, Lbutterknife/ButterKnife;->b(Landroid/app/Activity;)V
-
-    .line 14
-    .line 15
-    .line 16
     new-instance p1, Lcom/mbm_soft/irontvmax/fragment/UserInfoFragment;
 
     .line 17
@@ -111,22 +108,14 @@
     .line 45
     iget-object p1, p0, Lcom/mbm_soft/irontvmax/activities/SettingsActivity;->settingsNavigation:Lcom/google/android/material/navigation/NavigationView;
 
-    .line 46
-    .line 47
+    if-eqz p1, :aion_settings_nav_done
+
     new-instance v0, Lko0;
-
-    .line 48
-    .line 49
     const/4 v1, 0x7
-
-    .line 50
     invoke-direct {v0, v1, p0}, Lko0;-><init>(ILjava/lang/Object;)V
-
-    .line 51
-    .line 52
-    .line 53
     invoke-virtual {p1, v0}, Lcom/google/android/material/navigation/NavigationView;->setNavigationItemSelectedListener(Lcom/google/android/material/navigation/NavigationView$a;)V
 
+    :aion_settings_nav_done
     invoke-static {p0}, Lcom/irontvgold/app/SettingsExtraActions;->install(Landroid/app/Activity;)V
 
     .line 54
