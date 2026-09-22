@@ -110,6 +110,19 @@ public class VlcFullscreenActivity extends Activity implements IVLCVout.Callback
             vout.addCallback(this);
             vout.setVideoView(surface);
             vout.attachViews();
+
+            // Some phones do not reliably dispatch IVLCVout.onSurfacesCreated().
+            // Start from the actual Android Surface as soon as it is laid out.
+            surface.post(new Runnable() {
+                @Override public void run() { startPlaybackIfReady(); }
+            });
+            surface.postDelayed(new Runnable() {
+                @Override public void run() { startPlaybackIfReady(); }
+            }, 250L);
+            surface.postDelayed(new Runnable() {
+                @Override public void run() { startPlaybackIfReady(); }
+            }, 700L);
+
             showControls();
             ui.post(progressTask);
         } catch (Throwable error) {
@@ -460,7 +473,10 @@ public class VlcFullscreenActivity extends Activity implements IVLCVout.Callback
             applyVideoLayout();
             if (surface != null) {
                 surface.post(new Runnable() {
-                    @Override public void run() { applyVideoLayout(); }
+                    @Override public void run() {
+                        applyVideoLayout();
+                        startPlaybackIfReady();
+                    }
                 });
             }
         }
