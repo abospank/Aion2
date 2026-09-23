@@ -151,6 +151,7 @@ jobs:
           PY
 
           python3 scripts/patch_fast_live_start.py
+          python3 scripts/patch_iron_code_restore.py
 
           # Run identity migration last so no later patch can reintroduce legacy package names.
           python3 scripts/patch_aion_identity.py
