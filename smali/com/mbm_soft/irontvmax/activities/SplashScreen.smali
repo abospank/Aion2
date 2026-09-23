@@ -571,6 +571,15 @@
     const-string v6, "XC_HOST_2"
     invoke-static {v6, v5}, Lgu;->d(Ljava/lang/String;Ljava/lang/String;)V
 
+    # Remember that this is a direct Xtream/M3U account so startup can skip
+    # the AION activation host discovery and reuse the saved server.
+    sget-object v6, Lgu;->b:Landroid/content/SharedPreferences$Editor;
+    const-string v7, "direct_xtream"
+    const/4 v8, 0x1
+    invoke-interface {v6, v7, v8}, Landroid/content/SharedPreferences$Editor;->putBoolean(Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;
+    move-result-object v6
+    invoke-interface {v6}, Landroid/content/SharedPreferences$Editor;->commit()Z
+
     # Rebuild Retrofit immediately on the parsed host.
     invoke-static {v5}, Lgo0;->c(Ljava/lang/String;)V
 
@@ -597,6 +606,14 @@
     nop
 
 :aion_activation_normal
+    # Normal AION activation must not inherit a previously saved direct account.
+    sget-object v2, Lgu;->b:Landroid/content/SharedPreferences$Editor;
+    const-string v3, "direct_xtream"
+    const/4 v4, 0x0
+    invoke-interface {v2, v3, v4}, Landroid/content/SharedPreferences$Editor;->putBoolean(Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;
+    move-result-object v2
+    invoke-interface {v2}, Landroid/content/SharedPreferences$Editor;->commit()Z
+
     .line 45
     .line 46
     invoke-virtual {p0}, Lcom/mbm_soft/irontvmax/activities/SplashScreen;->B()V
@@ -1863,6 +1880,46 @@
     .line 394
     invoke-virtual {v0, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
 
+    # Restore a previously validated direct Xtream/M3U account.
+    sget-object v0, Lgu;->a:Landroid/content/SharedPreferences;
+    if-eqz v0, :aion_direct_restore_done
+
+    const-string v1, "direct_xtream"
+    const/4 v2, 0x0
+    invoke-interface {v0, v1, v2}, Landroid/content/SharedPreferences;->getBoolean(Ljava/lang/String;Z)Z
+    move-result v0
+    if-eqz v0, :aion_direct_restore_done
+
+    const-string v0, "username"
+    invoke-static {v0}, Lgu;->b(Ljava/lang/String;)Ljava/lang/String;
+    move-result-object v1
+
+    const-string v0, "password"
+    invoke-static {v0}, Lgu;->b(Ljava/lang/String;)Ljava/lang/String;
+    move-result-object v2
+
+    const-string v0, "XC_HOST"
+    invoke-static {v0}, Lgu;->b(Ljava/lang/String;)Ljava/lang/String;
+    move-result-object v3
+
+    invoke-virtual {v1}, Ljava/lang/String;->length()I
+    move-result v4
+    if-lez v4, :aion_direct_restore_done
+
+    invoke-virtual {v2}, Ljava/lang/String;->length()I
+    move-result v4
+    if-lez v4, :aion_direct_restore_done
+
+    invoke-virtual {v3}, Ljava/lang/String;->length()I
+    move-result v4
+    if-lez v4, :aion_direct_restore_done
+
+    invoke-static {v3}, Lgo0;->c(Ljava/lang/String;)V
+    invoke-virtual {p0}, Lcom/mbm_soft/irontvmax/activities/SplashScreen;->B()V
+    invoke-virtual {p0}, Lcom/mbm_soft/irontvmax/activities/SplashScreen;->x()V
+    return-void
+
+:aion_direct_restore_done
     const-string v0, "username"
 
     invoke-static {v0}, Lgu;->b(Ljava/lang/String;)Ljava/lang/String;
