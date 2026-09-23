@@ -88,26 +88,41 @@ jobs:
           python3 scripts/patch_hide_categories_runtime.py
 
           # Route only the final generated movie Play action to Aion2's built-in
-          # ExoPlayer after all movie-details visual patches have completed.
+          # ExoPlayer after every movie-details visual/logic patch has completed.
           python3 - <<'PY'
           from pathlib import Path
           p = Path("inject-src/com/irontvgold/app/MovieLibraryActivity.java")
           s = p.read_text(encoding="utf-8")
-          old = '''        Intent intent = new Intent(this, VlcFullscreenActivity.class);
-                  intent.putExtra("url", movieUrl);
-                  intent.putExtra("title", movieName);
-                  startActivity(intent);'''
-          new = '''        Intent intent = new Intent().setClassName(this, "com.mbm_soft.irontvmax.activities.VodActivity");
-                  intent.putExtra("link", movieUrl);
-                  intent.putExtra("name", movieName);
-                  intent.putExtra("image", posterUrl);
-                  intent.putExtra("movie", "movie");
-                  startActivity(intent);'''
-          if old not in s:
-              raise SystemExit("final movie playback anchor not found")
-          s = s.replace(old, new, 1)
+
+          old_target = "new Intent(this, VlcFullscreenActivity.class)"
+          if old_target not in s:
+              raise SystemExit("final movie player target not found")
+          s = s.replace(
+              old_target,
+              'new Intent().setClassName(this, "com.mbm_soft.irontvmax.activities.VodActivity")',
+              1
+          )
+
+          if 'intent.putExtra("url", movieUrl);' not in s:
+              raise SystemExit("final movie url extra not found")
+          s = s.replace(
+              'intent.putExtra("url", movieUrl);',
+              'intent.putExtra("link", movieUrl);',
+              1
+          )
+
+          if 'intent.putExtra("title", movieName);' not in s:
+              raise SystemExit("final movie title extra not found")
+          s = s.replace(
+              'intent.putExtra("title", movieName);',
+              'intent.putExtra("name", movieName);\n'
+              '        intent.putExtra("image", posterUrl);\n'
+              '        intent.putExtra("movie", "movie");',
+              1
+          )
+
           p.write_text(s, encoding="utf-8")
-          print("Final movie playback routed to built-in ExoPlayer")
+          print("Final generated movie playback routed to built-in ExoPlayer")
           PY
 
           python3 - <<'PY'
