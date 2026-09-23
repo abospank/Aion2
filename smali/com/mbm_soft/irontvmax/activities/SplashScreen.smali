@@ -929,6 +929,32 @@
     .line 194
     invoke-static {v1, v0}, Lgu;->d(Ljava/lang/String;Ljava/lang/String;)V
 
+    # Direct Xtream account mode: reuse a previously saved host. On a fresh
+    # install use the provider host that was proven by the long M3U test.
+    const-string v0, "XC_HOST"
+    invoke-static {v0}, Lgu;->b(Ljava/lang/String;)Ljava/lang/String;
+    move-result-object v1
+
+    invoke-virtual {v1}, Ljava/lang/String;->length()I
+    move-result v2
+    if-nez v2, :aion_account_host_ready
+
+    const-string v1, "http://cf.business-cloud-4.ru/"
+    invoke-static {v0, v1}, Lgu;->d(Ljava/lang/String;Ljava/lang/String;)V
+
+:aion_account_host_ready
+    const-string v0, "XC_HOST_2"
+    invoke-static {v0, v1}, Lgu;->d(Ljava/lang/String;Ljava/lang/String;)V
+
+    invoke-static {v1}, Lgo0;->c(Ljava/lang/String;)V
+
+    sget-object v2, Lgu;->b:Landroid/content/SharedPreferences$Editor;
+    const-string v3, "direct_xtream"
+    const/4 v4, 0x1
+    invoke-interface {v2, v3, v4}, Landroid/content/SharedPreferences$Editor;->putBoolean(Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;
+    move-result-object v2
+    invoke-interface {v2}, Landroid/content/SharedPreferences$Editor;->commit()Z
+
     .line 195
     .line 196
     .line 197
