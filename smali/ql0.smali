@@ -3704,17 +3704,12 @@
 .method public static h(Landroid/content/Context;)Z
     .locals 1
 
-    invoke-virtual {p0}, Landroid/content/Context;->getPackageName()Ljava/lang/String;
+    # The app identity is now com.aiontvgold.app. The legacy brand gate
+    # checked whether the package name contained "ont", which disabled
+    # Live/VOD ViewModel and player initialization after the rename.
+    const/4 v0, 0x1
 
-    move-result-object p0
-
-    const-string v0, "ont"
-
-    invoke-virtual {p0, v0}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-
-    move-result p0
-
-    return p0
+    return v0
 .end method
 
 .method public static j(II)Ljava/text/SimpleDateFormat;
