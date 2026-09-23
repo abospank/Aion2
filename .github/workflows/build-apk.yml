@@ -152,6 +152,7 @@ jobs:
 
           # Run identity migration last so no later patch can reintroduce legacy package names.
           python3 scripts/patch_disable_auto_epg.py
+          python3 scripts/patch_per_channel_epg.py
 
           python3 scripts/patch_aion_identity.py
 
