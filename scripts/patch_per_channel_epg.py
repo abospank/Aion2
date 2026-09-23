@@ -280,7 +280,7 @@ patch_activity(
     "Lcom/mbm_soft/irontvmax/activities/LiveActivityVlc$AionEpgCallback;"
 )
 
-callback_template = r'''.class public final {callback};
+callback_template = r'''.class public final {callback}
 .super Ljava/lang/Object;
 .source "AionPerChannelEpg"
 
