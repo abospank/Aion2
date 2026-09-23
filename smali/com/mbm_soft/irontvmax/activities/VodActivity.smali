@@ -570,6 +570,20 @@
     .line 195
     invoke-direct {p1, p0, v2}, Ljs0$a;-><init>(Landroid/content/Context;Lej;)V
 
+    # VOD/Series only: faster startup without changing Live TV defaults.
+    # minAudio=5000ms, minVideo=10000ms, max=30000ms,
+    # start=750ms, rebuffer=1500ms.
+    new-instance v2, Lzi;
+
+    const/16 v3, 0x1388
+    const/16 v4, 0x2710
+    const/16 v5, 0x7530
+    const/16 v6, 0x2ee
+    const/16 v7, 0x5dc
+
+    invoke-direct/range {v2 .. v7}, Lzi;-><init>(IIIII)V
+    iput-object v2, p1, Ljs0$a;->e:Lzi;
+
     .line 196
     .line 197
     .line 198
