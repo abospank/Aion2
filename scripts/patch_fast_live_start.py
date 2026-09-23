@@ -149,7 +149,9 @@ if ".method public final vFull()V" not in s:
 
     invoke-virtual {p0}, Lcom/mbm_soft/irontvmax/activities/MainActivity;->x()V
 
-    invoke-virtual {p0}, Lcom/mbm_soft/irontvmax/activities/MainActivity;->vFull()V
+    # Full refresh is intentionally NOT started here. Re-fetching live data while
+    # the user is already inside LiveActivity can replace lists underneath the UI
+    # and cause index races/freezes. VOD/series remain cached until their normal refresh.
 
     :done
     return-void
