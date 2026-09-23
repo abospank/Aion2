@@ -364,9 +364,11 @@ public final class MovieDetailsActivity extends Activity {
             Toast.makeText(this, "Lecture indisponible", Toast.LENGTH_SHORT).show();
             return;
         }
-        Intent intent = new Intent(this, VlcFullscreenActivity.class);
-        intent.putExtra("url", movieUrl);
-        intent.putExtra("title", movieName);
+        Intent intent = new Intent().setClassName(this, "com.mbm_soft.irontvmax.activities.VodActivity");
+        intent.putExtra("link", movieUrl);
+        intent.putExtra("name", movieName);
+        intent.putExtra("image", posterUrl);
+        intent.putExtra("movie", "movie");
         startActivity(intent);
     }
 
