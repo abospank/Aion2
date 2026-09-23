@@ -150,6 +150,8 @@ jobs:
           print("FILMS footer LIVE TV routed to Aion2 LiveActivityVlc")
           PY
 
+          python3 scripts/patch_fast_live_start.py
+
           # Run identity migration last so no later patch can reintroduce legacy package names.
           python3 scripts/patch_aion_identity.py
 
