@@ -384,7 +384,7 @@
 .end method
 
 .method public startActivate()V
-    .locals 5
+    .locals 10
     .annotation runtime Lbutterknife/OnClick;
     .end annotation
 
@@ -469,11 +469,134 @@
     .line 41
     .line 42
     .line 43
-    move-result v1
+    move-result v2
 
     .line 44
-    if-nez v1, :cond_1
+    if-nez v2, :cond_1
 
+    # AION dual login:
+    # If the activation field contains a full Xtream/M3U URL, extract the
+    # username/password/host and validate it through the normal player_api flow.
+    iget-object v1, p0, Lcom/mbm_soft/irontvmax/activities/SplashScreen;->usernameEditBox:Landroid/widget/EditText;
+    invoke-virtual {v1}, Landroid/widget/EditText;->getText()Landroid/text/Editable;
+    move-result-object v1
+    invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    move-result-object v1
+    invoke-virtual {v1}, Ljava/lang/String;->trim()Ljava/lang/String;
+    move-result-object v1
+
+    const-string v2, "http://"
+    invoke-virtual {v1, v2}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z
+    move-result v2
+    if-nez v2, :aion_m3u_try
+
+    const-string v2, "https://"
+    invoke-virtual {v1, v2}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z
+    move-result v2
+    if-eqz v2, :aion_activation_normal
+
+:aion_m3u_try
+    :try_start_aion_m3u
+    invoke-static {v1}, Landroid/net/Uri;->parse(Ljava/lang/String;)Landroid/net/Uri;
+    move-result-object v2
+
+    const-string v3, "username"
+    invoke-virtual {v2, v3}, Landroid/net/Uri;->getQueryParameter(Ljava/lang/String;)Ljava/lang/String;
+    move-result-object v3
+
+    const-string v4, "password"
+    invoke-virtual {v2, v4}, Landroid/net/Uri;->getQueryParameter(Ljava/lang/String;)Ljava/lang/String;
+    move-result-object v4
+
+    if-eqz v3, :aion_activation_normal
+    if-eqz v4, :aion_activation_normal
+
+    invoke-virtual {v3}, Ljava/lang/String;->length()I
+    move-result v5
+    if-lez v5, :aion_activation_normal
+
+    invoke-virtual {v4}, Ljava/lang/String;->length()I
+    move-result v5
+    if-lez v5, :aion_activation_normal
+
+    # Prefer everything before /get.php so non-standard ports are preserved.
+    const-string v5, "/get.php"
+    invoke-virtual {v1, v5}, Ljava/lang/String;->indexOf(Ljava/lang/String;)I
+    move-result v6
+
+    if-lez v6, :aion_m3u_host_uri
+
+    const/4 v5, 0x0
+    invoke-virtual {v1, v5, v6}, Ljava/lang/String;->substring(II)Ljava/lang/String;
+    move-result-object v5
+
+    new-instance v6, Ljava/lang/StringBuilder;
+    invoke-direct {v6}, Ljava/lang/StringBuilder;-><init>()V
+    invoke-virtual {v6, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    const-string v5, "/"
+    invoke-virtual {v6, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {v6}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+    move-result-object v5
+    goto :aion_m3u_host_ready
+
+:aion_m3u_host_uri
+    invoke-virtual {v2}, Landroid/net/Uri;->getScheme()Ljava/lang/String;
+    move-result-object v5
+    invoke-virtual {v2}, Landroid/net/Uri;->getAuthority()Ljava/lang/String;
+    move-result-object v6
+    if-eqz v5, :aion_activation_normal
+    if-eqz v6, :aion_activation_normal
+
+    new-instance v7, Ljava/lang/StringBuilder;
+    invoke-direct {v7}, Ljava/lang/StringBuilder;-><init>()V
+    invoke-virtual {v7, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    const-string v5, "://"
+    invoke-virtual {v7, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {v7, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    const-string v5, "/"
+    invoke-virtual {v7, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {v7}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+    move-result-object v5
+
+:aion_m3u_host_ready
+    const-string v6, "username"
+    invoke-static {v6, v3}, Lgu;->d(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string v6, "password"
+    invoke-static {v6, v4}, Lgu;->d(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string v6, "XC_HOST"
+    invoke-static {v6, v5}, Lgu;->d(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string v6, "XC_HOST_2"
+    invoke-static {v6, v5}, Lgu;->d(Ljava/lang/String;Ljava/lang/String;)V
+
+    # Rebuild Retrofit immediately on the parsed host.
+    invoke-static {v5}, Lgo0;->c(Ljava/lang/String;)V
+
+    const/4 v6, 0x1
+    sget-object v7, Lgu;->b:Landroid/content/SharedPreferences$Editor;
+    const-string v8, "activation_type"
+    invoke-interface {v7, v8, v6}, Landroid/content/SharedPreferences$Editor;->putBoolean(Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;
+    move-result-object v7
+
+    const/4 v6, 0x0
+    const-string v8, "runOnStartUp"
+    invoke-interface {v7, v8, v6}, Landroid/content/SharedPreferences$Editor;->putBoolean(Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;
+    move-result-object v7
+    invoke-interface {v7}, Landroid/content/SharedPreferences$Editor;->commit()Z
+
+    invoke-virtual {p0}, Lcom/mbm_soft/irontvmax/activities/SplashScreen;->B()V
+    invoke-virtual {p0}, Lcom/mbm_soft/irontvmax/activities/SplashScreen;->x()V
+    return-void
+    :try_end_aion_m3u
+    .catch Ljava/lang/Exception; {:try_start_aion_m3u .. :try_end_aion_m3u} :catch_aion_m3u
+
+:catch_aion_m3u
+    # Malformed URL: fall back to the existing AION activation-code flow.
+    nop
+
+:aion_activation_normal
     .line 45
     .line 46
     invoke-virtual {p0}, Lcom/mbm_soft/irontvmax/activities/SplashScreen;->B()V
