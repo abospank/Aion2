@@ -30,6 +30,55 @@
 
 
 # direct methods
+.method public constructor <init>(IIIII)V
+    .locals 3
+
+    new-instance v0, Lyh;
+    invoke-direct {v0}, Lyh;-><init>()V
+
+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+
+    iput-object v0, p0, Lzi;->a:Lyh;
+
+    int-to-long v0, p1
+    invoke-static {v0, v1}, Lq9;->a(J)J
+    move-result-wide v0
+    iput-wide v0, p0, Lzi;->b:J
+
+    int-to-long v0, p2
+    invoke-static {v0, v1}, Lq9;->a(J)J
+    move-result-wide v0
+    iput-wide v0, p0, Lzi;->c:J
+
+    int-to-long v0, p3
+    invoke-static {v0, v1}, Lq9;->a(J)J
+    move-result-wide v0
+    iput-wide v0, p0, Lzi;->d:J
+
+    int-to-long v0, p4
+    invoke-static {v0, v1}, Lq9;->a(J)J
+    move-result-wide v0
+    iput-wide v0, p0, Lzi;->e:J
+
+    int-to-long v0, p5
+    invoke-static {v0, v1}, Lq9;->a(J)J
+    move-result-wide v0
+    iput-wide v0, p0, Lzi;->f:J
+
+    const/4 v0, -0x1
+    iput v0, p0, Lzi;->g:I
+
+    const/4 v0, 0x1
+    iput-boolean v0, p0, Lzi;->h:Z
+
+    const-wide/16 v0, 0x0
+    invoke-static {v0, v1}, Lq9;->a(J)J
+    move-result-wide v0
+    iput-wide v0, p0, Lzi;->i:J
+
+    return-void
+.end method
+
 .method public constructor <init>()V
     .locals 11
 
