@@ -929,20 +929,12 @@
     .line 194
     invoke-static {v1, v0}, Lgu;->d(Ljava/lang/String;Ljava/lang/String;)V
 
-    # Direct Xtream account mode: reuse a previously saved host. On a fresh
-    # install use the provider host that was proven by the long M3U test.
-    const-string v0, "XC_HOST"
-    invoke-static {v0}, Lgu;->b(Ljava/lang/String;)Ljava/lang/String;
-    move-result-object v1
-
-    invoke-virtual {v1}, Ljava/lang/String;->length()I
-    move-result v2
-    if-nez v2, :aion_account_host_ready
-
+    # Direct Xtream account mode uses this provider host explicitly.
     const-string v1, "http://cf.business-cloud-4.ru/"
+
+    const-string v0, "XC_HOST"
     invoke-static {v0, v1}, Lgu;->d(Ljava/lang/String;Ljava/lang/String;)V
 
-:aion_account_host_ready
     const-string v0, "XC_HOST_2"
     invoke-static {v0, v1}, Lgu;->d(Ljava/lang/String;Ljava/lang/String;)V
 
