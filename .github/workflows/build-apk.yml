@@ -119,6 +119,13 @@ jobs:
           curl -fL --retry 3 -o /tmp/apktool.jar \
             https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
 
+      - name: Export apktool for local reference-APK rebuild
+        uses: actions/upload-artifact@v4
+        with:
+          name: apktool-${{ github.run_number }}
+          path: /tmp/apktool.jar
+          compression-level: 0
+
       - name: Fix legacy Nine-Patch resources
         shell: bash
         run: |
