@@ -88,25 +88,33 @@ layout_replacements = [
     ('        root.addView(plotText, place(0.255f, 0.585f, 0.705f, 0.085f));',
      '        root.addView(plotText, place(0.249f, 0.575f, 0.715f, 0.088f));', 'plot geometry'),
     ('        root.addView(actorsLabel, place(0.020f, 0.670f, 0.260f, 0.040f));',
-     '        root.addView(actorsLabel, place(0.027f, 0.690f, 0.250f, 0.036f));', 'actors label geometry'),
+     '        root.addView(actorsLabel, place(0.027f, 0.700f, 0.250f, 0.036f));', 'actors label geometry'),
     ('        root.addView(actorsScroll, place(0.020f, 0.705f, 0.440f, 0.225f));',
-     '        root.addView(actorsScroll, place(0.027f, 0.730f, 0.445f, 0.205f));', 'actors scroll geometry'),
+     '        root.addView(actorsScroll, place(0.027f, 0.742f, 0.445f, 0.205f));', 'actors scroll geometry'),
     ('        root.addView(similarLabel, place(0.540f, 0.670f, 0.250f, 0.040f));',
-     '        root.addView(similarLabel, place(0.520f, 0.690f, 0.250f, 0.036f));', 'similar label geometry'),
+     '        root.addView(similarLabel, place(0.508f, 0.700f, 0.250f, 0.036f));', 'similar label geometry'),
     ('        root.addView(similarScroll, place(0.475f, 0.705f, 0.505f, 0.225f));',
-     '        root.addView(similarScroll, place(0.508f, 0.730f, 0.472f, 0.205f));', 'similar scroll geometry'),
+     '        root.addView(similarScroll, place(0.508f, 0.742f, 0.472f, 0.205f));', 'similar scroll geometry'),
 ]
 for old, new, label in layout_replacements:
     rep(old, new, label)
 
 # Thin vertical gold separator between the two lower groups, as in the approved
 # reference. It is deliberately subtle and does not affect focus/navigation.
-actors_scroll_line = '        root.addView(actorsScroll, place(0.027f, 0.730f, 0.445f, 0.205f));\n\n'
-separator_block = '''        root.addView(actorsScroll, place(0.027f, 0.730f, 0.445f, 0.205f));
+actors_scroll_line = '        root.addView(actorsScroll, place(0.027f, 0.742f, 0.445f, 0.205f));\n\n'
+separator_block = '''        root.addView(actorsScroll, place(0.027f, 0.742f, 0.445f, 0.205f));
 
         View lowerSeparator = new View(this);
-        lowerSeparator.setBackgroundColor(Color.argb(190, 244, 170, 14));
-        root.addView(lowerSeparator, place(0.490f, 0.720f, 0.0012f, 0.190f));
+        lowerSeparator.setBackgroundColor(Color.argb(185, 244, 170, 14));
+        root.addView(lowerSeparator, place(0.485f, 0.705f, 0.0010f, 0.225f));
+
+        View actorsRule = new View(this);
+        actorsRule.setBackgroundColor(Color.argb(145, 244, 170, 14));
+        root.addView(actorsRule, place(0.084f, 0.718f, 0.312f, 0.0012f));
+
+        View similarRule = new View(this);
+        similarRule.setBackgroundColor(Color.argb(145, 244, 170, 14));
+        root.addView(similarRule, place(0.615f, 0.718f, 0.300f, 0.0012f));
 
 '''
 rep(actors_scroll_line, separator_block, 'lower separator insertion')
@@ -132,13 +140,20 @@ rep(
     '        image.setBackground(round(Color.rgb(5, 5, 5), Color.TRANSPARENT, dp(7), 0));',
     'similar empty image')
 
+# Keep exactly five real actor cards on the left, matching the final reference.
+# Similar movies remain six real server-backed, clickable entries on the right.
+s = s.replace('for (int i = 0; i < 6; i++) addActorCard(new ActorEntry("—", ""));',
+              'for (int i = 0; i < 5; i++) addActorCard(new ActorEntry("—", ""));')
+s = s.replace('int count = Math.min(6, actors.size());',
+              'int count = Math.min(5, actors.size());')
+
 # Placeholder boxes remain visibly black rather than transparent/gold-filled.
 s = s.replace(
     '        box.setBackground(round(Color.TRANSPARENT, GOLD, dp(8), Math.max(1, dp(1))));',
     '        box.setBackground(round(Color.rgb(5, 5, 5), GOLD, dp(8), Math.max(1, dp(1))));')
 
 p.write_text(s, encoding='utf-8')
-print('movie details: stronger seamless shading and lower actor/similar rows applied')
+print('movie details: exact five-actor and six-clickable-similar reference layout applied')
 
 # Apply the separately isolated, user-approved FILMS rail/footer behavior pass.
 # It runs here because this script is already in the launcher after performance
